@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="external">
+      <UniqueIdentifier>{f5919023-5204-40ac-958f-9beaf2a23ac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\safetyhook">
+      <UniqueIdentifier>{661f5cd4-f39d-492f-ae09-aca652dc2175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\easylogging">
+      <UniqueIdentifier>{c95489bc-ba46-48fc-93d6-7830b6d6df9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\StackWalker">
+      <UniqueIdentifier>{2103cf0e-8f8b-452f-b95e-8314154ba421}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="external\safetyhook\safetyhook.cpp">
+      <Filter>external\safetyhook</Filter>
+    </ClCompile>
+    <ClCompile Include="external\safetyhook\Zydis.c">
+      <Filter>external\safetyhook</Filter>
+    </ClCompile>
+    <ClCompile Include="external\easylogging\easylogging++.cc">
+      <Filter>external\easylogging</Filter>
+    </ClCompile>
+    <ClCompile Include="external\StackWalker\StackWalker.cpp">
+      <Filter>external\StackWalker</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="external\safetyhook\safetyhook.hpp">
+      <Filter>external\safetyhook</Filter>
+    </ClInclude>
+    <ClInclude Include="external\safetyhook\Zydis.h">
+      <Filter>external\safetyhook</Filter>
+    </ClInclude>
+    <ClInclude Include="external\easylogging\easylogging++.h">
+      <Filter>external\easylogging</Filter>
+    </ClInclude>
+    <ClInclude Include="gobal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VectoredHandler.cpp">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VectoredHandler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SD.h">
+      <Filter>external</Filter>
+    </ClInclude>
+    <ClInclude Include="external\StackWalker\StackWalker.h">
+      <Filter>external\StackWalker</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
