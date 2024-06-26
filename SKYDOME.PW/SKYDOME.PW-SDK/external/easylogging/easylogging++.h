@@ -10,6 +10,9 @@
 //  https://github.com/amrayn/easyloggingpp/blob/master/LICENSE
 //
 
+//添加了这个用于关闭默认的文件创建
+#define ELPP_NO_DEFAULT_LOG_FILE
+
 #ifndef EASYLOGGINGPP_H
 #define EASYLOGGINGPP_H
 // Compilers and C++0x/C++11 Evaluation

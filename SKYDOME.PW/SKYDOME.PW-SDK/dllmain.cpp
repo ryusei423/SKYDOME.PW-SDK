@@ -7,7 +7,6 @@
 //获取偏移的方法:网络 + 本地
 //从网络获取的包括:特征码/索引/当前版本是否可用?
 
-
 #include <iostream>
 #include "external/easylogging/easylogging++.h"
 #include "gobal.h"
@@ -167,11 +166,42 @@ LONG WINAPI VectoredHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 }
 
 
+//TODO:更体面地管理控制台
+void CreateConsole() {
+	AllocConsole();
+	SetConsoleTitleA("SKYDOME.PW");
+	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT);
+#ifdef _DEBUG
+	SetConsoleTitleA("SKYDOME.PW - DEBUG");
+#endif // DEBUG
+	freopen_s(&g_CheatData->m_ConsoleStream, "CONOUT$", "w", stdout);
+
+	el::Configurations defaultConf;
+	defaultConf.setToDefault();
+	// Values are always std::string
+	defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[SKYDOME.PW] %datetime %level %msg");
+	defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[ SKYDOME.PW ] %datetime{%H:%m:%s} -> %level -> %msg");
 
 
+	defaultConf.parseFromText("*GLOBAL:\n TO_FILE = FALSE\n FILENAME = "" \n");
+	el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
+
+	el::Loggers::reconfigureLogger("default", defaultConf);
+	// Actually reconfigure all loggers instead
+	el::Loggers::reconfigureAllLoggers(defaultConf);
+
+
+	/*el::Loggers::getLogger("default")->setFlag(el::LoggingFlag::ColoredTerminalOutput);
+	el::Loggers::getLogger("default")->setFlag(el::LoggingFlag::ColoredTerminalOutput);
+	el::Loggers::getLogger("default")->setConfigurations(el::ConfigurationType::Format, "%datetime %level %msg");
+	el::Loggers::getLogger("default")->setFlag(el::LoggingFlag::DisableFileLogging);*/
+	LOG(ERROR) << "test msg";
+	LOG(INFO) << "test msg";
+}
 
 
 uintptr_t __stdcall init_main(const HMODULE h_module) {
+	CreateConsole();
 
 	return 0;
 }
@@ -203,11 +233,25 @@ int __stdcall DllMain(HMODULE dllhandle,
 		//注册异常处理程序
 		AddVectoredExceptionHandler(0, VectoredHandler);
 
+
 		//创建初始化线程
 		CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)init_main, dllhandle, 0, nullptr);
 		
-	
 	}
+
+	if (_Reason == DLL_PROCESS_DETACH) {
+	
+		HWND consoleWindow = GetConsoleWindow();
+
+		FreeConsole();
+
+		if (consoleWindow != NULL)
+		{
+			// 发送关闭窗口消息
+			PostMessage(consoleWindow, WM_CLOSE, 0, 0);
+		}
+	}
+
 	return true;
 }
 

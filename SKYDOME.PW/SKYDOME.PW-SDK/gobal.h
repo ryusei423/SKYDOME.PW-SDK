@@ -10,7 +10,7 @@ class CheatData {
 public:
 	HMODULE self_handle;
 
-
+	FILE* m_ConsoleStream;
 
 
 };

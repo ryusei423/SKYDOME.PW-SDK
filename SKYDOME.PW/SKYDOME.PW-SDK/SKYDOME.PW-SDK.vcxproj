@@ -137,6 +137,7 @@
     <ClCompile Include="external\safetyhook\safetyhook.cpp" />
     <ClCompile Include="external\safetyhook\Zydis.c" />
     <ClCompile Include="external\StackWalker\StackWalker.cpp" />
+    <ClCompile Include="sd\utilities\pointer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\easylogging\easylogging++.h" />
@@ -144,7 +145,10 @@
     <ClInclude Include="external\safetyhook\Zydis.h" />
     <ClInclude Include="external\SD.h" />
     <ClInclude Include="external\StackWalker\StackWalker.h" />
+    <ClInclude Include="external\xor.hpp" />
     <ClInclude Include="gobal.h" />
+    <ClInclude Include="sd\utilities\memory.h" />
+    <ClInclude Include="sd\utilities\pointer.hpp" />
     <ClInclude Include="VectoredHandler.cpp" />
     <ClInclude Include="VectoredHandler.h" />
   </ItemGroup>
