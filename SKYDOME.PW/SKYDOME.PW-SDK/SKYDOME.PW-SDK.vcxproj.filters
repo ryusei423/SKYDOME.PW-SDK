@@ -31,6 +31,9 @@
     <Filter Include="sd\utilities">
       <UniqueIdentifier>{8273304b-8fa0-4f04-abb9-809dcdbb740d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\localization">
+      <UniqueIdentifier>{8407c7c9-8075-48f7-b8bc-2075209ad2e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -49,6 +52,12 @@
       <Filter>external\StackWalker</Filter>
     </ClCompile>
     <ClCompile Include="sd\utilities\pointer.cpp">
+      <Filter>sd\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\utilities\memory.cpp">
+      <Filter>sd\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\utilities\math.cpp">
       <Filter>sd\utilities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,6 +94,21 @@
     </ClInclude>
     <ClInclude Include="sd\utilities\pointer.hpp">
       <Filter>sd\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\utilities\crt.h">
+      <Filter>sd\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\utilities\fnv1a.h">
+      <Filter>sd\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\utilities\math.h">
+      <Filter>sd\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\utilities\pe64.h">
+      <Filter>sd\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\localization\localization.h">
+      <Filter>sd\localization</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

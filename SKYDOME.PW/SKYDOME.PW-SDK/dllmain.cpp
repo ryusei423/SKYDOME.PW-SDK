@@ -169,17 +169,19 @@ LONG WINAPI VectoredHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 //TODO:更体面地管理控制台
 void CreateConsole() {
 	AllocConsole();
-	SetConsoleTitleA("SKYDOME.PW");
+	SetConsoleTitleA(g_CheatLocalization->get(XorStr("console_skydome")).c_str());
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT);
+
 #ifdef _DEBUG
-	SetConsoleTitleA("SKYDOME.PW - DEBUG");
+	SetConsoleTitleA(g_CheatLocalization->get(XorStr("console_skydome_debug")).c_str());
 #endif // DEBUG
+	
 	freopen_s(&g_CheatData->m_ConsoleStream, "CONOUT$", "w", stdout);
 
 	el::Configurations defaultConf;
 	defaultConf.setToDefault();
 	// Values are always std::string
-	defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[SKYDOME.PW] %datetime %level %msg");
+	//defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[SKYDOME.PW] %datetime %level %msg");
 	defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[ SKYDOME.PW ] %datetime{%H:%m:%s} -> %level -> %msg");
 
 
@@ -195,14 +197,17 @@ void CreateConsole() {
 	el::Loggers::getLogger("default")->setFlag(el::LoggingFlag::ColoredTerminalOutput);
 	el::Loggers::getLogger("default")->setConfigurations(el::ConfigurationType::Format, "%datetime %level %msg");
 	el::Loggers::getLogger("default")->setFlag(el::LoggingFlag::DisableFileLogging);*/
-	LOG(ERROR) << "test msg";
-	LOG(INFO) << "test msg";
+	/*LOG(ERROR) << "test msg";
+	LOG(INFO) << "test msg";*/
 }
 
-
+#include "sd/utilities/memory.h"
 uintptr_t __stdcall init_main(const HMODULE h_module) {
-	CreateConsole();
 
+	g_CheatLocalization->setcn();
+	g_CheatLocalization->seteng();
+	CreateConsole();
+	MEM::Setup();
 	return 0;
 }
 
