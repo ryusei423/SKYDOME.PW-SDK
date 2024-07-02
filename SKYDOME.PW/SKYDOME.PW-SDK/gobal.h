@@ -32,6 +32,18 @@
 #define MATCHMAKING_DLL XorStr(L"matchmaking.dll")
 #define RESOURCESYSTEM_DLL XorStr(L"resourcesystem.dll")
 
+//计数器宏用于内存占位
+#define CONCAT_IMPL(x, y) x##y
+#define CONCAT(x, y) CONCAT_IMPL(x, y)
+#define UNIQUE_NAME1(prefix) CONCAT(prefix, __COUNTER__)
+
+#define MEM_PAD(SIZE) \
+private: \
+    char UNIQUE_NAME1(pad_)[SIZE]; \
+public:
+
+
+
 //它使用上面的一些东西，在define之后编译
 #include "sd/localization/localization.h"
 

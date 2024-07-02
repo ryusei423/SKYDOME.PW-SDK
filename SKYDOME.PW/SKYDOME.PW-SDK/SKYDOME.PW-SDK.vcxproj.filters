@@ -34,6 +34,12 @@
     <Filter Include="sd\localization">
       <UniqueIdentifier>{8407c7c9-8075-48f7-b8bc-2075209ad2e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdk">
+      <UniqueIdentifier>{c2376665-990c-4f67-8238-7b8c1c142038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sd\interfaces">
+      <UniqueIdentifier>{ec312ad2-9993-4a3f-b1df-0716094af43f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -109,6 +115,18 @@
     </ClInclude>
     <ClInclude Include="sd\localization\localization.h">
       <Filter>sd\localization</Filter>
+    </ClInclude>
+    <ClInclude Include="OffsetManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\interfaces\interfaces.h">
+      <Filter>sd\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\iswapchaindx11.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="valvesdk.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -40,6 +40,8 @@ public:
 	__forceinline void seteng() {
 		SET_TEXT("console_skydome", "SKYDOME.PW CONSOLE");
 		SET_TEXT("console_skydome_debug", "SKYDOME.PW CONSOLE - DEBUG");
+		SET_TEXT("console_log", "%datetime{%H:%m:%s} -> %level -> %msg");
+
 
 		SET_TEXT("mem_module_base_not_found", "module base not found:");
 		SET_TEXT("mem_pattern_not_found", "pattern not found:");
@@ -49,6 +51,7 @@ public:
 	__forceinline void setcn() {
 		SET_TEXT("console_skydome", "SKYDOME.PW 控制台");
 		SET_TEXT("console_skydome_debug", "SKYDOME.PW CONSOLE - 调试");
+		SET_TEXT("console_log", "%datetime{%H:%m:%s} -> %level -> %msg");
 
 		SET_TEXT("mem_module_base_not_found",U8ST("模块搜索失败:"));
 		SET_TEXT("mem_pattern_not_found", U8ST("特征码搜素失败:"));

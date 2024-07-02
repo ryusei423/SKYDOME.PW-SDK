@@ -13,10 +13,10 @@
 #pragma warning(pop)
 #define MEM_STACKFREE(MEMORY) static_cast<void>(0)
 
-#define MEM_PAD(SIZE)										\
-private:												\
-	char CS_CONCATENATE(pad_0, __COUNTER__)[SIZE]; \
-public:
+//#define MEM_PAD(SIZE)										\
+//private:												\
+//	char CS_CONCATENATE(pad_0, __COUNTER__)[SIZE]; \
+//public:
 #pragma endregion
 
 class CUtlBuffer;
@@ -103,6 +103,15 @@ namespace MEM
 		using VirtualFn_t = T(__thiscall*)(const void*, decltype(argList)...);
 		return (*reinterpret_cast<VirtualFn_t* const*>(reinterpret_cast<std::uintptr_t>(thisptr)))[nIndex](thisptr, argList...);
 	}
+
+	//用于调用任意函数
+	/*template <typename T, class CBaseClass, typename... Args_t>
+	static __forceinline T CallFunc(CBaseClass* thisptr,void* funcptr, Args_t... argList)
+	{
+		using VirtualFn_t = T(__thiscall*)(const void*, decltype(argList)...);
+		return (*reinterpret_cast<VirtualFn_t* const*>(funcptr)(thisptr, argList...);
+	}*/
+
 	/* @section: search */
 	/// ida style pattern byte comparison in a specific mo	dule
 	/// @param[in] wszModuleName module name where to search for pattern

@@ -149,6 +149,9 @@
     <ClInclude Include="external\StackWalker\StackWalker.h" />
     <ClInclude Include="external\xor.hpp" />
     <ClInclude Include="gobal.h" />
+    <ClInclude Include="OffsetManager.h" />
+    <ClInclude Include="sdk\iswapchaindx11.h" />
+    <ClInclude Include="sd\interfaces\interfaces.h" />
     <ClInclude Include="sd\localization\localization.h" />
     <ClInclude Include="sd\utilities\crt.h" />
     <ClInclude Include="sd\utilities\fnv1a.h" />
@@ -156,6 +159,7 @@
     <ClInclude Include="sd\utilities\memory.h" />
     <ClInclude Include="sd\utilities\pe64.h" />
     <ClInclude Include="sd\utilities\pointer.hpp" />
+    <ClInclude Include="valvesdk.h" />
     <ClInclude Include="VectoredHandler.cpp" />
     <ClInclude Include="VectoredHandler.h" />
   </ItemGroup>

@@ -176,19 +176,19 @@ void CreateConsole() {
 	SetConsoleTitleA(g_CheatLocalization->get(XorStr("console_skydome_debug")).c_str());
 #endif // DEBUG
 	
-	freopen_s(&g_CheatData->m_ConsoleStream, "CONOUT$", "w", stdout);
+	freopen_s(&g_CheatData->m_ConsoleStream, XorStr("CONOUT$"), XorStr("w"), stdout);
 
 	el::Configurations defaultConf;
 	defaultConf.setToDefault();
 	// Values are always std::string
 	//defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[SKYDOME.PW] %datetime %level %msg");
-	defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[ SKYDOME.PW ] %datetime{%H:%m:%s} -> %level -> %msg");
+	defaultConf.set(el::Level::Global, el::ConfigurationType::Format, g_CheatLocalization->get(XorStr("console_log")));
 
 
-	defaultConf.parseFromText("*GLOBAL:\n TO_FILE = FALSE\n FILENAME = "" \n");
+	defaultConf.parseFromText(XorStr("*GLOBAL:\n TO_FILE = FALSE\n FILENAME = "" \n"));
 	el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
 
-	el::Loggers::reconfigureLogger("default", defaultConf);
+	el::Loggers::reconfigureLogger(XorStr("default"), defaultConf);
 	// Actually reconfigure all loggers instead
 	el::Loggers::reconfigureAllLoggers(defaultConf);
 
@@ -205,9 +205,27 @@ void CreateConsole() {
 uintptr_t __stdcall init_main(const HMODULE h_module) {
 
 	g_CheatLocalization->setcn();
-	g_CheatLocalization->seteng();
+
 	CreateConsole();
 	MEM::Setup();
+
+	//https://www.unknowncheats.me/forum/4089361-post4621.html
+	auto Address = MEM::FindPattern(RENDERSYSTEM_DLL, XorStr("66 0F 7F 05 ?? ?? ?? ?? 48 89 2D ?? ?? ?? ?? 66 0F 7F 0D"));
+	if (!Address)
+	{
+		SD_ASSERT(false && "Swapchain signature not found!");
+		return false;
+	}
+	LOG(INFO) << "SwapChainDX11 SCAN -> " << Address;
+	do
+	{
+		Address++;
+	} while (*(uint16_t*)Address != 0x0F66);
+	LOG(INFO) << "SwapChainDX11 WHILE -> " << Address;
+	const void* SwapChainDX11 = **reinterpret_cast<void***>(MEM::ResolveRelativeAddress(Address, 0x4, 0x8));
+	
+	LOG(INFO) << "SwapChainDX11 -> " << SwapChainDX11;
+	
 	return 0;
 }
 
