@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\97802\Documents\GitHub\SKYDOME.PW-SDK\SKYDOME.PW\SKYDOME.PW-SDK\external\imgui\freetype;C:\Users\97802\Documents\GitHub\SKYDOME.PW-SDK\SKYDOME.PW\SKYDOME.PW-SDK\external\safetyhook;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\97802\Documents\GitHub\SKYDOME.PW-SDK\SKYDOME.PW\SKYDOME.PW-SDK\external\imgui\freetype;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,6 +138,7 @@
     <ClCompile Include="external\imgui\imgui.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
     <ClCompile Include="external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\imgui\imgui_freetype.cpp" />
     <ClCompile Include="external\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="external\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
@@ -153,6 +155,7 @@
     <ClInclude Include="external\easylogging\easylogging++.h" />
     <ClInclude Include="external\imgui\imconfig.h" />
     <ClInclude Include="external\imgui\imgui.h" />
+    <ClInclude Include="external\imgui\imgui_freetype.h" />
     <ClInclude Include="external\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="external\imgui\imgui_impl_win32.h" />
     <ClInclude Include="external\imgui\imgui_internal.h" />

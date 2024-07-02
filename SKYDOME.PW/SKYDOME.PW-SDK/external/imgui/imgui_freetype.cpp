@@ -34,6 +34,9 @@
 
 // FIXME: cfg.OversampleH, OversampleV are not supported (but perhaps not so necessary with this rasterizer).
 
+//ÃÌº”¡Àfreetype
+#pragma comment(lib, "freetype.lib")
+
 #include "imgui.h"
 #ifndef IMGUI_DISABLE
 #include "imgui_freetype.h"
