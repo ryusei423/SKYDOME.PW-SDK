@@ -5,6 +5,9 @@
 class OffsetManager
 {
 public:
+	bool scan();
+
+
 	enum
 	{
 
@@ -29,3 +32,5 @@ public:
 	void* offsets[OFFSET_MAX];
 
 };
+
+inline OffsetManager* g_OffsetManager = new OffsetManager;

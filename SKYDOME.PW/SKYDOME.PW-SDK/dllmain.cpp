@@ -201,30 +201,28 @@ void CreateConsole() {
 	LOG(INFO) << "test msg";*/
 }
 
+
+
+
+
 #include "sd/utilities/memory.h"
+#include "OffsetManager.h"
 uintptr_t __stdcall init_main(const HMODULE h_module) {
 
 	g_CheatLocalization->setcn();
-
+	//g_CheatLocalization->seteng();
 	CreateConsole();
-	MEM::Setup();
+	//欢迎信息
+	LOG(INFO) << g_CheatLocalization->get(XorStr("console_start"));
+	LOG(INFO) << g_CheatLocalization->get(XorStr("console_start1"));
 
-	//https://www.unknowncheats.me/forum/4089361-post4621.html
-	auto Address = MEM::FindPattern(RENDERSYSTEM_DLL, XorStr("66 0F 7F 05 ?? ?? ?? ?? 48 89 2D ?? ?? ?? ?? 66 0F 7F 0D"));
-	if (!Address)
-	{
-		SD_ASSERT(false && "Swapchain signature not found!");
-		return false;
-	}
-	LOG(INFO) << "SwapChainDX11 SCAN -> " << Address;
-	do
-	{
-		Address++;
-	} while (*(uint16_t*)Address != 0x0F66);
-	LOG(INFO) << "SwapChainDX11 WHILE -> " << Address;
-	const void* SwapChainDX11 = **reinterpret_cast<void***>(MEM::ResolveRelativeAddress(Address, 0x4, 0x8));
+	//不需要
+	//MEM::Setup();
+
+	g_OffsetManager->scan();
+
 	
-	LOG(INFO) << "SwapChainDX11 -> " << SwapChainDX11;
+	
 	
 	return 0;
 }

@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\97802\Documents\GitHub\SKYDOME.PW-SDK\SKYDOME.PW\SKYDOME.PW-SDK\external\safetyhook;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\97802\Documents\GitHub\SKYDOME.PW-SDK\SKYDOME.PW\SKYDOME.PW-SDK\external\imgui\freetype;C:\Users\97802\Documents\GitHub\SKYDOME.PW-SDK\SKYDOME.PW\SKYDOME.PW-SDK\external\safetyhook;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,15 +134,31 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="external\easylogging\easylogging++.cc" />
+    <ClCompile Include="external\imgui\imgui.cpp" />
+    <ClCompile Include="external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="external\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="external\imgui\imgui_tables.cpp" />
+    <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\safetyhook\safetyhook.cpp" />
     <ClCompile Include="external\safetyhook\Zydis.c" />
     <ClCompile Include="external\StackWalker\StackWalker.cpp" />
+    <ClCompile Include="OffsetManager.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
     <ClCompile Include="sd\utilities\memory.cpp" />
     <ClCompile Include="sd\utilities\pointer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\easylogging\easylogging++.h" />
+    <ClInclude Include="external\imgui\imconfig.h" />
+    <ClInclude Include="external\imgui\imgui.h" />
+    <ClInclude Include="external\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="external\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="external\imgui\imgui_internal.h" />
+    <ClInclude Include="external\imgui\imstb_rectpack.h" />
+    <ClInclude Include="external\imgui\imstb_textedit.h" />
+    <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\safetyhook\safetyhook.hpp" />
     <ClInclude Include="external\safetyhook\Zydis.h" />
     <ClInclude Include="external\SD.h" />

@@ -61,6 +61,20 @@ public:
 		return astr;
 	}
 
+	std::string printf(std::string text, ...) {
+		va_list args;
+		va_start(args, text);
+		int nParameterLen = _vscprintf(text.c_str(), args) + 1;
+		char* buffer = new char[nParameterLen];
+		vsnprintf(buffer, nParameterLen, text.c_str(), args);
+		va_end(args);
+
+		std::string result(buffer);
+		delete[] buffer;
+
+		return result;
+	}
+
 
 };
 

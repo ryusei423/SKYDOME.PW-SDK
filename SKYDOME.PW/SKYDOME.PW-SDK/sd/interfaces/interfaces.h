@@ -26,7 +26,9 @@ public:
 		return true;
 	}
 
-
+	ISwapChainDx11* SwapChainDx11;
 
 
 };
+
+inline InterfacesManager* g_interfaces = new InterfacesManager;
