@@ -24,7 +24,10 @@ bool OffsetManager::scan()
 	} while (*(uint16_t*)swapchain != 0x0F66);
 
 
-	offsets[OFFSET_SWAPCHAINDX11] = **reinterpret_cast<ISwapChainDx11***>(MEM::ResolveRelativeAddress(swapchain, 0x4, 0x8));
+	offsets[OFFSET_SWAPCHAINDX11] = **reinterpret_cast<void***>(MEM::ResolveRelativeAddress(swapchain, 0x4, 0x8));
+
+
+	
 
 
 
@@ -33,15 +36,12 @@ bool OffsetManager::scan()
 
 
 
-
-
-
-
-
+	int nullptr_cout = 0;
 
 	for (int i = 0; i < OFFSET_MAX; i++) {
 		if (!offsets[i]) {
 			LOG(ERROR) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("offset_manager_scan_check")), i, offsets[i]);
+			nullptr_cout++;
 			rt = false;
 		}
 		else{
@@ -60,7 +60,12 @@ bool OffsetManager::scan()
 	}
 	else {
 
-
+		// 获取结束时间
+		auto end = std::chrono::system_clock::now();
+		// 计算时间差，单位为秒
+		std::chrono::duration<double> elapsed = end - start;
+		// 输出结果
+		LOG(ERROR) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("offset_manager_scan_fail")), OFFSET_MAX, nullptr_cout);
 
 	}
 

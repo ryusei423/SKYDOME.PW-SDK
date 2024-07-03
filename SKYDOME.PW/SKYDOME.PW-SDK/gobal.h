@@ -46,7 +46,7 @@ public:
 
 //它使用上面的一些东西，在define之后编译
 #include "sd/localization/localization.h"
-#include "sd/interfaces/interfaces.h"
+//#include "sd/interfaces/interfaces.h"
 
 class CheatData {
 public:

@@ -7,7 +7,7 @@ class OffsetManager
 public:
 	bool scan();
 
-
+	//我们先把用特征码搜索的接口放在这里，然后在初始化接口时从这里读取
 	enum
 	{
 

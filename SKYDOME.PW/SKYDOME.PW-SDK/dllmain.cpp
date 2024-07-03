@@ -207,6 +207,8 @@ void CreateConsole() {
 
 #include "sd/utilities/memory.h"
 #include "OffsetManager.h"
+#include "sd/interfaces/interfaces.h"
+#include "sd/hooks/hooks.h"
 uintptr_t __stdcall init_main(const HMODULE h_module) {
 
 	g_CheatLocalization->setcn();
@@ -218,11 +220,13 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 
 	//不需要
 	//MEM::Setup();
-
-	g_OffsetManager->scan();
-
-	
-	
+	bool rt = true;
+	rt = g_OffsetManager->scan();
+	SD_ASSERT(rt);
+	rt = g_interfaces->init();
+	SD_ASSERT(rt);
+	rt = g_hooks::init();
+	SD_ASSERT(rt);
 	
 	return 0;
 }

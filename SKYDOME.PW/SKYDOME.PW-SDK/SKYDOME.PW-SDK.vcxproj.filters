@@ -43,6 +43,9 @@
     <Filter Include="external\imgui">
       <UniqueIdentifier>{ef4156df-e996-41f9-927d-24436b899e2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\hooks">
+      <UniqueIdentifier>{11a04ab5-9862-463c-aae5-9adec91f99f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -95,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="external\imgui\imgui_freetype.cpp">
       <Filter>external\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\hooks\hooks.cpp">
+      <Filter>sd\hooks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="external\imgui\imgui_freetype.h">
       <Filter>external\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\hooks\hooks.h">
+      <Filter>sd\hooks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

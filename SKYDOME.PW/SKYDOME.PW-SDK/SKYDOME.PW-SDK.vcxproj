@@ -147,6 +147,7 @@
     <ClCompile Include="external\safetyhook\Zydis.c" />
     <ClCompile Include="external\StackWalker\StackWalker.cpp" />
     <ClCompile Include="OffsetManager.cpp" />
+    <ClCompile Include="sd\hooks\hooks.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
     <ClCompile Include="sd\utilities\memory.cpp" />
     <ClCompile Include="sd\utilities\pointer.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="gobal.h" />
     <ClInclude Include="OffsetManager.h" />
     <ClInclude Include="sdk\iswapchaindx11.h" />
+    <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
     <ClInclude Include="sd\localization\localization.h" />
     <ClInclude Include="sd\utilities\crt.h" />
