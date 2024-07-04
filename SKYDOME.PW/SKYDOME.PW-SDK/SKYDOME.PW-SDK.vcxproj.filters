@@ -46,6 +46,9 @@
     <Filter Include="sd\hooks">
       <UniqueIdentifier>{11a04ab5-9862-463c-aae5-9adec91f99f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\menu">
+      <UniqueIdentifier>{861c5751-5eda-4852-b479-de9435bfdc2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -101,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="sd\hooks\hooks.cpp">
       <Filter>sd\hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\menu.cpp">
+      <Filter>sd\menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="sd\hooks\hooks.h">
       <Filter>sd\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\menu.h">
+      <Filter>sd\menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

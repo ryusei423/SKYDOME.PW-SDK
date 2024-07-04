@@ -148,6 +148,7 @@
     <ClCompile Include="external\StackWalker\StackWalker.cpp" />
     <ClCompile Include="OffsetManager.cpp" />
     <ClCompile Include="sd\hooks\hooks.cpp" />
+    <ClCompile Include="sd\menu\menu.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
     <ClCompile Include="sd\utilities\memory.cpp" />
     <ClCompile Include="sd\utilities\pointer.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
     <ClInclude Include="sd\localization\localization.h" />
+    <ClInclude Include="sd\menu\menu.h" />
     <ClInclude Include="sd\utilities\crt.h" />
     <ClInclude Include="sd\utilities\fnv1a.h" />
     <ClInclude Include="sd\utilities\math.h" />

@@ -64,6 +64,8 @@ public:
 		SET_TEXT("mem_pattern_not_found", "特征码搜素失败:");
 		SET_TEXT("mem_export_not_found", "导出表搜索失败:");
 
+		SET_TEXT("hook_log", "已经挂钩%s");
+
 		SET_TEXT("interfaces_swapchain_not_found", "交换链特征搜索失败！");
 		SET_TEXT("interfaces_init_log", "%s -> %p");
 		SET_TEXT("interfaces_init_success", "对接口的分段检查已经完成，一切顺利，舰长。");

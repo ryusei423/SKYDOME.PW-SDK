@@ -1,6 +1,5 @@
 #pragma once
 #include <corecrt_malloc.h>
-#include <winnt.h>
 
 #include "../../valvesdk.h"
 #include "../../OffsetManager.h"
@@ -63,6 +62,7 @@ public:
 	ISwapChainDx11* SwapChainDx11;
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* DeviceContext = nullptr;
+	ID3D11RenderTargetView* RenderTargetView = nullptr;
 
 
 };
