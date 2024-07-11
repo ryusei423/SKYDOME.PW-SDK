@@ -3,87 +3,101 @@
 #include "../../external/safetyhook/safetyhook.hpp"
 #include "../utilities/memory.h"
 #include "../interfaces/interfaces.h"
+#include "../menu/menu.h"
 
+#include "../../external/imgui/imgui.h"
+#include "../../external/imgui/imgui_impl_win32.h"
+#include "../../external/imgui/imgui_impl_dx11.h"
 namespace g_hooks {
 
 	namespace DX11 {
 		safetyhook::InlineHook hook_present;
 		safetyhook::InlineHook hook_resizebuffers;
 		safetyhook::InlineHook hook_createswapchain;
-
+		static WNDPROC o_WndProc;
+		static std::once_flag g_InputInit;
 	}
 }
 
-void CreateRenderTarget()
-{
-	if (FAILED(g_interfaces->SwapChainDx11->pDXGISwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&g_interfaces->Device)))
-	{
-		//L_PRINT(LOG_ERROR) << CS_XOR("failed to get device from swapchain");
-		//CS_ASSERT(false);
-	}
-	else
-		// we successfully got device, so we can get immediate context
-		g_interfaces->Device->GetImmediateContext(&g_interfaces->DeviceContext);
 
-	// @note: i dont use this anywhere else so lambda is fine
-	static const auto GetCorrectDXGIFormat = [](DXGI_FORMAT eCurrentFormat)
-		{
-			switch (eCurrentFormat)
-			{
-			case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
-				return DXGI_FORMAT_R8G8B8A8_UNORM;
-			}
+static LRESULT g_hooks::DX11::hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	std::call_once(g_hooks::DX11::g_InputInit, [hWnd]() {
+		/*ImGui::CreateContext();
+		ImGui_ImplWin32_Init(hWnd);
+		ImGui_ImplDX11_Init(g_interfaces->Device, g_interfaces->DeviceContext);
 
-			return eCurrentFormat;
-		};
+		ImGuiIO& io = ImGui::GetIO();
+		io.IniFilename = io.LogFilename = nullptr;*/
 
-	DXGI_SWAP_CHAIN_DESC sd;
-	g_interfaces->SwapChainDx11->pDXGISwapChain->GetDesc(&sd);
+		g_MenuManager->init(hWnd, g_interfaces->Device, g_interfaces->DeviceContext);
 
-	ID3D11Texture2D* pBackBuffer = nullptr;
-	if (SUCCEEDED(g_interfaces->SwapChainDx11->pDXGISwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer))))
-	{
-		if (pBackBuffer)
-		{
-			D3D11_RENDER_TARGET_VIEW_DESC desc{};
-			desc.Format = static_cast<DXGI_FORMAT>(GetCorrectDXGIFormat(sd.BufferDesc.Format));
-			desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-			if (FAILED(g_interfaces->Device->CreateRenderTargetView(pBackBuffer, &desc, &g_interfaces->RenderTargetView)))
-			{
-				//L_PRINT(LOG_WARNING) << CS_XOR("failed to create render target view with D3D11_RTV_DIMENSION_TEXTURE2D...");
-				//L_PRINT(LOG_INFO) << CS_XOR("retrying to create render target view with D3D11_RTV_DIMENSION_TEXTURE2DMS...");
-				desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-				if (FAILED(g_interfaces->Device->CreateRenderTargetView(pBackBuffer, &desc, &g_interfaces->RenderTargetView)))
-				{
-					//L_PRINT(LOG_WARNING) << CS_XOR("failed to create render target view with D3D11_RTV_DIMENSION_TEXTURE2D...");
-					//L_PRINT(LOG_INFO) << CS_XOR("retrying...");
-					if (FAILED(g_interfaces->Device->CreateRenderTargetView(pBackBuffer, NULL, &g_interfaces->RenderTargetView)))
-					{
-						//L_PRINT(LOG_ERROR) << CS_XOR("failed to create render target view");
-						//CS_ASSERT(false);
-					}
-				}
-			}
-			pBackBuffer->Release();
-			pBackBuffer = nullptr;
+		});
+
+	LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+	if (g_MenuManager->show_menu) {
+		// Messages handled by 'ImGui_ImplWin32_WndProcHandler'.
+		switch (uMsg) {
+		case WM_MOUSEMOVE:
+		case WM_NCMOUSEMOVE:
+		case WM_MOUSELEAVE:
+		case WM_NCMOUSELEAVE:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONDBLCLK:
+		case WM_MBUTTONDOWN:
+		case WM_MBUTTONDBLCLK:
+		case WM_XBUTTONDOWN:
+		case WM_XBUTTONDBLCLK:
+		case WM_LBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_XBUTTONUP:
+		case WM_MOUSEWHEEL:
+		case WM_MOUSEHWHEEL:
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYDOWN:
+		case WM_SYSKEYUP:
+		case WM_SETFOCUS:
+		case WM_KILLFOCUS:
+		case WM_CHAR:
+		case WM_SETCURSOR:
+		case WM_DEVICECHANGE:
+			return 1;
 		}
 	}
+
+	return CallWindowProc(g_hooks::DX11::o_WndProc, hWnd, uMsg, wParam, lParam);
 }
+
 
 
 //可能需要缺乏一些必要的检查
-
 HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncInterval, UINT uFlags)
 {
+
+	g_MenuManager->frame();
 
     return hook_present.call<HRESULT>(pSwapChain, uSyncInterval, uFlags);
 }
 
+
+//设备 设备上下文等会在启动时被接口系统初始化
+//如果更改了窗口分辨率CreateSwapChain会先被调用
+//清除，随后在ResizeBuffers里程序初始化
+//绘制函数只需要进行一些检查，免除任何维护
+//可能...需要重新初始化imgui?
 HRESULT __fastcall g_hooks::DX11::ResizeBuffers(IDXGISwapChain* pSwapChain, std::uint32_t nBufferCount, std::uint32_t nWidth, std::uint32_t nHeight, DXGI_FORMAT newFormat, std::uint32_t nFlags)
 {
-	CreateRenderTarget();
+	auto rt = hook_resizebuffers.call<HRESULT>(pSwapChain, nBufferCount, nWidth, nHeight, newFormat, nFlags);
 
-    return hook_resizebuffers.call<HRESULT>(pSwapChain, nBufferCount, nWidth, nHeight, newFormat, nFlags);
+	//重新创建各种东西
+	if(rt == S_OK)
+		g_MenuManager->on_resizebuffers();
+ 
+	return rt;
 }
 
 HRESULT __stdcall g_hooks::DX11::CreateSwapChain(IDXGIFactory* pFactory, IUnknown* pDevice, DXGI_SWAP_CHAIN_DESC* pDesc, IDXGISwapChain** ppSwapChain)
@@ -94,16 +108,6 @@ HRESULT __stdcall g_hooks::DX11::CreateSwapChain(IDXGIFactory* pFactory, IUnknow
 
 	return hook_createswapchain.call<HRESULT>(pFactory, pDevice, pDesc, ppSwapChain);
 }
-
-
-
-
-long g_hooks::DX11::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    return 0;
-}
-
-
 
 
 #define HK(N,S,P,I,F)	S = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(P,I)), reinterpret_cast<void*>(F));		\
@@ -120,9 +124,15 @@ bool g_hooks::init()
 	IDXGIFactory* pIDXGIFactory = NULL;
 	pDXGIAdapter->GetParent(IID_PPV_ARGS(&pIDXGIFactory));
 
+	//挂钩窗口过程
+	auto hwnd = FindWindowW(L"SDL_app", nullptr);
+	auto hwnd1 = FindWindowW(nullptr, L"Counter-Strike 2");
+	g_hooks::DX11::o_WndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hwnd1, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_hooks::DX11::hkWndProc)));
 	HK("Present", DX11::hook_present, g_interfaces->SwapChainDx11->pDXGISwapChain, 8, DX11::Present);
 	HK("ResizeBuffers", DX11::hook_resizebuffers, g_interfaces->SwapChainDx11->pDXGISwapChain, 13, DX11::ResizeBuffers);
 	HK("CreateSwapChain", DX11::hook_createswapchain, pIDXGIFactory, 10, DX11::CreateSwapChain);
+
+
 
 	pDXGIDevice->Release();
 	pDXGIDevice = nullptr;
@@ -135,4 +145,12 @@ bool g_hooks::init()
 	//DX11::hook_resizebuffers = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(g_interfaces->SwapChainDx11->pDXGISwapChain, 13)), reinterpret_cast<void*>(DX11::ResizeBuffers));
 
     return 1;
+}
+
+
+void g_hooks::unhook(){
+	DX11::hook_present.reset();
+	DX11::hook_resizebuffers.reset();
+	DX11::hook_createswapchain.reset();
+
 }

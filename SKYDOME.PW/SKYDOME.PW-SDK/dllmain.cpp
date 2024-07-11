@@ -266,6 +266,8 @@ int __stdcall DllMain(HMODULE dllhandle,
 
 	if (_Reason == DLL_PROCESS_DETACH) {
 	
+		g_hooks::unhook();
+
 		HWND consoleWindow = GetConsoleWindow();
 
 		FreeConsole();
