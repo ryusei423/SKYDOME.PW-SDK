@@ -59,7 +59,8 @@ public:
 		return true;
 	}
 
-	ISwapChainDx11* SwapChainDx11;
+	ISwapChainDx11* SwapChainDx11;	//游戏的交换链
+	IDXGISwapChain* SwapChain;	//我们自己创建的交换链
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* DeviceContext = nullptr;
 	ID3D11RenderTargetView* RenderTargetView = nullptr;

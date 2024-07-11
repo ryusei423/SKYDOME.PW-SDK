@@ -6,6 +6,8 @@ class MenuManager
 {
 public:
 	bool init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	bool create(HWND hWnd);
+
 	void frame();
 	void on_resizebuffers();
 	void on_createswapchain();

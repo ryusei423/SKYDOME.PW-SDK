@@ -19,19 +19,23 @@ namespace g_hooks {
 	}
 }
 
+static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
+	const auto isMainWindow = [handle]() {
+		return GetWindow(handle, GW_OWNER) == nullptr && IsWindowVisible(handle) && handle != GetConsoleWindow();
+		};
+
+	DWORD pID = 0;
+	GetWindowThreadProcessId(handle, &pID);
+
+	if (GetCurrentProcessId() != pID || !isMainWindow()) {
+		return TRUE;
+	}
+
+	*reinterpret_cast<HWND*>(lParam) = handle;
+	return FALSE;
+}
 
 static LRESULT g_hooks::DX11::hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	std::call_once(g_hooks::DX11::g_InputInit, [hWnd]() {
-		/*ImGui::CreateContext();
-		ImGui_ImplWin32_Init(hWnd);
-		ImGui_ImplDX11_Init(g_interfaces->Device, g_interfaces->DeviceContext);
-
-		ImGuiIO& io = ImGui::GetIO();
-		io.IniFilename = io.LogFilename = nullptr;*/
-
-		g_MenuManager->init(hWnd, g_interfaces->Device, g_interfaces->DeviceContext);
-
-		});
 
 	LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
@@ -77,7 +81,7 @@ static LRESULT g_hooks::DX11::hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 //可能需要缺乏一些必要的检查
 HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncInterval, UINT uFlags)
 {
-
+	
 	g_MenuManager->frame();
 
     return hook_present.call<HRESULT>(pSwapChain, uSyncInterval, uFlags);
@@ -115,8 +119,17 @@ HRESULT __stdcall g_hooks::DX11::CreateSwapChain(IDXGIFactory* pFactory, IUnknow
 
 bool g_hooks::init()
 {
+	
+
+	//挂钩窗口过程
+	HWND hwnd = NULL;
+	EnumWindows(::EnumWindowsCallback, reinterpret_cast<LPARAM>(&hwnd));
+	g_MenuManager->create(hwnd);
+	g_hooks::DX11::o_WndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_hooks::DX11::hkWndProc)));
+	g_MenuManager->init(hwnd, g_interfaces->Device, g_interfaces->DeviceContext);
+
 	IDXGIDevice* pDXGIDevice = NULL;
-	g_interfaces-> Device->QueryInterface(IID_PPV_ARGS(&pDXGIDevice));
+	g_interfaces->Device->QueryInterface(IID_PPV_ARGS(&pDXGIDevice));
 
 	IDXGIAdapter* pDXGIAdapter = NULL;
 	pDXGIDevice->GetAdapter(&pDXGIAdapter);
@@ -124,12 +137,8 @@ bool g_hooks::init()
 	IDXGIFactory* pIDXGIFactory = NULL;
 	pDXGIAdapter->GetParent(IID_PPV_ARGS(&pIDXGIFactory));
 
-	//挂钩窗口过程
-	auto hwnd = FindWindowW(L"SDL_app", nullptr);
-	auto hwnd1 = FindWindowW(nullptr, L"Counter-Strike 2");
-	g_hooks::DX11::o_WndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hwnd1, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_hooks::DX11::hkWndProc)));
-	HK("Present", DX11::hook_present, g_interfaces->SwapChainDx11->pDXGISwapChain, 8, DX11::Present);
-	HK("ResizeBuffers", DX11::hook_resizebuffers, g_interfaces->SwapChainDx11->pDXGISwapChain, 13, DX11::ResizeBuffers);
+	HK("Present", DX11::hook_present, /*g_interfaces->SwapChainDx11->pDXGISwapChain*/ g_interfaces->SwapChain, 8, DX11::Present);
+	HK("ResizeBuffers", DX11::hook_resizebuffers, /*g_interfaces->SwapChainDx11->pDXGISwapChain*/g_interfaces->SwapChain, 13, DX11::ResizeBuffers);
 	HK("CreateSwapChain", DX11::hook_createswapchain, pIDXGIFactory, 10, DX11::CreateSwapChain);
 
 

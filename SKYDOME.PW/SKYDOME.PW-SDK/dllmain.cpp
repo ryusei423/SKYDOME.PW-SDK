@@ -221,9 +221,9 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 	//不需要
 	//MEM::Setup();
 	bool rt = true;
-	rt = g_OffsetManager->scan();
+	//rt = g_OffsetManager->scan();
 	SD_ASSERT(rt);
-	rt = g_interfaces->init();
+	//rt = g_interfaces->init();
 	SD_ASSERT(rt);
 	rt = g_hooks::init();
 	SD_ASSERT(rt);
