@@ -6,6 +6,7 @@
 #include "../../external/imgui/imgui_impl_win32.h"
 
 #include "../utilities/memory.h"
+#include "../hooks/hooks.h"
 
 //²»ÔÙÓ²±àÂë½»»»Á´
 //void CreateRenderTarget(IDXGISwapChain* pDXGISwapChain)
@@ -72,7 +73,7 @@ static auto GetCorrectDXGIFormat(DXGI_FORMAT currentFormat) {
 	return currentFormat;
 }
 
-static void CreateRenderTarget(IDXGISwapChain* pSwapChain) {
+static void CreateRenderTarget1(IDXGISwapChain* pSwapChain) {
 	//SDK_LOG_PROLOGUE();
 
 	ID3D11Texture2D* pBackBuffer = NULL;
@@ -98,11 +99,11 @@ static void CreateRenderTarget(IDXGISwapChain* pSwapChain) {
 	}
 }
 
-void GetDevice(IDXGISwapChain* pSwapChain) {
-	pSwapChain->GetDevice(IID_PPV_ARGS(&g_interfaces->Device));
-	g_interfaces->Device->GetImmediateContext(&g_interfaces->DeviceContext);
-
-}
+//void GetDevice(IDXGISwapChain* pSwapChain) {
+//	pSwapChain->GetDevice(IID_PPV_ARGS(&g_interfaces->Device));
+//	g_interfaces->Device->GetImmediateContext(&g_interfaces->DeviceContext);
+//
+//}
 
 
 static bool CreateDevice(HWND hWnd) {
@@ -128,15 +129,6 @@ static bool CreateDevice(HWND hWnd) {
 
 bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext){
 
-	ImGui::CreateContext();
-
-	// setup platform and renderer bindings
-	if (!ImGui_ImplWin32_Init(hWnd))
-		return false;
-
-	if (!ImGui_ImplDX11_Init(pDevice, pContext))
-		return false;
-
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = io.LogFilename = nullptr;
 
@@ -149,72 +141,23 @@ bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pC
 bool MenuManager::create(HWND hWnd)
 {
 	bool rt = CreateDevice(hWnd);
-	CreateRenderTarget(g_interfaces->SwapChain);
-	GetDevice(g_interfaces->SwapChain);
+	//CreateRenderTarget(g_interfaces->SwapChain);
+	//GetDevice(g_interfaces->SwapChain);
 	return rt;
 }
 
-void MenuManager::frame()
+void MenuManager::CreateRenderTarget(IDXGISwapChain* pSwapChain)
 {
-	if (!ImGui::GetCurrentContext()) return;
-
-	if (!ImGui::GetIO().BackendRendererUserData) {
-		//if (SUCCEEDED(g_interfaces->SwapChainDx11->pDXGISwapChain->GetDevice(IID_PPV_ARGS(&g_interfaces->Device)))) {
-		//	g_interfaces->Device->GetImmediateContext(&g_interfaces->DeviceContext);
-		//	ImGui_ImplDX11_Init(g_interfaces->Device, g_interfaces->DeviceContext);
-
-		//	//CRenderer::Get().Initialize();
-		//}
-		//else {
-		//	//return CLogger::Log("[dx11] GetDevice() failed!");
-		//	return;
-		//}
-
-		return;
-	}
-
-	//if (!g_interfaces->RenderTargetView) {
-	//	//CreateRenderTarget(pSwapChain);
-	//	CreateRenderTarget();
-	//}
-	//else {
-	//	ImGui_ImplDX11_NewFrame();
-	//	ImGui_ImplWin32_NewFrame();
-	//	ImGui::NewFrame();
-
-	//	//CRenderer::Get().NewFrame();
-
-	//	ImGui::Render();
-	//	g_interfaces->DeviceContext->OMSetRenderTargets(1, &g_interfaces->RenderTargetView, NULL);
-	//	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	//}
-
-
-
-
-
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::SetNextWindowPos(ImVec2(300,300));
-
-	ImGui::Begin("SKYDOME");
-	ImGui::Text("hello world");
-
-	ImGui::End();
-
-	ImGui::Render();
-	g_interfaces->DeviceContext->OMSetRenderTargets(1, &g_interfaces->RenderTargetView, NULL);
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	return CreateRenderTarget1(pSwapChain);
 }
 
-void MenuManager::on_resizebuffers(){
-	CreateRenderTarget(g_interfaces->SwapChain);
-
-}
-
-void MenuManager::on_createswapchain(){
+void MenuManager::frame(IDXGISwapChain* pSwapChain)
+{
+	
 
 
+
+
+
+	
 }

@@ -61,55 +61,55 @@ bool MEM::Setup()
  * overload global new/delete operators with our allocators
  * - @note: ensure that all sdk classes that can be instantiated have an overloaded constructor and/or game allocator, otherwise marked as non-constructible
  */
-void* __cdecl operator new(const std::size_t nSize)
-{
-	return MEM::HeapAlloc(nSize);
-}
-
-void* __cdecl operator new[](const std::size_t nSize)
-{
-	return MEM::HeapAlloc(nSize);
-}
-
-void __cdecl operator delete(void* pMemory) noexcept
-{
-	MEM::HeapFree(pMemory);
-}
-
-void __cdecl operator delete[](void* pMemory) noexcept
-{
-	MEM::HeapFree(pMemory);
-}
-
-void* MEM::HeapAlloc(const std::size_t nSize)
-{
-	const HANDLE hHeap = ::GetProcessHeap();
-	return ::HeapAlloc(hHeap, 0UL, nSize);
-}
-
-void MEM::HeapFree(void* pMemory)
-{
-	if (pMemory != nullptr)
-	{
-		const HANDLE hHeap = ::GetProcessHeap();
-		::HeapFree(hHeap, 0UL, pMemory);
-	}
-}
-
-void* MEM::HeapRealloc(void* pMemory, const std::size_t nNewSize)
-{
-	if (pMemory == nullptr)
-		return HeapAlloc(nNewSize);
-
-	if (nNewSize == 0UL)
-	{
-		HeapFree(pMemory);
-		return nullptr;
-	}
-
-	const HANDLE hHeap = ::GetProcessHeap();
-	return ::HeapReAlloc(hHeap, 0UL, pMemory, nNewSize);
-}
+//void* __cdecl operator new(const std::size_t nSize)
+//{
+//	return MEM::HeapAlloc(nSize);
+//}
+//
+//void* __cdecl operator new[](const std::size_t nSize)
+//{
+//	return MEM::HeapAlloc(nSize);
+//}
+//
+//void __cdecl operator delete(void* pMemory) noexcept
+//{
+//	MEM::HeapFree(pMemory);
+//}
+//
+//void __cdecl operator delete[](void* pMemory) noexcept
+//{
+//	MEM::HeapFree(pMemory);
+//}
+//
+//void* MEM::HeapAlloc(const std::size_t nSize)
+//{
+//	const HANDLE hHeap = ::GetProcessHeap();
+//	return ::HeapAlloc(hHeap, 0UL, nSize);
+//}
+//
+//void MEM::HeapFree(void* pMemory)
+//{
+//	if (pMemory != nullptr)
+//	{
+//		const HANDLE hHeap = ::GetProcessHeap();
+//		::HeapFree(hHeap, 0UL, pMemory);
+//	}
+//}
+//
+//void* MEM::HeapRealloc(void* pMemory, const std::size_t nNewSize)
+//{
+//	if (pMemory == nullptr)
+//		return HeapAlloc(nNewSize);
+//
+//	if (nNewSize == 0UL)
+//	{
+//		HeapFree(pMemory);
+//		return nullptr;
+//	}
+//
+//	const HANDLE hHeap = ::GetProcessHeap();
+//	return ::HeapReAlloc(hHeap, 0UL, pMemory, nNewSize);
+//}
 
 #pragma endregion
 

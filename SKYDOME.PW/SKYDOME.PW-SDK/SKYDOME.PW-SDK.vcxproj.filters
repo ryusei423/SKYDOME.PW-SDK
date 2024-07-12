@@ -49,6 +49,12 @@
     <Filter Include="sd\menu">
       <UniqueIdentifier>{861c5751-5eda-4852-b479-de9435bfdc2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="external\MinHook">
+      <UniqueIdentifier>{3a5a774b-efd3-460f-b695-31905b27b2bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\MinHook\hde">
+      <UniqueIdentifier>{152c9ae1-2439-4745-9a59-4dd2d797c742}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -99,14 +105,29 @@
     <ClCompile Include="external\imgui\imgui_widgets.cpp">
       <Filter>external\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui\imgui_freetype.cpp">
-      <Filter>external\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="sd\hooks\hooks.cpp">
       <Filter>sd\hooks</Filter>
     </ClCompile>
     <ClCompile Include="sd\menu\menu.cpp">
       <Filter>sd\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="external\MinHook\buffer.c">
+      <Filter>external\MinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="external\MinHook\hook.c">
+      <Filter>external\MinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="external\MinHook\trampoline.c">
+      <Filter>external\MinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="external\MinHook\hde\hde32.c">
+      <Filter>external\MinHook\hde</Filter>
+    </ClCompile>
+    <ClCompile Include="external\MinHook\hde\hde64.c">
+      <Filter>external\MinHook\hde</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_freetype.cpp">
+      <Filter>external\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,14 +215,38 @@
     <ClInclude Include="external\imgui\imstb_truetype.h">
       <Filter>external\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="external\imgui\imgui_freetype.h">
-      <Filter>external\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="sd\hooks\hooks.h">
       <Filter>sd\hooks</Filter>
     </ClInclude>
     <ClInclude Include="sd\menu\menu.h">
       <Filter>sd\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\buffer.h">
+      <Filter>external\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\min_hook.h">
+      <Filter>external\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\trampoline.h">
+      <Filter>external\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\hde\hde32.h">
+      <Filter>external\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\hde\hde64.h">
+      <Filter>external\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\hde\pstdint.h">
+      <Filter>external\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\hde\table32.h">
+      <Filter>external\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="external\MinHook\hde\table64.h">
+      <Filter>external\MinHook\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imgui_freetype.h">
+      <Filter>external\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

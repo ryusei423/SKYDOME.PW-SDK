@@ -8,6 +8,7 @@
 #include "../../external/imgui/imgui.h"
 #include "../../external/imgui/imgui_impl_win32.h"
 #include "../../external/imgui/imgui_impl_dx11.h"
+
 namespace g_hooks {
 
 	namespace DX11 {
@@ -15,7 +16,7 @@ namespace g_hooks {
 		safetyhook::InlineHook hook_resizebuffers;
 		safetyhook::InlineHook hook_createswapchain;
 		static WNDPROC o_WndProc;
-		static std::once_flag g_InputInit;
+
 	}
 }
 
@@ -35,43 +36,12 @@ static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
 	return FALSE;
 }
 
-static LRESULT g_hooks::DX11::hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
 
 	LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
-	if (g_MenuManager->show_menu) {
-		// Messages handled by 'ImGui_ImplWin32_WndProcHandler'.
-		switch (uMsg) {
-		case WM_MOUSEMOVE:
-		case WM_NCMOUSEMOVE:
-		case WM_MOUSELEAVE:
-		case WM_NCMOUSELEAVE:
-		case WM_LBUTTONDOWN:
-		case WM_LBUTTONDBLCLK:
-		case WM_RBUTTONDOWN:
-		case WM_RBUTTONDBLCLK:
-		case WM_MBUTTONDOWN:
-		case WM_MBUTTONDBLCLK:
-		case WM_XBUTTONDOWN:
-		case WM_XBUTTONDBLCLK:
-		case WM_LBUTTONUP:
-		case WM_RBUTTONUP:
-		case WM_MBUTTONUP:
-		case WM_XBUTTONUP:
-		case WM_MOUSEWHEEL:
-		case WM_MOUSEHWHEEL:
-		case WM_KEYDOWN:
-		case WM_KEYUP:
-		case WM_SYSKEYDOWN:
-		case WM_SYSKEYUP:
-		case WM_SETFOCUS:
-		case WM_KILLFOCUS:
-		case WM_CHAR:
-		case WM_SETCURSOR:
-		case WM_DEVICECHANGE:
-			return 1;
-		}
-	}
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
 
 	return CallWindowProc(g_hooks::DX11::o_WndProc, hWnd, uMsg, wParam, lParam);
 }
@@ -81,27 +51,69 @@ static LRESULT g_hooks::DX11::hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 //可能需要缺乏一些必要的检查
 HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncInterval, UINT uFlags)
 {
-	
-	g_MenuManager->frame();
+
+	if (!ImGui::GetCurrentContext()) {
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		return hook_present.call<HRESULT>(pSwapChain, uSyncInterval, uFlags);
+	};
+
+	if (!ImGui::GetIO().BackendRendererUserData) {
+		if (SUCCEEDED(pSwapChain->GetDevice(IID_PPV_ARGS(&g_interfaces->Device)))) {
+			g_interfaces->Device->GetImmediateContext(&g_interfaces->DeviceContext);
+
+
+			g_hooks::DX11::o_WndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(g_hooks::DX11::hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hkWndProc)));
+			ImGui_ImplWin32_Init(g_hooks::DX11::hwnd);
+			ImGui_ImplDX11_Init(g_interfaces->Device, g_interfaces->DeviceContext);
+
+			//CRenderer::Get().Initialize();
+		}
+		else {
+			return hook_present.call<HRESULT>(pSwapChain, uSyncInterval, uFlags);
+		}
+	}
+
+	if (!g_interfaces->RenderTargetView) {
+		g_MenuManager->CreateRenderTarget(pSwapChain);
+		//CreateRenderTarget();
+	}
+	else {
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("SKYDOME");
+		ImGui::Text("hello world");
+
+		ImGui::End();
+
+		auto m_BackgroundDrawList = ImGui::GetBackgroundDrawList();
+
+		char framerate[128];
+		snprintf(framerate, IM_ARRAYSIZE(framerate), "Welcome [%d]\nFPS: %d", 1337,
+			static_cast<int>(ImGui::GetIO().Framerate));
+
+		m_BackgroundDrawList->AddText({ 17, 9 }, IM_COL32(0, 0, 0, 255), framerate);
+		m_BackgroundDrawList->AddText({ 16, 8 }, IM_COL32(27, 227, 200, 255), framerate);
+
+
+		ImGui::Render();
+		g_interfaces->DeviceContext->OMSetRenderTargets(1, &g_interfaces->RenderTargetView, NULL);
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
 
     return hook_present.call<HRESULT>(pSwapChain, uSyncInterval, uFlags);
 }
 
 
-//设备 设备上下文等会在启动时被接口系统初始化
-//如果更改了窗口分辨率CreateSwapChain会先被调用
-//清除，随后在ResizeBuffers里程序初始化
-//绘制函数只需要进行一些检查，免除任何维护
-//可能...需要重新初始化imgui?
 HRESULT __fastcall g_hooks::DX11::ResizeBuffers(IDXGISwapChain* pSwapChain, std::uint32_t nBufferCount, std::uint32_t nWidth, std::uint32_t nHeight, DXGI_FORMAT newFormat, std::uint32_t nFlags)
 {
-	auto rt = hook_resizebuffers.call<HRESULT>(pSwapChain, nBufferCount, nWidth, nHeight, newFormat, nFlags);
-
-	//重新创建各种东西
-	if(rt == S_OK)
-		g_MenuManager->on_resizebuffers();
+	if (g_interfaces->RenderTargetView != nullptr)
+		g_interfaces->RenderTargetView->Release();
+	g_interfaces->RenderTargetView = nullptr;
  
-	return rt;
+	return hook_resizebuffers.call<HRESULT>(pSwapChain, nBufferCount, nWidth, nHeight, newFormat, nFlags);
 }
 
 HRESULT __stdcall g_hooks::DX11::CreateSwapChain(IDXGIFactory* pFactory, IUnknown* pDevice, DXGI_SWAP_CHAIN_DESC* pDesc, IDXGISwapChain** ppSwapChain)
@@ -121,12 +133,11 @@ bool g_hooks::init()
 {
 	
 
-	//挂钩窗口过程
-	HWND hwnd = NULL;
-	EnumWindows(::EnumWindowsCallback, reinterpret_cast<LPARAM>(&hwnd));
-	g_MenuManager->create(hwnd);
-	g_hooks::DX11::o_WndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_hooks::DX11::hkWndProc)));
-	g_MenuManager->init(hwnd, g_interfaces->Device, g_interfaces->DeviceContext);
+	//初始化窗口句柄
+	EnumWindows(::EnumWindowsCallback, reinterpret_cast<LPARAM>(&DX11::hwnd));
+
+	g_MenuManager->create(DX11::hwnd);
+	//g_MenuManager->init(hwnd, g_interfaces->Device, g_interfaces->DeviceContext);
 
 	IDXGIDevice* pDXGIDevice = NULL;
 	g_interfaces->Device->QueryInterface(IID_PPV_ARGS(&pDXGIDevice));
@@ -140,8 +151,6 @@ bool g_hooks::init()
 	HK("Present", DX11::hook_present, /*g_interfaces->SwapChainDx11->pDXGISwapChain*/ g_interfaces->SwapChain, 8, DX11::Present);
 	HK("ResizeBuffers", DX11::hook_resizebuffers, /*g_interfaces->SwapChainDx11->pDXGISwapChain*/g_interfaces->SwapChain, 13, DX11::ResizeBuffers);
 	HK("CreateSwapChain", DX11::hook_createswapchain, pIDXGIFactory, 10, DX11::CreateSwapChain);
-
-
 
 	pDXGIDevice->Release();
 	pDXGIDevice = nullptr;
