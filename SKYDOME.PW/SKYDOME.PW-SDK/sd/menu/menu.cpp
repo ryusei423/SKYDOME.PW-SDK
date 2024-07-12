@@ -131,7 +131,7 @@ bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = io.LogFilename = nullptr;
-
+	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 
 
 
@@ -153,11 +153,52 @@ void MenuManager::CreateRenderTarget(IDXGISwapChain* pSwapChain)
 
 void MenuManager::frame(IDXGISwapChain* pSwapChain)
 {
+	/*if (g_OffsetManager->fnGetRelativeMouseMode()){
+		g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
+		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
+	}*/
 	
 
+	if (toggle_mouse > 0) {
+		toggle_mouse--;
+		g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
+		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
+	}
+	//g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
+	if (show_menu)
+	{
+		//ImGui::GetIO().MouseDrawCursor = true;
+		
+
+		ImGui::Begin("SKYDOME");
+		ImGui::Text("hello world");
+
+		ImGui::End();
+	}
 
 
 
 
 	
+}
+
+void MenuManager::toggle(bool state)
+{
+	if (!ImGui::GetCurrentContext()) {
+		return;
+	}
+
+	show_menu = state;
+	
+
+	if (/*g_interfaces->InputSystem->IsRelativeMouseMode()*/g_OffsetManager->fnGetRelativeMouseMode()) {
+		const ImVec2 screenCenter = ImGui::GetIO().DisplaySize * 0.5f;
+
+		toggle_mouse = 300;
+
+		g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
+		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
+		g_OffsetManager->fnWarpMouseInWindow(nullptr, screenCenter.x, screenCenter.y);
+	}
+
 }

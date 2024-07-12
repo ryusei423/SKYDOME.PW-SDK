@@ -12,6 +12,7 @@ public:
 	void toggle(bool state);
 
 	bool show_menu = false;
+	int toggle_mouse = 0;
 private:
 
 };

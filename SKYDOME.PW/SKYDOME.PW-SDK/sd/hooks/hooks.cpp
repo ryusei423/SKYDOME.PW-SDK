@@ -18,6 +18,12 @@ namespace g_hooks {
 		static WNDPROC o_WndProc;
 
 	}
+
+	namespace MouseInputEnabled {
+		bool __fastcall MouseInputEnabled(void* pThisptr);
+		safetyhook::InlineHook hook_MouseInputEnabled;
+	}
+	
 }
 
 static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
@@ -66,7 +72,7 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 			g_hooks::DX11::o_WndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(g_hooks::DX11::hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hkWndProc)));
 			ImGui_ImplWin32_Init(g_hooks::DX11::hwnd);
 			ImGui_ImplDX11_Init(g_interfaces->Device, g_interfaces->DeviceContext);
-
+			g_MenuManager->init(0,0,0);
 			//CRenderer::Get().Initialize();
 		}
 		else {
@@ -83,19 +89,12 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::Begin("SKYDOME");
-		ImGui::Text("hello world");
 
-		ImGui::End();
+		if (ImGui::IsKeyPressed(ImGuiKey_Insert, false)) {
+			g_MenuManager->toggle(!g_MenuManager->show_menu);
+		}
 
-		auto m_BackgroundDrawList = ImGui::GetBackgroundDrawList();
-
-		char framerate[128];
-		snprintf(framerate, IM_ARRAYSIZE(framerate), "Welcome [%d]\nFPS: %d", 1337,
-			static_cast<int>(ImGui::GetIO().Framerate));
-
-		m_BackgroundDrawList->AddText({ 17, 9 }, IM_COL32(0, 0, 0, 255), framerate);
-		m_BackgroundDrawList->AddText({ 16, 8 }, IM_COL32(27, 227, 200, 255), framerate);
+		g_MenuManager->frame(pSwapChain);
 
 
 		ImGui::Render();
@@ -123,6 +122,11 @@ HRESULT __stdcall g_hooks::DX11::CreateSwapChain(IDXGIFactory* pFactory, IUnknow
 	g_interfaces->RenderTargetView = nullptr;
 
 	return hook_createswapchain.call<HRESULT>(pFactory, pDevice, pDesc, ppSwapChain);
+}
+
+
+bool __fastcall g_hooks::MouseInputEnabled::MouseInputEnabled(void* pThisptr){
+	return g_MenuManager->show_menu ? false : hook_MouseInputEnabled.call<bool>(pThisptr);
 }
 
 
@@ -158,6 +162,9 @@ bool g_hooks::init()
 	pDXGIAdapter = nullptr;
 	pIDXGIFactory->Release();
 	pIDXGIFactory = nullptr;
+
+
+	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
 
     //DX11::hook_present = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(g_interfaces->SwapChainDx11->pDXGISwapChain,8)), reinterpret_cast<void*>(DX11::Present));
 	//DX11::hook_resizebuffers = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(g_interfaces->SwapChainDx11->pDXGISwapChain, 13)), reinterpret_cast<void*>(DX11::ResizeBuffers));

@@ -29,7 +29,7 @@ bool OffsetManager::scan()
 
 	
 
-
+	offsets[OFFSET_CCSGOINPUT] = *reinterpret_cast</*CCSGOInput*/void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, XorStr("48 8B 0D ? ? ? ? 48 8B 01 FF 50 ? 8B DF")), 0x3, 0x7));
 
 
 
@@ -76,4 +76,21 @@ bool OffsetManager::scan()
 	return rt;
 
 
+}
+
+bool OffsetManager::scan_export(){
+	const void* hSDL3 = MEM::GetModuleBaseHandle(SDL3_DLL);
+
+	fnSetRelativeMouseMode = reinterpret_cast<decltype(fnSetRelativeMouseMode)>(MEM::GetExportAddress(hSDL3, XorStr("SDL_SetRelativeMouseMode")));
+	fnGetRelativeMouseMode = reinterpret_cast<decltype(fnGetRelativeMouseMode)>(MEM::GetExportAddress(hSDL3, XorStr("SDL_GetRelativeMouseMode")));
+	fnSetWindowMouseGrab = reinterpret_cast<decltype(fnSetWindowMouseGrab)>(MEM::GetExportAddress(hSDL3, XorStr("SDL_SetWindowMouseGrab")));
+	fnWarpMouseInWindow = reinterpret_cast<decltype(fnWarpMouseInWindow)>(MEM::GetExportAddress(hSDL3, XorStr("SDL_WarpMouseInWindow")));
+	fnShowCursor = reinterpret_cast<decltype(fnShowCursor)>(MEM::GetExportAddress(hSDL3, XorStr("SDL_ShowCursor")));
+
+	if (fnSetRelativeMouseMode && fnGetRelativeMouseMode && fnSetWindowMouseGrab && fnWarpMouseInWindow){
+		LOG(INFO) << g_CheatLocalization->get("offset_manager_export_scan_success");
+		return true;
+	}
+	LOG(INFO) << g_CheatLocalization->get("offset_manager_export_scan_fail");
+	return false;
 }

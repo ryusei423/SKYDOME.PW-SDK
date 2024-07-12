@@ -55,6 +55,9 @@
     <Filter Include="external\MinHook\hde">
       <UniqueIdentifier>{152c9ae1-2439-4745-9a59-4dd2d797c742}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdk\datatypes">
+      <UniqueIdentifier>{7a10167c-0acc-4716-8706-41895569b8ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -128,6 +131,21 @@
     </ClCompile>
     <ClCompile Include="external\imgui\imgui_freetype.cpp">
       <Filter>external\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\interfaces\interfaces.cpp">
+      <Filter>sd\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\datatypes\keyvalues3.cpp">
+      <Filter>sdk\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\datatypes\matrix.cpp">
+      <Filter>sdk\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\datatypes\qangle.cpp">
+      <Filter>sdk\datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\datatypes\vector.cpp">
+      <Filter>sdk\datatypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +265,69 @@
     </ClInclude>
     <ClInclude Include="external\imgui\imgui_freetype.h">
       <Filter>external\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\inputsystem.hpp">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\ccsgoinput.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\color.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\keyvalue3.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\matrix.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\qangle.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\quaternion.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\stronghandle.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\transform.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\usercmd.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlbuffer.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlfixedmemory.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utllinkedlist.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlmap.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlmemory.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlrbtree.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlstring.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlthash.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlvector.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\vector.h">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\viewsetup.h">
+      <Filter>sdk\datatypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

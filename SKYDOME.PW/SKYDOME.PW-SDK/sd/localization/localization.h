@@ -63,6 +63,7 @@ public:
 		SET_TEXT("mem_module_base_not_found","模块搜索失败:");
 		SET_TEXT("mem_pattern_not_found", "特征码搜素失败:");
 		SET_TEXT("mem_export_not_found", "导出表搜索失败:");
+		SET_TEXT("mem_export_no_export", "模块没有导出表:");
 
 		SET_TEXT("hook_log", "已经挂钩%s");
 
@@ -74,6 +75,9 @@ public:
 		SET_TEXT("offset_manager_scan_success", "我们通过特征码扫描了 %d 个地址 ！ 用时%.2f s。");
 		SET_TEXT("offset_manager_scan_fail", "抱歉，发生了一些意料之外的错误... %d 个地址中的 %d 个搜索失败了。");
 		SET_TEXT("offset_manager_scan_check", "offsets[%d] -> %p");
+
+		SET_TEXT("offset_manager_export_scan_success", "导出表搜索完毕！");
+		SET_TEXT("offset_manager_export_scan_fail", "导出表搜索失败！");
 	}
 
 	std::unordered_map<std::string, std::string> texts;
