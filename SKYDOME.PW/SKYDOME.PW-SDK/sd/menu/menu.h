@@ -1,6 +1,6 @@
 #pragma once
 #include "../interfaces/interfaces.h"
-
+#include "../../external/imgui/imgui.h"
 
 class MenuManager
 {
@@ -14,6 +14,59 @@ public:
 	bool show_menu = false;
 	int toggle_mouse = 0;
 private:
+	const ImVec2 menu_size_origin = ImVec2(559,700);
+	ImVec2 menu_size_scale;
+
+	const ImVec2 tab_size_origin = ImVec2(200, 700);
+	ImVec2 tab_size_scale;
+
+	const ImVec2 logo_size_origin = ImVec2(559, 39);
+	ImVec2 logo_size_scale;
+
+	ImGuiStyle DefaultStyle;
+
+	int dpi = 1;
+	inline void UpdateDpi() {
+		static int save_dpi = dpi;
+
+		switch (dpi)
+		{
+			case 0: menu_dpi_scale = 0.75; break;
+			case 1: menu_dpi_scale = 1.0f; break;
+			case 2: menu_dpi_scale = 1.25f; break;
+			case 3: menu_dpi_scale = 1.5f; break;
+			case 4: menu_dpi_scale = 2.0f; break;
+		}
+
+		if (dpi != save_dpi)
+		{
+		
+			ImGui::GetStyle() = DefaultStyle;
+			ImGui::GetStyle().ScaleAllSizes(menu_dpi_scale);
+			
+			save_dpi = dpi;
+		}
+
+		menu_size_scale = menu_size_origin * menu_dpi_scale;
+		tab_size_scale = tab_size_origin * menu_dpi_scale;
+		logo_size_scale = logo_size_origin * menu_dpi_scale;
+
+		
+	
+	};
+	inline ImFont* GetDpiFont(std::string);
+	//我知道这看起来很弱智
+	//我会在某个时刻重新设计的
+	float menu_dpi_scale_075 = 0.75f;
+	float menu_dpi_scale_100 = 1.0f;
+	float menu_dpi_scale_125 = 1.25f;
+	float menu_dpi_scale_150 = 1.5f;
+	float menu_dpi_scale_200 = 2.0f;
+	float menu_dpi_scale = menu_dpi_scale_100;
+
+
+	std::unordered_map<std::string, ImFont*> fonts;
+
 
 };
 

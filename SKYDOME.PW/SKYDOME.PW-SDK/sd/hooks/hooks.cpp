@@ -130,9 +130,18 @@ bool __fastcall g_hooks::MouseInputEnabled::MouseInputEnabled(void* pThisptr){
 }
 
 
+safetyhook::InlineHook hook_setmousemode;
+__int64 __fastcall setmousemode(__int64 a1, __int64 a2) {
+	LOG(INFO) << a1 << " - " << a2;
+
+	return hook_setmousemode.call<__int64>(a1,a2);
+}
+
 #define HK(N,S,P,I,F)	S = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(P,I)), reinterpret_cast<void*>(F));		\
 					LOG(INFO) << SDlib.StrSystem().printf(g_CheatLocalization->get("hook_log"),N);
 
+#define HK_SIG(N,S,A,F)	S = safetyhook::create_inline(A, reinterpret_cast<void*>(F));		\
+					LOG(INFO) << SDlib.StrSystem().printf(g_CheatLocalization->get("hook_log"),N);
 bool g_hooks::init()
 {
 	
@@ -156,6 +165,8 @@ bool g_hooks::init()
 	HK("ResizeBuffers", DX11::hook_resizebuffers, /*g_interfaces->SwapChainDx11->pDXGISwapChain*/g_interfaces->SwapChain, 13, DX11::ResizeBuffers);
 	HK("CreateSwapChain", DX11::hook_createswapchain, pIDXGIFactory, 10, DX11::CreateSwapChain);
 
+	
+
 	pDXGIDevice->Release();
 	pDXGIDevice = nullptr;
 	pDXGIAdapter->Release();
@@ -163,11 +174,8 @@ bool g_hooks::init()
 	pIDXGIFactory->Release();
 	pIDXGIFactory = nullptr;
 
-
+	//hook_setmousemode = safetyhook::create_inline(GetModuleHandle(L"inputsystem.dll") + 0x2360, reinterpret_cast<void*>(setmousemode));
 	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
-
-    //DX11::hook_present = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(g_interfaces->SwapChainDx11->pDXGISwapChain,8)), reinterpret_cast<void*>(DX11::Present));
-	//DX11::hook_resizebuffers = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(g_interfaces->SwapChainDx11->pDXGISwapChain, 13)), reinterpret_cast<void*>(DX11::ResizeBuffers));
 
     return 1;
 }

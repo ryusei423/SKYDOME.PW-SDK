@@ -8,7 +8,8 @@
 #include "external/easylogging/easylogging++.h"
 
 //标准库对于char8_t缺乏支持 我认为它存在的意义并不大
-#define U8ST(s) (const char*)u8"s"
+#define U8ST(s) ((const char*)u8 ## s)
+
 //目前真正的作弊并不是第一目标
 #define XorStr(s) s
 

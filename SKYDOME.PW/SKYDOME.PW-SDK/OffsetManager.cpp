@@ -32,10 +32,6 @@ bool OffsetManager::scan()
 	offsets[OFFSET_CCSGOINPUT] = *reinterpret_cast</*CCSGOInput*/void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, XorStr("48 8B 0D ? ? ? ? 48 8B 01 FF 50 ? 8B DF")), 0x3, 0x7));
 
 
-
-
-
-
 	int nullptr_cout = 0;
 
 	for (int i = 0; i < OFFSET_MAX; i++) {

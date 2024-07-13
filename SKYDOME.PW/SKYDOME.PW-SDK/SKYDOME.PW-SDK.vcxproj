@@ -215,6 +215,8 @@
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
     <ClInclude Include="sd\localization\localization.h" />
+    <ClInclude Include="sd\menu\chinese.h" />
+    <ClInclude Include="sd\menu\fonts\Roboto-Bold.h" />
     <ClInclude Include="sd\menu\menu.h" />
     <ClInclude Include="sd\utilities\crt.h" />
     <ClInclude Include="sd\utilities\fnv1a.h" />

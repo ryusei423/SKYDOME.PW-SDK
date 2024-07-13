@@ -58,6 +58,9 @@
     <Filter Include="sdk\datatypes">
       <UniqueIdentifier>{7a10167c-0acc-4716-8706-41895569b8ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\menu\fonts">
+      <UniqueIdentifier>{2c0402d9-845f-4dd8-b484-0f342168485e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -328,6 +331,12 @@
     </ClInclude>
     <ClInclude Include="sdk\datatypes\viewsetup.h">
       <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\chinese.h">
+      <Filter>sd\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\fonts\Roboto-Bold.h">
+      <Filter>sd\menu\fonts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
