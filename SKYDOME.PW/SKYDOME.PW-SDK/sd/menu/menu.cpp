@@ -8,7 +8,7 @@
 #include "../utilities/memory.h"
 #include "../hooks/hooks.h"
 
-
+#include "widget.h"
 
 
 static auto GetCorrectDXGIFormat(DXGI_FORMAT currentFormat) {
@@ -80,22 +80,10 @@ void EditStyle() {
 
 	ImGuiStyle* style = &ImGui::GetStyle();
 	ImVec4* colors = style->Colors;
-	colors[ImGuiCol_ChildBg] = ImVec4(45.f / 255.f, 45.f / 255.f, 45.f / 255.f, 1.0f);
-	colors[ImGuiCol_FrameBg] = ImVec4(0.56f, 0.59f, 0.56f, 0.30f);
-	colors[ImGuiCol_FrameBgHovered] = ImVec4(37.0f / 255.0f, 37.0f / 255.0f, 37.0f / 255.0f, 102.0f / 255.0f);
-	colors[ImGuiCol_FrameBgActive] = ImVec4(76.0f / 255.0f, 76.0f / 255.0f, 76.0f / 255.0f, 1.0f);
-	colors[ImGuiCol_CheckMark] = ImVec4(132.0f / 255.0f, 132.0f / 255.0f, 132.0f / 255.0f, 1.0f);
+	colors[ImGuiCol_ChildBg] = ImVec4(25.f / 255.f, 25.f / 255.f, 25.f / 255.f, 1.0f);
+	colors[ImGuiCol_WindowBg] = ImVec4(28.f / 255.f, 28.f / 255.f, 28.f / 255.f, 1.0f);
 
-
-	colors[ImGuiCol_Button] = ImVec4(0.56f, 0.59f, 0.56f, 0.30f);									//按钮颜色
-	colors[ImGuiCol_ButtonHovered] = ImVec4(50.0f / 255.0f, 50.0f / 255.0f, 50.0f / 255.0f, 1.0f);	//按钮在悬停时的颜色 我们的自定义控件将通过动画到达此颜色
-	colors[ImGuiCol_ButtonActive] = ImVec4(76.0f / 255.0f, 76.0f / 255.0f, 76.0f / 255.0f, 1.0f);	//按钮被点击时的颜色
-
-	colors[ImGuiCol_Header] = ImVec4(0.56f, 0.59f, 0.56f, 0.30f);
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.39f, 0.39f, 0.39f, 0.80f);
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-
-	//style->ChildBorderSize = 0;
+	colors[ImGuiCol_Button] = ImVec4(25.f / 255.f, 25.f / 255.f, 25.f / 255.f, 1.0f);
 }
 
 #include "chinese.h"
@@ -105,7 +93,7 @@ bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pC
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = io.LogFilename = nullptr;
 	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
-
+	EditStyle();
 	DefaultStyle = ImGui::GetStyle();
 
 	static ImVector<ImWchar> myRange;
@@ -231,7 +219,7 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 			ImVec2 text_size = ImGui::CalcTextSize("SKYDOME.PW");
 
 			ImGui::SetCursorPos(ImVec2(12 * menu_dpi_scale, (logo_size_scale.y / 2) - (text_size.y / 2)));
-			ImGui::Text("SKYDOME.PW");
+			ImGui::Text(U8ST("SKYDOME.PW"));
 		
 			ImGui::PopFont();
 
@@ -240,7 +228,7 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		ImGui::PushFont(GetDpiFont("main_font"));
 
-		const char* dpi_str[] = { "%75", "%100" , "%150" , "%175", "%200" };
+		const char* dpi_str[] = { "75%", "100%" , "150%" , "175%", "200%" };
 		ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
 
 		ImGui::PopFont();
@@ -249,6 +237,17 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		ImGui::SetNextWindowSize(tab_size_scale);
 		ImGui::SetNextWindowPos(main_windows_pos + ImVec2(menu_size_scale.x + 8 * menu_dpi_scale, 0));
 		ImGui::Begin("SKYDOME_TAB", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
+		
+		ImGui::PushFont(GetDpiFont("main_font_small"));
+		
+		static int anim_alpha[7];
+		static int anim_size[7];
+
+		if (ImGuiW::Button(U8ST("合法自瞄\n用合法的方式赢得胜利  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale),0,cur_tab == 0,anim_alpha[0], anim_size[0])) cur_tab = 0;
+		if (ImGuiW::Button(U8ST("暴力自瞄\n使用一切手段击败敌人  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 1, anim_alpha[1], anim_size[1])) cur_tab = 1;
+
+		ImGui::PopFont();
+
 		ImGui::End();
 	}
 

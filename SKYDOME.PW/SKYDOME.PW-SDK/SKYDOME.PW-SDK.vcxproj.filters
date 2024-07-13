@@ -150,6 +150,9 @@
     <ClCompile Include="sdk\datatypes\vector.cpp">
       <Filter>sdk\datatypes</Filter>
     </ClCompile>
+    <ClCompile Include="sd\menu\widget.cpp">
+      <Filter>sd\menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\safetyhook\safetyhook.hpp">
@@ -337,6 +340,12 @@
     </ClInclude>
     <ClInclude Include="sd\menu\fonts\Roboto-Bold.h">
       <Filter>sd\menu\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\widget.h">
+      <Filter>sd\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\config.h">
+      <Filter>sd\menu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

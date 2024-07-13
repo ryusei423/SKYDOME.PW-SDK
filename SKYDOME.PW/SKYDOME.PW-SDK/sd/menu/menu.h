@@ -13,6 +13,10 @@ public:
 
 	bool show_menu = false;
 	int toggle_mouse = 0;
+
+	int cur_tab = 0;
+	ImColor color = ImColor(9.f / 255.f,104.f / 255.f,247.f / 255.f);
+
 private:
 	const ImVec2 menu_size_origin = ImVec2(559,700);
 	ImVec2 menu_size_scale;
