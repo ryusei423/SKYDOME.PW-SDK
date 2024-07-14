@@ -86,8 +86,26 @@ void EditStyle() {
 	colors[ImGuiCol_Button] = ImVec4(25.f / 255.f, 25.f / 255.f, 25.f / 255.f, 1.0f);
 }
 
+void MenuManager::TryFindDpi() {
+	auto size = ImGui::GetWindowSize();
+
+	if (size == ImVec2(1920,1080)){
+		dpi = 0;
+	}
+
+	if (size == ImVec2(2560, 1440)) {
+		dpi = 1;
+	}
+
+	if (size == ImVec2(3840, 2160)) {
+		dpi = 2;
+	}
+
+}
+
 #include "chinese.h"
 #include "fonts/Roboto-Bold.h"
+#include "fonts/icon.h"
 bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext){
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -95,6 +113,8 @@ bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pC
 	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 	EditStyle();
 	DefaultStyle = ImGui::GetStyle();
+
+	//TryFindDpi();
 
 	static ImVector<ImWchar> myRange;
 	ImFontGlyphRangesBuilder myGlyph;
@@ -116,26 +136,40 @@ bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pC
 	myGlyph.AddRanges(&ranges[0]);//加上默认的文字范围...因为我们也要显示英文
 	myGlyph.BuildRanges(&myRange);
 
-	fonts.insert(std::make_pair("main_font_75", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_075, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("main_font_small_75", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_075, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("logo_font_75", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_075)));
+	ImFontConfig cfg;
+	cfg.FontBuilderFlags |= ImGuiFreeTypeBuilderFlags::ImGuiFreeTypeBuilderFlags_LoadColor | ImGuiFreeTypeBuilderFlags::ImGuiFreeTypeBuilderFlags_MonoHinting;
 
-	fonts.insert(std::make_pair("main_font_100", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("main_font_small_100", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("logo_font_100", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f)));
+	//TODO: io.Fonts->Clear();
 
-	fonts.insert(std::make_pair("main_font_125", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_125, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("main_font_small_125", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_125, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("logo_font_125", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_125)));
+	fonts.insert(std::make_pair("main_75", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_075, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("main_small_75", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_075, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("logo_75", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_075)));
+	fonts.insert(std::make_pair("icon_75", io.Fonts->AddFontFromMemoryTTF(icon, sizeof(icon), 17.f * menu_dpi_scale_075, &cfg)));
 
-	fonts.insert(std::make_pair("main_font_150", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_150, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("main_font_small_150", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_150, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("logo_font_150", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_150)));
+	fonts.insert(std::make_pair("main_100", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("main_small_100", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("logo_100", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f)));
+	fonts.insert(std::make_pair("icon_100", io.Fonts->AddFontFromMemoryTTF(icon, sizeof(icon), 17.f)));
 
-	fonts.insert(std::make_pair("main_font_200", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_200, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("main_font_small_200", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_200, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
-	fonts.insert(std::make_pair("logo_font_200", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_200)));
+	fonts.insert(std::make_pair("main_125", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_125, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("main_small_125", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_125, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("logo_125", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_125)));
+	fonts.insert(std::make_pair("icon_125", io.Fonts->AddFontFromMemoryTTF(icon, sizeof(icon), 17.f * menu_dpi_scale_125, &cfg)));
 
+	fonts.insert(std::make_pair("main_150", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_150, NULL, io.Fonts->GetGlyphRangesChineseFull()/*myRange.Data*/)));
+	fonts.insert(std::make_pair("main_small_150", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_150, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("logo_150", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_150)));
+	fonts.insert(std::make_pair("icon_150", io.Fonts->AddFontFromMemoryTTF(icon, sizeof(icon), 17.f * menu_dpi_scale_150, &cfg)));
+
+	fonts.insert(std::make_pair("main_175", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 18.0f * menu_dpi_scale_175, NULL,/* io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("main_small_175", io.Fonts->AddFontFromFileTTF("C:/windows/fonts/simhei.ttf", 15.0f * menu_dpi_scale_175, NULL, /*io.Fonts->GetGlyphRangesChineseFull()*/myRange.Data)));
+	fonts.insert(std::make_pair("logo_175", io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, sizeof(Roboto_compressed_data), 17.f * menu_dpi_scale_175)));
+	fonts.insert(std::make_pair("icon_175", io.Fonts->AddFontFromMemoryTTF(icon, sizeof(icon), 17.f * menu_dpi_scale_175, &cfg)));
+
+
+	logo_texts.push_back(U8ST("花无凋零之日 / 意无传达之时"));
+	logo_texts.push_back(U8ST("故事总是拥有美好的开始 / 却总是难以得到美好的结局"));
+	logo_texts.push_back(U8ST("美艳不可方物 / 清丽可涤尘世"));
 
 	return true;
 }
@@ -172,33 +206,24 @@ inline ImFont* MenuManager::GetDpiFont(std::string font) {
 	}
 
 	if (menu_dpi_scale == 2.f) {
-		return fonts[font + XorStr("_200")];
+		return fonts[font + XorStr("_175")];
 	}
 
 	return nullptr;
 
 };
+#include "anim/ImVec4Anim.h"
+
+static ImVec4 vTextColor(1.0F, 1.0F, 1.0F, 1.0F);
+static imanim::ImVec4Anim* pColorAnim = nullptr;
 
 void MenuManager::frame(IDXGISwapChain* pSwapChain)
 {
-	/*if (g_OffsetManager->fnGetRelativeMouseMode()){
-		g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
-		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
-	}*/
-	
 
-	/*if (toggle_mouse > 0) {
-		toggle_mouse--;
-		if (show_menu == false)
-		{
-			g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
-			g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
-		}
-		
-	}*/
-	//g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
 	if (show_menu)
 	{
+		on_anim_frame();
+
 		UpdateDpi();
 
 		//ImGui::GetIO().MouseDrawCursor = true;
@@ -214,31 +239,114 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 
 			
-			ImGui::PushFont(GetDpiFont("logo_font"));
+			ImGui::PushFont(GetDpiFont(logo_text_d == logo_text ? "logo" : "main"));
 
 			ImVec2 text_size = ImGui::CalcTextSize("SKYDOME.PW");
 
 			ImGui::SetCursorPos(ImVec2(12 * menu_dpi_scale, (logo_size_scale.y / 2) - (text_size.y / 2)));
-			ImGui::Text(U8ST("SKYDOME.PW"));
+			//ImGui::Text(U8ST("SKYDOME.PW"));
+
+			ImGui::TextColored(vTextColor, logo_text_d.c_str());
+
+			
 		
 			ImGui::PopFont();
 
 		}
 		ImGui::EndChild();
 
-		ImGui::PushFont(GetDpiFont("main_font"));
+		ImGui::PushFont(GetDpiFont("main"));
 
-		const char* dpi_str[] = { "75%", "100%" , "150%" , "175%", "200%" };
+
+		ImGui::Text(U8ST("软件处于测试阶段，所以不要在任何你关心的账户上使用它。"));
+		ImGui::Text(U8ST("我们不对发生的任何禁令负责。"));
+
+
+		ImGui::BeginChild("misc_main", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, ImGuiWindowFlags_MenuBar);
+
+		if (ImGui::BeginMenuBar()) {
+
+			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
+			ImGui::Text(U8ST("其他设置:"));
+			ImGui::PopStyleVar();
+			ImGui::EndMenuBar();
+
+		}
+
+		
+		static bool shit = false;
+		ImGui::Checkbox(U8ST("一键开转"), &shit);
+		ImGui::EndChild();
+
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("misc_", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY , ImGuiWindowFlags_MenuBar);
+
+		if (ImGui::BeginMenuBar()) {
+
+			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
+			ImGui::Text(U8ST("设置:"));
+			ImGui::PopStyleVar();
+			ImGui::EndMenuBar();
+
+		}
+
+
+		const char* dpi_str[] = { "75%", "100%" , "125%" , "150%", "175%" };
 		ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
 
+		ImGui::EndChild();
+
+
+		ImGui::BeginChild("misc_1", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, ImGuiWindowFlags_MenuBar);
+
+		if (ImGui::BeginMenuBar()) {
+
+			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
+			ImGui::Text(U8ST("设置1:"));
+			ImGui::PopStyleVar();
+			ImGui::EndMenuBar();
+
+		}
+
+
+		
+		ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
+
+		ImGui::EndChild();
+
+
 		ImGui::PopFont();
+
+
 		ImGui::End();
 
 		ImGui::SetNextWindowSize(tab_size_scale);
 		ImGui::SetNextWindowPos(main_windows_pos + ImVec2(menu_size_scale.x + 8 * menu_dpi_scale, 0));
 		ImGui::Begin("SKYDOME_TAB", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
 		
-		ImGui::PushFont(GetDpiFont("main_font_small"));
+
+		ImGui::SetCursorPos(ImVec2(0, 0));
+		if (ImGui::BeginChild("tab_top", logo_size_scale, ImGuiChildFlags_Border, ImGuiWindowFlags_NoDecoration)) {
+
+
+
+			ImGui::PushFont(GetDpiFont("icon"));
+
+			ImVec2 text_size = ImGui::CalcTextSize("SKYDOME.PW");
+
+			ImGui::SetCursorPos(ImVec2(12 * menu_dpi_scale, (logo_size_scale.y / 2) - (text_size.y / 2)));
+			ImGui::Text(U8ST("G"));
+			
+
+			ImGui::PopFont();
+
+		}
+		ImGui::EndChild();
+
+
+		ImGui::PushFont(GetDpiFont("main_small"));
 		
 		static int anim_alpha[7];
 		static int anim_size[7];
@@ -254,9 +362,11 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 
 
+
 	
 }
 
+//或许，尝试在窗口过程中切换
 void MenuManager::toggle(bool state)
 {
 	if (!ImGui::GetCurrentContext()) {
@@ -265,8 +375,9 @@ void MenuManager::toggle(bool state)
 
 	show_menu = state;
 	
-
-	if (g_interfaces->InputSystem->IsRelativeMouseMode()/*g_OffsetManager->fnGetRelativeMouseMode()*/) {
+	
+	if (show_menu)on_menu_open();
+	if (/*g_interfaces->InputSystem->IsRelativeMouseMode()*/g_OffsetManager->fnGetRelativeMouseMode()) {
 		const ImVec2 screenCenter = ImGui::GetIO().DisplaySize * 0.5f;
 
 		//toggle_mouse = 200;
@@ -274,6 +385,90 @@ void MenuManager::toggle(bool state)
 		g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
 		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
 		g_OffsetManager->fnWarpMouseInWindow(nullptr, screenCenter.x, screenCenter.y);
+
+		
 	}
 
+}
+
+#include <iostream>
+#include <cstdlib> // for std::rand
+#include <ctime>   // for std::time
+#include <random> // C++11的随机数库
+
+bool probabilityTrigger(double probability) {
+	// 使用C++11引入的随机数引擎和分布
+	static std::random_device rd; // 随机设备，用于获取种子
+	static std::mt19937 gen(rd()); // Mersenne Twister随机数引擎
+	std::uniform_real_distribution<> dis(0.0, 1.0); // 均匀分布在[0.0, 1.0)范围内
+
+	double randNum = dis(gen); // 生成[0.0, 1.0)内的随机数
+
+	return randNum < probability;
+}
+
+
+//在菜单出现时，启动淡出
+void MenuManager::on_menu_open()
+{
+
+	std::srand(static_cast<unsigned>(std::time(nullptr))); // 初始化随机数种子
+
+	if (pColorAnim == nullptr)
+	{
+		// Create the animation and attach it to the ImVec4 used to color the text
+		pColorAnim = new imanim::ImVec4Anim(&vTextColor);
+	}
+
+	
+
+	if (probabilityTrigger(0.1)) {
+		// Animate from white text to red text
+		pColorAnim->setStartValue(ImVec4(1, 1, 1, 1));
+		pColorAnim->setEndValue(ImVec4(1, 1, 1, 0));
+		// Set the animation duration for a single loop (in seconds)
+		pColorAnim->setDuration(4);
+		// Set the number of loops of animation; -1 loops forever
+		pColorAnim->setLoopCount(1);
+		pColorAnim->setEasingCurve(imanim::EasingCurve::Type::OutInBounce);
+		pColorAnim->start();
+
+		logo_text_d = logo_texts[std::rand() % logo_texts.size()];
+	}
+	else {
+		pColorAnim->stop();
+		vTextColor = {1, 1, 1, 1};
+		logo_text_d = logo_text;
+	}
+	
+	
+
+
+}
+
+void MenuManager::on_anim_frame()
+{
+	if (pColorAnim->getStartValue().w == 1.f && 
+		vTextColor.w == 0.f &&
+		pColorAnim->getState() == imanim::AbstractAnimation::State::Stopped) {
+
+		logo_text_d = logo_text;
+
+		pColorAnim->setStartValue(ImVec4(1, 1, 1, 0));
+		pColorAnim->setEndValue(ImVec4(1, 1, 1, 1));
+		// Set the animation duration for a single loop (in seconds)
+		pColorAnim->setDuration(1.0);
+		// Set the number of loops of animation; -1 loops forever
+		pColorAnim->setLoopCount(1);
+		pColorAnim->setEasingCurve(imanim::EasingCurve::Type::OutQuad);
+
+		pColorAnim->stop();
+		pColorAnim->start();
+		
+
+
+	}
+	
+
+	pColorAnim->update();
 }

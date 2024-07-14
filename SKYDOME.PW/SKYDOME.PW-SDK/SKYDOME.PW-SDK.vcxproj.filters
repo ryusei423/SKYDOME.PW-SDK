@@ -61,6 +61,9 @@
     <Filter Include="sd\menu\fonts">
       <UniqueIdentifier>{2c0402d9-845f-4dd8-b484-0f342168485e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\menu\anim">
+      <UniqueIdentifier>{94de2a40-8ca2-4281-b75f-d6597a01335b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -152,6 +155,36 @@
     </ClCompile>
     <ClCompile Include="sd\menu\widget.cpp">
       <Filter>sd\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\AbstractAnimation.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\AnimationGroup.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\Easing.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\EasingCurve.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\ImVec2Anim.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\ImVec4Anim.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\ParallelAnimationGroup.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\PauseAnimation.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\SequentialAnimationGroup.cpp">
+      <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\menu\anim\Utils.cpp">
+      <Filter>sd\menu\anim</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,6 +379,39 @@
     </ClInclude>
     <ClInclude Include="sd\menu\config.h">
       <Filter>sd\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\fonts\icon.h">
+      <Filter>sd\menu\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\AbstractAnimation.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\AnimationGroup.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\Easing.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\EasingCurve.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\ImVec2Anim.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\ImVec4Anim.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\ParallelAnimationGroup.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\PauseAnimation.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\SequentialAnimationGroup.h">
+      <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\menu\anim\Utils.h">
+      <Filter>sd\menu\anim</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
