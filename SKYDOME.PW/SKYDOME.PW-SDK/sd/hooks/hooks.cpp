@@ -23,6 +23,12 @@ namespace g_hooks {
 		bool __fastcall MouseInputEnabled(void* pThisptr);
 		safetyhook::InlineHook hook_MouseInputEnabled;
 	}
+
+	namespace RelativeModeMouse {
+
+		__int64 __fastcall RelativeModeMouse(__int64 a1, __int64 a2);
+		safetyhook::InlineHook hook_RelativeModeMouse;
+	}
 	
 }
 
@@ -92,6 +98,7 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 
 		if (ImGui::IsKeyPressed(ImGuiKey_Insert, false)) {
 			g_MenuManager->toggle(!g_MenuManager->show_menu);
+			RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
 		}
 
 		g_MenuManager->frame(pSwapChain);
@@ -130,12 +137,37 @@ bool __fastcall g_hooks::MouseInputEnabled::MouseInputEnabled(void* pThisptr){
 }
 
 
-safetyhook::InlineHook hook_setmousemode;
-__int64 __fastcall setmousemode(__int64 a1, __int64 a2) {
-	LOG(INFO) << a1 << " - " << a2;
+enum InputDeviceActions {
+	ACTION_CURSOR_INVISIBLE = 0x01,      // 光标不可见 (0b00000001)
+	ACTION_MOUSE_CAPTURE = 0x02,         // 鼠标捕获 (0b00000010)
+	ACTION_CURSOR_CLIP = 0x04,           // 光标限制 (0b00000100)
+	ACTION_RELATIVE_MOUSE = 0x08,        // 相对模式鼠标 (0b00001000)
+	ACTION_STANDARD_CURSORS = 0x10,      // 标准光标 (0b00010000)
+	ACTION_IME_ALLOWED = 0x40            // 允许输入法 (0b01000000)
+};
 
-	return hook_setmousemode.call<__int64>(a1,a2);
+
+
+
+__int64 __fastcall g_hooks::RelativeModeMouse::RelativeModeMouse(__int64 a1, __int64 a2)
+{
+	//开启ISS输出
+	*((bool*)((void*)a1) + 0x40) = true;
+
+	auto rt = hook_RelativeModeMouse.call<__int64>(a1, a2);
+
+	LOG(INFO) << a1 << " - " << a2 << "  rt->"<<std::hex << rt;
+
+	return rt;
+
+
+
+	bool enabled = g_MenuManager->show_menu ? false : hook_RelativeModeMouse.call<__int64>(a1, a2);
+	g_CheatData->RelativeLastValue = enabled;
+
+	return enabled;
 }
+
 
 #define HK(N,S,P,I,F)	S = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(P,I)), reinterpret_cast<void*>(F));		\
 					LOG(INFO) << SDlib.StrSystem().printf(g_CheatLocalization->get("hook_log"),N);
@@ -174,8 +206,12 @@ bool g_hooks::init()
 	pIDXGIFactory->Release();
 	pIDXGIFactory = nullptr;
 
-	//hook_setmousemode = safetyhook::create_inline(GetModuleHandle(L"inputsystem.dll") + 0x2360, reinterpret_cast<void*>(setmousemode));
+	//hook_setmousemode = safetyhook::create_inline(g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(setmousemode));
+
 	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
+
+	HK_SIG("RelativeModeMouse",RelativeModeMouse::hook_RelativeModeMouse, g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(RelativeModeMouse::RelativeModeMouse));
+
 
     return 1;
 }

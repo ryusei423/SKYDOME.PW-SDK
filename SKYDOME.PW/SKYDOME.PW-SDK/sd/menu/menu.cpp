@@ -220,6 +220,8 @@ static imanim::ImVec4Anim* pColorAnim = nullptr;
 void MenuManager::frame(IDXGISwapChain* pSwapChain)
 {
 
+
+
 	if (show_menu)
 	{
 		on_anim_frame();
@@ -386,7 +388,6 @@ void MenuManager::toggle(bool state)
 		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
 		g_OffsetManager->fnWarpMouseInWindow(nullptr, screenCenter.x, screenCenter.y);
 
-		
 	}
 
 }

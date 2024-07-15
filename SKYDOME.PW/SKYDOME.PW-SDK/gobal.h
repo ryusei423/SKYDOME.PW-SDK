@@ -56,6 +56,8 @@ public:
 	FILE* m_ConsoleStream;
 
 
+	bool RelativeLastValue = false;
+
 };
 
 inline CheatData* g_CheatData = new CheatData;
