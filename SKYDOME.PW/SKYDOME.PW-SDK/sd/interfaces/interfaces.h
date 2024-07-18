@@ -24,6 +24,7 @@ public:
 
 	CInputSystem* InputSystem = nullptr;
 	CCSGOInput* CSGOInput = nullptr;
+	IMemAlloc* MemAlloc = nullptr;
 };
 
 inline InterfacesManager* g_interfaces = new InterfacesManager;

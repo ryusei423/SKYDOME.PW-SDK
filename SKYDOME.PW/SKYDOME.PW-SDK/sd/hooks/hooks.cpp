@@ -4,10 +4,12 @@
 #include "../utilities/memory.h"
 #include "../interfaces/interfaces.h"
 #include "../menu/menu.h"
+#include"../../CheatData.h"
 
 #include "../../external/imgui/imgui.h"
 #include "../../external/imgui/imgui_impl_win32.h"
 #include "../../external/imgui/imgui_impl_dx11.h"
+
 
 namespace g_hooks {
 
@@ -26,7 +28,7 @@ namespace g_hooks {
 
 	namespace RelativeModeMouse {
 
-		__int64 __fastcall RelativeModeMouse(__int64 a1, __int64 a2);
+		void* __fastcall RelativeModeMouse(void* _this, int a2);
 		safetyhook::InlineHook hook_RelativeModeMouse;
 	}
 	
@@ -49,6 +51,11 @@ static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
 }
 
 static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+	//在游戏中时，鼠标会被锁定在中心
+	//if (uMsg == WM_MOUSEMOVE) {
+	//	LOG(INFO) << LOWORD(lParam) << " - "<<HIWORD(lParam);
+	//}
 
 
 	LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -98,8 +105,10 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 
 		if (ImGui::IsKeyPressed(ImGuiKey_Insert, false)) {
 			g_MenuManager->toggle(!g_MenuManager->show_menu);
-			RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
+			//RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
 		}
+
+		g_CheatData->matrix = (Matrix3x4_t*)((std::ptrdiff_t)MEM::GetModuleBaseHandle(CLIENT_DLL) + cs2_dumper::offsets::client_dll::dwViewMatrix);
 
 		g_MenuManager->frame(pSwapChain);
 
@@ -149,23 +158,29 @@ enum InputDeviceActions {
 
 
 
-__int64 __fastcall g_hooks::RelativeModeMouse::RelativeModeMouse(__int64 a1, __int64 a2)
+void* __fastcall g_hooks::RelativeModeMouse::RelativeModeMouse(void* a1, int a2)
 {
 	//开启ISS输出
-	*((bool*)((void*)a1) + 0x40) = true;
+	//LOG(INFO) << "a1 + 0x28 -> " << *((unsigned int*) a1 + 0x28);
+	//*((bool*)((void*)a1) + 0x40) = true;
 
-	auto rt = hook_RelativeModeMouse.call<__int64>(a1, a2);
+	auto rt = hook_RelativeModeMouse.call<void*>(a1, a2);
 
-	LOG(INFO) << a1 << " - " << a2 << "  rt->"<<std::hex << rt;
+	/*LOG(INFO) << a1 << " - " << a2 << "  rt->"<<std::hex << rt;
+
+	if (a2 & ACTION_RELATIVE_MOUSE) {
+		LOG(INFO) << "SETINGMOUSEMODE - > " << a1 << " - " << a2 << "  rt->" << std::hex << rt;
+
+	}*/
 
 	return rt;
 
 
 
-	bool enabled = g_MenuManager->show_menu ? false : hook_RelativeModeMouse.call<__int64>(a1, a2);
-	g_CheatData->RelativeLastValue = enabled;
+	//bool enabled = g_MenuManager->show_menu ? false : hook_RelativeModeMouse.call<void*>(a1, a2);
+	//g_CheatData->RelativeLastValue = enabled;
 
-	return enabled;
+	//return enabled;
 }
 
 

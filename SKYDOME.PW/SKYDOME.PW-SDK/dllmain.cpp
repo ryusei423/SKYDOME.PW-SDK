@@ -11,6 +11,7 @@
 #include "external/easylogging/easylogging++.h"
 #include "gobal.h"
 #include "external/StackWalker/StackWalker.h"
+#include "CheatData.h"
 
 INITIALIZE_EASYLOGGINGPP
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "a2x/offsets.hpp"
 
 //实际上用于管理特征码搜索的函数地址
 class OffsetManager
@@ -15,6 +16,7 @@ public:
 		OFFSET_SWAPCHAINDX11,
 		OFFSET_CCSGOINPUT,
 		OFFSET_RELATIVE_MODE_MOUSE,
+		OFFSET_GET_ENTITY_BY_INDEX,
 		OFFSET_MAX
 	};
 

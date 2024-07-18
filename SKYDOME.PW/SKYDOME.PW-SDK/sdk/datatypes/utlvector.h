@@ -1,8 +1,8 @@
 #pragma once
-#include "utlmemory.h"
+#include "utlmemory.hpp"
 
 // used: memorymove
-#include "../../utilities/crt.h"
+#include "../../sd/utilities/crt.h"
 
 // @source: master/public/tier1/utlvector.h
 
@@ -35,7 +35,7 @@ public:
 
 	CUtlVector& operator=(const CUtlVector& vecOther)
 	{
-		CS_ASSERT(&vecOther != this); // self-assignment isn't allowed
+		SD_ASSERT(&vecOther != this); // self-assignment isn't allowed
 
 		const int nSourceCount = vecOther.Count();
 		SetCount(nSourceCount);
@@ -48,25 +48,25 @@ public:
 
 	[[nodiscard]] T& operator[](const int nIndex)
 	{
-		CS_ASSERT(IsValidIndex(nIndex)); // given index is out of range
+		SD_ASSERT(IsValidIndex(nIndex)); // given index is out of range
 		return memory[nIndex];
 	}
 
 	[[nodiscard]] const T& operator[](const int nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex)); // given index is out of range
+		SD_ASSERT(IsValidIndex(nIndex)); // given index is out of range
 		return memory[nIndex];
 	}
 
 	[[nodiscard]] T& Element(const int nIndex)
 	{
-		CS_ASSERT(IsValidIndex(nIndex)); // given index is out of range
+		SD_ASSERT(IsValidIndex(nIndex)); // given index is out of range
 		return memory[nIndex];
 	}
 
 	[[nodiscard]] const T& Element(const int nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex)); // given index is out of range
+		SD_ASSERT(IsValidIndex(nIndex)); // given index is out of range
 		return memory[nIndex];
 	}
 
@@ -98,7 +98,7 @@ public:
 	void CopyFromArray(const T* pArraySource, int nArraySize)
 	{
 		// can't insert something that's in the list. reallocation may hose us
-		CS_ASSERT(memory.Base() == nullptr || pArraySource == nullptr || begin() >= (pArraySource + nArraySize) || pArraySource >= end());
+		SD_ASSERT(memory.Base() == nullptr || pArraySource == nullptr || begin() >= (pArraySource + nArraySize) || pArraySource >= end());
 
 		// resize to accommodate array
 		SetCount(nArraySize);
@@ -131,7 +131,7 @@ public:
 
 	void ShiftElementsRight(const int nElement, const int nShift = 1)
 	{
-		CS_ASSERT(IsValidIndex(nElement) || nSize == 0 || nShift == 0);
+		SD_ASSERT(IsValidIndex(nElement) || nSize == 0 || nShift == 0);
 
 		if (const int nToMove = nSize - nElement - nShift; nToMove > 0 && nShift > 0)
 			CRT::MemoryMove(&Element(nElement + nShift), &Element(nElement), nToMove * sizeof(T));
@@ -139,7 +139,7 @@ public:
 
 	void ShiftElementsLeft(const int nElement, const int nShift = 1)
 	{
-		CS_ASSERT(IsValidIndex(nElement) || nSize == 0 || nShift == 0);
+		SD_ASSERT(IsValidIndex(nElement) || nSize == 0 || nShift == 0);
 
 		if (const int nToMove = nSize - nElement - nShift; nToMove > 0 && nShift > 0)
 			CRT::MemoryMove(&Element(nElement), &Element(nElement + nShift), nToMove * sizeof(T));
@@ -153,7 +153,7 @@ public:
 	int AddToHead(const T& source)
 	{
 		// can't insert something that's in the list. reallocation may hose us
-		CS_ASSERT(memory.Base() == nullptr || &source < begin() || &source >= end());
+		SD_ASSERT(memory.Base() == nullptr || &source < begin() || &source >= end());
 		return InsertBefore(0, source);
 	}
 
@@ -170,7 +170,7 @@ public:
 	int AddToTail(const T& source)
 	{
 		// can't insert something that's in the list. reallocation may hose us
-		CS_ASSERT(memory.Base() == nullptr || &source < begin() || &source >= end());
+		SD_ASSERT(memory.Base() == nullptr || &source < begin() || &source >= end());
 		return InsertBefore(nSize, source);
 	}
 
@@ -188,7 +188,7 @@ public:
 	int InsertBefore(const int nElement)
 	{
 		// can insert at the end
-		CS_ASSERT(nElement == nSize || IsValidIndex(nElement));
+		SD_ASSERT(nElement == nSize || IsValidIndex(nElement));
 
 		GrowVector();
 		ShiftElementsRight(nElement);
@@ -202,7 +202,7 @@ public:
 			return nElement;
 
 		// can insert at the end
-		CS_ASSERT(nElement == nSize || IsValidIndex(nElement));
+		SD_ASSERT(nElement == nSize || IsValidIndex(nElement));
 
 		GrowVector(nCount);
 		ShiftElementsRight(nElement, nCount);
@@ -217,10 +217,10 @@ public:
 	int InsertBefore(const int nElement, const T& source)
 	{
 		// can't insert something that's in the list. reallocation may hose us
-		CS_ASSERT(memory.Base() == nullptr || &source < begin() || &source >= end());
+		SD_ASSERT(memory.Base() == nullptr || &source < begin() || &source >= end());
 
 		// can insert at the end
-		CS_ASSERT(nElement == nSize || IsValidIndex(nElement));
+		SD_ASSERT(nElement == nSize || IsValidIndex(nElement));
 
 		// reallocate if can't insert something that's in the list
 		GrowVector();
@@ -235,7 +235,7 @@ public:
 			return nElement;
 
 		// can insert at the end
-		CS_ASSERT(nElement == nSize || IsValidIndex(nElement));
+		SD_ASSERT(nElement == nSize || IsValidIndex(nElement));
 
 		GrowVector(nCount);
 		ShiftElementsRight(nElement, nCount);
@@ -323,24 +323,51 @@ class CUtlVectorAligned : public CUtlVector<T, CUtlMemoryAligned<T, alignof(T)>>
 {
 };
 
-//a array class with a fixed allocation scheme
-template <class T, std::size_t MAX_SIZE>
-class CUtlVectorFixed : public CUtlVector<T, CUtlMemoryFixed<T, MAX_SIZE>>
-{
-	using CBaseClass = CUtlVector<T, CUtlMemoryFixed<T, MAX_SIZE>>;
 
-public:
-	explicit CUtlVectorFixed(int nGrowSize = 0, int nInitialCapacity = 0) :
-		CBaseClass(nGrowSize, nInitialCapacity) { }
-
-	CUtlVectorFixed(T* pMemory, int nElements) :
-		CBaseClass(pMemory, nElements) { }
-};
-
+//这是来自cs2sdk的简单版本
 template <typename T>
-class C_NetworkUtlVectorBase
-{
+class CUtlVectorSimple {
 public:
-	std::uint32_t nSize;
-	T* pElements;
+	auto At(int i) const { return m_Data[i]; }
+	auto AtPtr(int i) const { return m_Data + i; }
+
+	// C++ STL Iterators
+	auto begin() const { return m_Data; }
+	auto end() const { return m_Data + m_Size; }
+
+	bool Empty() const { return m_Size == 0; }
+	bool Contains(const T& element) const {
+		for (const auto& it : *this)
+			if (it == element) return true;
+		return false;
+	}
+
+	int m_Size;
+	char pad0[0x4];
+	T* m_Data;
+	char pad1[0x8];
 };
+
+
+//我们没有复制带有CUtlMemoryFixed的SDK，或许不是必须的...
+//a array class with a fixed allocation scheme
+//template <class T, std::size_t MAX_SIZE>
+//class CUtlVectorFixed : public CUtlVector<T, CUtlMemoryFixed<T, MAX_SIZE>>
+//{
+//	using CBaseClass = CUtlVector<T, CUtlMemoryFixed<T, MAX_SIZE>>;
+//
+//public:
+//	explicit CUtlVectorFixed(int nGrowSize = 0, int nInitialCapacity = 0) :
+//		CBaseClass(nGrowSize, nInitialCapacity) { }
+//
+//	CUtlVectorFixed(T* pMemory, int nElements) :
+//		CBaseClass(pMemory, nElements) { }
+//};
+//
+//template <typename T>
+//class C_NetworkUtlVectorBase
+//{
+//public:
+//	std::uint32_t nSize;
+//	T* pElements;
+//};

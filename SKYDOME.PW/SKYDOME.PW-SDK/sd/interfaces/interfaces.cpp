@@ -103,10 +103,11 @@ bool InterfacesManager::init()
 
 	const auto pInputSystemRegisterList = GetRegisterList(INPUTSYSTEM_DLL);
 	InputSystem = Capture<CInputSystem>(pInputSystemRegisterList, XorStr("InputSystemVersion00"));
+	INTERFACES_INITLOG("InputSystem", InputSystem);
+	const auto pTier0Handle = MEM::GetModuleBaseHandle(TIER0_DLL);
+	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
 
-	
-
-
+	INTERFACES_INITLOG("MemAlloc", MemAlloc);
 
 	if (CheckNull() != 1337) {
 

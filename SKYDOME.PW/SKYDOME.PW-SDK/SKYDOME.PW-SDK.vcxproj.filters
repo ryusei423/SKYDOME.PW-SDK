@@ -64,6 +64,12 @@
     <Filter Include="sd\menu\anim">
       <UniqueIdentifier>{94de2a40-8ca2-4281-b75f-d6597a01335b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdk\entity">
+      <UniqueIdentifier>{23bfd72a-40bc-4fd2-b5d7-63e50a77cf04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="a2x">
+      <UniqueIdentifier>{5fb26f39-3dd2-4c0a-988e-1d8e6bf7aa6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -198,12 +204,6 @@
       <Filter>external\easylogging</Filter>
     </ClInclude>
     <ClInclude Include="gobal.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VectoredHandler.cpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VectoredHandler.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="external\SD.h">
@@ -347,9 +347,6 @@
     <ClInclude Include="sdk\datatypes\utlmap.h">
       <Filter>sdk\datatypes</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\datatypes\utlmemory.h">
-      <Filter>sdk\datatypes</Filter>
-    </ClInclude>
     <ClInclude Include="sdk\datatypes\utlrbtree.h">
       <Filter>sdk\datatypes</Filter>
     </ClInclude>
@@ -412,6 +409,36 @@
     </ClInclude>
     <ClInclude Include="sd\menu\anim\Utils.h">
       <Filter>sd\menu\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\entity\CBaseHandle.h">
+      <Filter>sdk\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\ischemasystem.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\imemalloc.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\datatypes\utlmemory.hpp">
+      <Filter>sdk\datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="a2x\client.dll.hpp">
+      <Filter>a2x</Filter>
+    </ClInclude>
+    <ClInclude Include="a2x\engine2.dll.hpp">
+      <Filter>a2x</Filter>
+    </ClInclude>
+    <ClInclude Include="a2x\interfaces.hpp">
+      <Filter>a2x</Filter>
+    </ClInclude>
+    <ClInclude Include="a2x\offsets.hpp">
+      <Filter>a2x</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\cgameentitysystem.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatData.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

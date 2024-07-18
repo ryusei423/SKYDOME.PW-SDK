@@ -176,6 +176,11 @@
     <ClCompile Include="sd\utilities\pointer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="a2x\client.dll.hpp" />
+    <ClInclude Include="a2x\engine2.dll.hpp" />
+    <ClInclude Include="a2x\interfaces.hpp" />
+    <ClInclude Include="a2x\offsets.hpp" />
+    <ClInclude Include="CheatData.h" />
     <ClInclude Include="external\easylogging\easylogging++.h" />
     <ClInclude Include="external\imgui\imconfig.h" />
     <ClInclude Include="external\imgui\imgui.h" />
@@ -202,6 +207,7 @@
     <ClInclude Include="gobal.h" />
     <ClInclude Include="OffsetManager.h" />
     <ClInclude Include="sdk\ccsgoinput.h" />
+    <ClInclude Include="sdk\cgameentitysystem.h" />
     <ClInclude Include="sdk\datatypes\color.h" />
     <ClInclude Include="sdk\datatypes\keyvalue3.h" />
     <ClInclude Include="sdk\datatypes\matrix.h" />
@@ -214,14 +220,17 @@
     <ClInclude Include="sdk\datatypes\utlfixedmemory.h" />
     <ClInclude Include="sdk\datatypes\utllinkedlist.h" />
     <ClInclude Include="sdk\datatypes\utlmap.h" />
-    <ClInclude Include="sdk\datatypes\utlmemory.h" />
+    <ClInclude Include="sdk\datatypes\utlmemory.hpp" />
     <ClInclude Include="sdk\datatypes\utlrbtree.h" />
     <ClInclude Include="sdk\datatypes\utlstring.h" />
     <ClInclude Include="sdk\datatypes\utlthash.h" />
     <ClInclude Include="sdk\datatypes\utlvector.h" />
     <ClInclude Include="sdk\datatypes\vector.h" />
     <ClInclude Include="sdk\datatypes\viewsetup.h" />
+    <ClInclude Include="sdk\entity\CBaseHandle.h" />
+    <ClInclude Include="sdk\imemalloc.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
+    <ClInclude Include="sdk\ischemasystem.h" />
     <ClInclude Include="sdk\iswapchaindx11.h" />
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
@@ -249,8 +258,6 @@
     <ClInclude Include="sd\utilities\pe64.h" />
     <ClInclude Include="sd\utilities\pointer.hpp" />
     <ClInclude Include="valvesdk.h" />
-    <ClInclude Include="VectoredHandler.cpp" />
-    <ClInclude Include="VectoredHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
