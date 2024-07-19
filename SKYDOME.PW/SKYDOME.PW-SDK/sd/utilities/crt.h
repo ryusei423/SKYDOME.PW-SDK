@@ -1647,7 +1647,7 @@ namespace CRT
 			va_list args;
 			va_start(args, szFormat);
 
-			[[maybe_unused]] const int iReturn = stbsp_vsnprintf(this->szBuffer, static_cast<int>(sizeof(this->szBuffer)), szFormat, args);
+			[[maybe_unused]] const int iReturn = vsnprintf(this->szBuffer, static_cast<int>(sizeof(this->szBuffer)), szFormat, args);
 
 			va_end(args);
 		}

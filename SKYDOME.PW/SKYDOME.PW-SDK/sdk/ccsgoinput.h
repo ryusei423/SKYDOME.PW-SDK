@@ -38,7 +38,7 @@ public:
 	std::int32_t nMouseDeltaY; //0x0030
 	std::int32_t nAdditionalStepMovesCount; //0x0034
 	CTinyMoveStepData tinyMoveStepData[12]; //0x0038
-	Vector_t vecViewAngle; //0x0158
+	Vector vecViewAngle; //0x0158
 	std::int32_t nTargetHandle; //0x0164
 }; //Size:0x0168
 

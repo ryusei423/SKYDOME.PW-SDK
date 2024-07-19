@@ -8,8 +8,8 @@
 [[nodiscard]] QAngle_t Matrix3x4_t::ToAngles() const
 {
 	// extract the basis vectors from the matrix. since we only need the z component of the up vector, we don't get x and y
-	const Vector_t vecForward = this->GetForward();
-	const Vector_t vecLeft = this->GetLeft();
+	const Vector vecForward = this->GetForward();
+	const Vector vecLeft = this->GetLeft();
 	const float flUpZ = this->arrData[2][2];
 
 	const float flLength2D = vecForward.Length2D();

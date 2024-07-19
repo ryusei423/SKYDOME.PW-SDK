@@ -6,3 +6,5 @@
 #include"sdk/imemalloc.h"
 #include"sdk/ischemasystem.h"
 #include"sdk/cgameentitysystem.h"
+
+#include"sdk/entity/Entity.h"

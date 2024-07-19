@@ -12,6 +12,7 @@
 #include "gobal.h"
 #include "external/StackWalker/StackWalker.h"
 #include "CheatData.h"
+#include "sd/schema/schema.h"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -222,11 +223,14 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 	//不需要
 	//MEM::Setup();
 	bool rt = true;
+	
 	rt = g_OffsetManager->scan();
 	SD_ASSERT(rt);
 	rt = g_OffsetManager->scan_export();
 	SD_ASSERT(rt);
 	rt = g_interfaces->init();
+	SD_ASSERT(rt);
+	rt = g_SchemaManager->init(XorStr("client.dll"));
 	SD_ASSERT(rt);
 	
 	rt = g_hooks::init();

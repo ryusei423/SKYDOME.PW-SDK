@@ -3,7 +3,7 @@
 // used: mem_pad
 #include "../../sd/utilities/memory.h"
 
-// used: vector_t
+// used: Vector
 #include "vector.h"
 // used: qangle_t
 #include "qangle.h"
@@ -19,7 +19,7 @@ public:
 	MEM_PAD(0x38);
 	float flFov; // 0x04D8
 	float flFovViewmodel; // 0x04DC
-	Vector_t vecOrigin; // 0x04E0
+	Vector vecOrigin; // 0x04E0
 	MEM_PAD(0xC); // 0x04EC
 	QAngle_t angView; // 0x04F8
 	MEM_PAD(0x14); // 0x0504

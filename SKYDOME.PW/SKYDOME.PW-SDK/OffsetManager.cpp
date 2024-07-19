@@ -35,7 +35,26 @@ bool OffsetManager::scan()
 	offsets[OFFSET_GET_ENTITY_BY_INDEX] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL, 
 		XorStr("81 FA ? ? ? ? 77 ? 8B C2 C1 F8 ? 83 F8 ? 77 ? 48 98 48 8B 4C C1 ? 48 85 C9 74 ? 8B C2 25 ? ? ? ? 48 6B C0 ? 48 03 C8 74 ? 8B 41 ? 25 ? ? ? ? 3B C2 75 ? 48 8B 01")));
 
+	offsets[OFFSET_GET_BONE] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B FA 49 63 F0 BA ? ? ? ? 48 8B D9 E8 ? ? ? ? 48 8B 8B")));
+	offsets[OFFSET_GET_MATRIX_FOR_VIEW] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("40 53 48 81 EC ? ? ? ? 49 8B C1")));
+	
+	// #STR: "C:\\buildworker\\csgo_rel_win64\\build\\src\\game\\client\, "C:\\buildworker\\csgo_rel_win64\\build\\src\\game\\client\"
+	offsets[OFFSET_FRAME_STAGE_NOTIFY] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 5C 24 10 56 48 83 EC 30 8B 05")));
 
+	// #STR: "CountFilesNeedTrustCheck", "CountFilesCompletedTrustCheck", "BSecureAllowed", "CountItemsToReport", "GetTotalFilesLoaded"
+	offsets[OFFSET_GET_FUNCTION] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 5C 24 10 56 48 83 EC 30 8B 05")));
+
+	// #STR: "ntdll.dll", "NtOpenFile", "NtQueryInformationThread", "kernelbase.dll", "LoadLibraryExW", "kernel32.dll", "GetCurrentThreadStackLimits", "GetVersionExA", "gameoverlayrenderer64.dll"
+	offsets[OFFSET_GET_FUNCTION1] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 4C 24 ? 48 83 EC ? 48 8B 44 24 ? 48 83 78 ? ? 74 ? E9")));
+	//很有意思,我们是否能用一种更好的方法来隐藏我们的模块？
+	// 48 89 4C 24 ? 48 81 EC ? ? ? ? 48 C7 44 24 - DllVerification
+	// 48 89 4C 24 ? 48 83 EC ? 48 83 3D - DllVerification2
+	// 44 88 4C 24 ? 4C 89 44 24 ? 48 89 54 24 ? 48 89 4C 24 ? B8 - CUserMessage_DllStatus
 
 	// #STR: "allowed", "ISS: Cursor invisible from '%s'\n", "ISS: Cursor icon from '%s'\n", "ISS: Mouse capture enabled from '%s'\n", "ISS: Mouse capture disabled from '%s'\n", "ISS: Cursor clip %s from '%s'\n", "ISS: Relative mouse %s from '%s'\n", "ISS: Standard cursors from '%s'\n", "disabled", "enabled"
 	offsets[OFFSET_RELATIVE_MODE_MOUSE] = reinterpret_cast<void*>(MEM::FindPattern(INPUTSYSTEM_DLL, 

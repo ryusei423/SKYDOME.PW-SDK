@@ -38,7 +38,7 @@ struct Matrix3x4_t
 		arrData[2][3] = m23;
 	}
 
-	constexpr Matrix3x4_t(const Vector_t& vecForward, const Vector_t& vecLeft, const Vector_t& vecUp, const Vector_t& vecOrigin)
+	constexpr Matrix3x4_t(const Vector& vecForward, const Vector& vecLeft, const Vector& vecUp, const Vector& vecOrigin)
 	{
 		SetForward(vecForward);
 		SetLeft(vecLeft);
@@ -56,50 +56,50 @@ struct Matrix3x4_t
 		return arrData[nIndex];
 	}
 
-	constexpr void SetForward(const Vector_t& vecForward)
+	constexpr void SetForward(const Vector& vecForward)
 	{
 		arrData[0][0] = vecForward.x;
 		arrData[1][0] = vecForward.y;
 		arrData[2][0] = vecForward.z;
 	}
 
-	constexpr void SetLeft(const Vector_t& vecLeft)
+	constexpr void SetLeft(const Vector& vecLeft)
 	{
 		arrData[0][1] = vecLeft.x;
 		arrData[1][1] = vecLeft.y;
 		arrData[2][1] = vecLeft.z;
 	}
 
-	constexpr void SetUp(const Vector_t& vecUp)
+	constexpr void SetUp(const Vector& vecUp)
 	{
 		arrData[0][2] = vecUp.x;
 		arrData[1][2] = vecUp.y;
 		arrData[2][2] = vecUp.z;
 	}
 
-	constexpr void SetOrigin(const Vector_t& vecOrigin)
+	constexpr void SetOrigin(const Vector& vecOrigin)
 	{
 		arrData[0][3] = vecOrigin.x;
 		arrData[1][3] = vecOrigin.y;
 		arrData[2][3] = vecOrigin.z;
 	}
 
-	[[nodiscard]] constexpr Vector_t GetForward() const
+	[[nodiscard]] constexpr Vector GetForward() const
 	{
 		return { arrData[0][0], arrData[1][0], arrData[2][0] };
 	}
 
-	[[nodiscard]] constexpr Vector_t GetLeft() const
+	[[nodiscard]] constexpr Vector GetLeft() const
 	{
 		return { arrData[0][1], arrData[1][1], arrData[2][1] };
 	}
 
-	[[nodiscard]] constexpr Vector_t GetUp() const
+	[[nodiscard]] constexpr Vector GetUp() const
 	{
 		return { arrData[0][2], arrData[1][2], arrData[2][2] };
 	}
 
-	[[nodiscard]] constexpr Vector_t GetOrigin() const
+	[[nodiscard]] constexpr Vector GetOrigin() const
 	{
 		return { arrData[0][3], arrData[1][3], arrData[2][3] };
 	}

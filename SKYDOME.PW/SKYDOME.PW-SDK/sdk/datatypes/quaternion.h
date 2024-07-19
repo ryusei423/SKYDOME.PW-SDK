@@ -1,5 +1,7 @@
 #pragma once
 
+#include"matrix.h"
+
 struct Quaternion_t
 {
 	constexpr Quaternion_t(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f, const float w = 0.0f) :
@@ -12,9 +14,9 @@ struct Quaternion_t
 
 	/// @param[in] vecOrigin [optional] translation for converted matrix
 	/// @returns: matrix converted from quaternion
-	[[nodiscard]] Matrix3x4_t ToMatrix(const Vector_t& vecOrigin = {}) const
+	[[nodiscard]] Matrix3x4_t ToMatrix(const Vector& vecOrigin = {}) const
 	{
-		CS_ASSERT(this->IsValid());
+		SD_ASSERT(this->IsValid());
 
 		Matrix3x4_t matOut;
 

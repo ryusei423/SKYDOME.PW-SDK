@@ -1,6 +1,5 @@
 #pragma once
 #include"gobal.h"
-#include"sdk/datatypes/matrix.h"
 
 class CheatData {
 public:
@@ -8,7 +7,7 @@ public:
 
 	FILE* m_ConsoleStream;
 
-	Matrix3x4_t* matrix;
+	
 
 
 	bool RelativeLastValue = false;

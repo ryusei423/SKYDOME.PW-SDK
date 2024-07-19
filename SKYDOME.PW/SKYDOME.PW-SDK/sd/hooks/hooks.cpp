@@ -3,13 +3,15 @@
 #include "../../external/safetyhook/safetyhook.hpp"
 #include "../utilities/memory.h"
 #include "../interfaces/interfaces.h"
-#include "../menu/menu.h"
+
 #include"../../CheatData.h"
 
 #include "../../external/imgui/imgui.h"
 #include "../../external/imgui/imgui_impl_win32.h"
 #include "../../external/imgui/imgui_impl_dx11.h"
 
+#include "../menu/menu.h"
+#include"../esp/esp.h"
 
 namespace g_hooks {
 
@@ -32,6 +34,10 @@ namespace g_hooks {
 		safetyhook::InlineHook hook_RelativeModeMouse;
 	}
 	
+	namespace GetMatrixForView {
+		ViewMatrix_t* __fastcall GetMatrixForView(/*CRenderGameSystem**/void* pRenderGameSystem, /*IViewRender**/void* pViewRender, ViewMatrix_t* pOutWorldToView, ViewMatrix_t* pOutViewToProjection, ViewMatrix_t* pOutWorldToProjection, ViewMatrix_t* pOutWorldToPixels);
+		safetyhook::InlineHook hook_GetMatrixForView;
+	}
 }
 
 static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
@@ -108,8 +114,7 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 			//RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
 		}
 
-		g_CheatData->matrix = (Matrix3x4_t*)((std::ptrdiff_t)MEM::GetModuleBaseHandle(CLIENT_DLL) + cs2_dumper::offsets::client_dll::dwViewMatrix);
-
+		
 		g_MenuManager->frame(pSwapChain);
 
 
@@ -183,6 +188,18 @@ void* __fastcall g_hooks::RelativeModeMouse::RelativeModeMouse(void* a1, int a2)
 	//return enabled;
 }
 
+ViewMatrix_t* __fastcall g_hooks::GetMatrixForView::GetMatrixForView(void* pRenderGameSystem, void* pViewRender, ViewMatrix_t* pOutWorldToView, ViewMatrix_t* pOutViewToProjection, ViewMatrix_t* pOutWorldToProjection, ViewMatrix_t* pOutWorldToPixels)
+{
+	auto rt = hook_GetMatrixForView.call<ViewMatrix_t*>(pRenderGameSystem, pViewRender, pOutWorldToView, pOutViewToProjection, pOutWorldToProjection, pOutWorldToPixels);
+
+	g_EspDrawManager->matrix = *pOutWorldToProjection;
+
+	//无用 只是感觉很好玩
+	//pOutWorldToProjection = &g_EspDrawManager->matrix;
+
+	return rt;
+}
+
 
 #define HK(N,S,P,I,F)	S = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(P,I)), reinterpret_cast<void*>(F));		\
 					LOG(INFO) << SDlib.StrSystem().printf(g_CheatLocalization->get("hook_log"),N);
@@ -226,6 +243,7 @@ bool g_hooks::init()
 	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
 
 	HK_SIG("RelativeModeMouse",RelativeModeMouse::hook_RelativeModeMouse, g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(RelativeModeMouse::RelativeModeMouse));
+	HK_SIG("GetMatrixForView", GetMatrixForView::hook_GetMatrixForView, g_OffsetManager->offsets[g_OffsetManager->OFFSET_GET_MATRIX_FOR_VIEW], reinterpret_cast<void*>(GetMatrixForView::GetMatrixForView));
 
 
     return 1;

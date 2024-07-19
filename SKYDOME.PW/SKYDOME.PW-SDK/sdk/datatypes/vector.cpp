@@ -6,7 +6,7 @@
 // used: m_rad2deg
 //#include "../../sd/utilities/math.h"
 
-[[nodiscard]] Vector_t Vector_t::Transform(const Matrix3x4_t& matTransform) const
+[[nodiscard]] Vector Vector::Transform(const Matrix3x4_t& matTransform) const
 {
 	return {
 		this->DotProduct(matTransform[0]) + matTransform[0][3],
@@ -15,7 +15,7 @@
 	};
 }
 
-[[nodiscard]] QAngle_t Vector_t::ToAngles() const
+[[nodiscard]] QAngle_t Vector::ToAngles() const
 {
 	float flPitch, flYaw;
 	if (this->x == 0.0f && this->y == 0.0f)
@@ -39,9 +39,9 @@
 	return { flPitch, flYaw, 0.0f };
 }
 
-[[nodiscard]] Matrix3x4_t Vector_t::ToMatrix() const
+[[nodiscard]] Matrix3x4_t Vector::ToMatrix() const
 {
-	Vector_t vecRight = {}, vecUp = {};
+	Vector vecRight = {}, vecUp = {};
 	this->ToDirections(&vecRight, &vecUp);
 
 	Matrix3x4a_t matOutput = {};

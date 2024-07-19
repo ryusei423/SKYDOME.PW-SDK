@@ -157,6 +157,8 @@
     <ClCompile Include="sdk\datatypes\matrix.cpp" />
     <ClCompile Include="sdk\datatypes\qangle.cpp" />
     <ClCompile Include="sdk\datatypes\vector.cpp" />
+    <ClCompile Include="sdk\entity\Entity.cpp" />
+    <ClCompile Include="sd\esp\esp.cpp" />
     <ClCompile Include="sd\hooks\hooks.cpp" />
     <ClCompile Include="sd\interfaces\interfaces.cpp" />
     <ClCompile Include="sd\menu\anim\AbstractAnimation.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="sd\menu\anim\Utils.cpp" />
     <ClCompile Include="sd\menu\menu.cpp" />
     <ClCompile Include="sd\menu\widget.cpp" />
+    <ClCompile Include="sd\schema\schema.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
     <ClCompile Include="sd\utilities\memory.cpp" />
     <ClCompile Include="sd\utilities\pointer.cpp" />
@@ -228,10 +231,12 @@
     <ClInclude Include="sdk\datatypes\vector.h" />
     <ClInclude Include="sdk\datatypes\viewsetup.h" />
     <ClInclude Include="sdk\entity\CBaseHandle.h" />
+    <ClInclude Include="sdk\entity\Entity.h" />
     <ClInclude Include="sdk\imemalloc.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
     <ClInclude Include="sdk\ischemasystem.h" />
     <ClInclude Include="sdk\iswapchaindx11.h" />
+    <ClInclude Include="sd\esp\esp.h" />
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
     <ClInclude Include="sd\localization\localization.h" />
@@ -251,6 +256,7 @@
     <ClInclude Include="sd\menu\fonts\Roboto-Bold.h" />
     <ClInclude Include="sd\menu\menu.h" />
     <ClInclude Include="sd\menu\widget.h" />
+    <ClInclude Include="sd\schema\schema.h" />
     <ClInclude Include="sd\utilities\crt.h" />
     <ClInclude Include="sd\utilities\fnv1a.h" />
     <ClInclude Include="sd\utilities\math.h" />

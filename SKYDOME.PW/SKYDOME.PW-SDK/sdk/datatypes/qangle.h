@@ -236,11 +236,11 @@ struct QAngle_t
 	/// @param[out] pvecForward [optional] output for converted forward vector
 	/// @param[out] pvecRight [optional] output for converted right vector
 	/// @param[out] pvecUp [optional] output for converted up vector
-	void ToDirections(Vector_t* pvecForward, Vector_t* pvecRight = nullptr, Vector_t* pvecUp = nullptr) const;
+	void ToDirections(Vector* pvecForward, Vector* pvecRight = nullptr, Vector* pvecUp = nullptr) const;
 
 	/// @param[in] vecOrigin [optional] origin for converted matrix
 	/// @returns: matrix converted from angle
-	[[nodiscard]] Matrix3x4_t ToMatrix(const Vector_t& vecOrigin = {}) const;
+	[[nodiscard]] Matrix3x4_t ToMatrix(const Vector& vecOrigin = {}) const;
 
 public:
 	float x = 0.0f, y = 0.0f, z = 0.0f;

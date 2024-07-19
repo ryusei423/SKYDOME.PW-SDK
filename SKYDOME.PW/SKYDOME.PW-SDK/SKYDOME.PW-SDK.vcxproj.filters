@@ -70,6 +70,12 @@
     <Filter Include="a2x">
       <UniqueIdentifier>{5fb26f39-3dd2-4c0a-988e-1d8e6bf7aa6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\esp">
+      <UniqueIdentifier>{25bb265e-61cc-4ca7-bc9c-41239344cb28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sd\schema">
+      <UniqueIdentifier>{c18e6caf-9d53-468e-87dc-765a03dc4421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -191,6 +197,15 @@
     </ClCompile>
     <ClCompile Include="sd\menu\anim\Utils.cpp">
       <Filter>sd\menu\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\schema\schema.cpp">
+      <Filter>sd\schema</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\entity\Entity.cpp">
+      <Filter>sdk\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\esp\esp.cpp">
+      <Filter>sd\esp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +454,15 @@
     </ClInclude>
     <ClInclude Include="CheatData.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\esp\esp.h">
+      <Filter>sd\esp</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\entity\Entity.h">
+      <Filter>sdk\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\schema\schema.h">
+      <Filter>sd\schema</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

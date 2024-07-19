@@ -24,15 +24,15 @@ struct Vector2D_t
 	float x = 0.0f, y = 0.0f;
 };
 
-struct Vector_t
+struct Vector
 {
-	constexpr Vector_t(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f) :
+	constexpr Vector(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f) :
 		x(x), y(y), z(z) { }
 
-	constexpr Vector_t(const float* arrVector) :
+	constexpr Vector(const float* arrVector) :
 		x(arrVector[0]), y(arrVector[1]), z(arrVector[2]) { }
 
-	constexpr Vector_t(const Vector2D_t& vecBase2D) :
+	constexpr Vector(const Vector2D_t& vecBase2D) :
 		x(vecBase2D.x), y(vecBase2D.y) { }
 
 #pragma region vector_array_operators
@@ -51,12 +51,12 @@ struct Vector_t
 
 #pragma region vector_relational_operators
 
-	bool operator==(const Vector_t& vecBase) const
+	bool operator==(const Vector& vecBase) const
 	{
 		return this->IsEqual(vecBase);
 	}
 
-	bool operator!=(const Vector_t& vecBase) const
+	bool operator!=(const Vector& vecBase) const
 	{
 		return !this->IsEqual(vecBase);
 	}
@@ -65,7 +65,7 @@ struct Vector_t
 
 #pragma region vector_assignment_operators
 
-	constexpr Vector_t& operator=(const Vector_t& vecBase)
+	constexpr Vector& operator=(const Vector& vecBase)
 	{
 		this->x = vecBase.x;
 		this->y = vecBase.y;
@@ -73,7 +73,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator=(const Vector2D_t& vecBase2D)
+	constexpr Vector& operator=(const Vector2D_t& vecBase2D)
 	{
 		this->x = vecBase2D.x;
 		this->y = vecBase2D.y;
@@ -85,7 +85,7 @@ struct Vector_t
 
 #pragma region vector_arithmetic_assignment_operators
 
-	constexpr Vector_t& operator+=(const Vector_t& vecBase)
+	constexpr Vector& operator+=(const Vector& vecBase)
 	{
 		this->x += vecBase.x;
 		this->y += vecBase.y;
@@ -93,7 +93,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator-=(const Vector_t& vecBase)
+	constexpr Vector& operator-=(const Vector& vecBase)
 	{
 		this->x -= vecBase.x;
 		this->y -= vecBase.y;
@@ -101,7 +101,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator*=(const Vector_t& vecBase)
+	constexpr Vector& operator*=(const Vector& vecBase)
 	{
 		this->x *= vecBase.x;
 		this->y *= vecBase.y;
@@ -109,7 +109,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator/=(const Vector_t& vecBase)
+	constexpr Vector& operator/=(const Vector& vecBase)
 	{
 		this->x /= vecBase.x;
 		this->y /= vecBase.y;
@@ -117,7 +117,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator+=(const float flAdd)
+	constexpr Vector& operator+=(const float flAdd)
 	{
 		this->x += flAdd;
 		this->y += flAdd;
@@ -125,7 +125,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator-=(const float flSubtract)
+	constexpr Vector& operator-=(const float flSubtract)
 	{
 		this->x -= flSubtract;
 		this->y -= flSubtract;
@@ -133,7 +133,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator*=(const float flMultiply)
+	constexpr Vector& operator*=(const float flMultiply)
 	{
 		this->x *= flMultiply;
 		this->y *= flMultiply;
@@ -141,7 +141,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t& operator/=(const float flDivide)
+	constexpr Vector& operator/=(const float flDivide)
 	{
 		this->x /= flDivide;
 		this->y /= flDivide;
@@ -153,7 +153,7 @@ struct Vector_t
 
 #pragma region vector_arithmetic_unary_operators
 
-	constexpr Vector_t& operator-()
+	constexpr Vector& operator-()
 	{
 		this->x = -this->x;
 		this->y = -this->y;
@@ -161,7 +161,7 @@ struct Vector_t
 		return *this;
 	}
 
-	constexpr Vector_t operator-() const
+	constexpr Vector operator-() const
 	{
 		return { -this->x, -this->y, -this->z };
 	}
@@ -170,42 +170,42 @@ struct Vector_t
 
 #pragma region vector_arithmetic_ternary_operators
 
-	Vector_t operator+(const Vector_t& vecAdd) const
+	Vector operator+(const Vector& vecAdd) const
 	{
 		return { this->x + vecAdd.x, this->y + vecAdd.y, this->z + vecAdd.z };
 	}
 
-	Vector_t operator-(const Vector_t& vecSubtract) const
+	Vector operator-(const Vector& vecSubtract) const
 	{
 		return { this->x - vecSubtract.x, this->y - vecSubtract.y, this->z - vecSubtract.z };
 	}
 
-	Vector_t operator*(const Vector_t& vecMultiply) const
+	Vector operator*(const Vector& vecMultiply) const
 	{
 		return { this->x * vecMultiply.x, this->y * vecMultiply.y, this->z * vecMultiply.z };
 	}
 
-	Vector_t operator/(const Vector_t& vecDivide) const
+	Vector operator/(const Vector& vecDivide) const
 	{
 		return { this->x / vecDivide.x, this->y / vecDivide.y, this->z / vecDivide.z };
 	}
 
-	Vector_t operator+(const float flAdd) const
+	Vector operator+(const float flAdd) const
 	{
 		return { this->x + flAdd, this->y + flAdd, this->z + flAdd };
 	}
 
-	Vector_t operator-(const float flSubtract) const
+	Vector operator-(const float flSubtract) const
 	{
 		return { this->x - flSubtract, this->y - flSubtract, this->z - flSubtract };
 	}
 
-	Vector_t operator*(const float flMultiply) const
+	Vector operator*(const float flMultiply) const
 	{
 		return { this->x * flMultiply, this->y * flMultiply, this->z * flMultiply };
 	}
 
-	Vector_t operator/(const float flDivide) const
+	Vector operator/(const float flDivide) const
 	{
 		return { this->x / flDivide, this->y / flDivide, this->z / flDivide };
 	}
@@ -224,7 +224,7 @@ struct Vector_t
 	}
 
 	/// @returns: true if each component of the vector equals to another, false otherwise
-	[[nodiscard]] bool IsEqual(const Vector_t& vecEqual, const float flErrorMargin = std::numeric_limits<float>::epsilon()) const
+	[[nodiscard]] bool IsEqual(const Vector& vecEqual, const float flErrorMargin = std::numeric_limits<float>::epsilon()) const
 	{
 		return (std::fabsf(this->x - vecEqual.x) < flErrorMargin && std::fabsf(this->y - vecEqual.y) < flErrorMargin && std::fabsf(this->z - vecEqual.z) < flErrorMargin);
 	}
@@ -256,12 +256,12 @@ struct Vector_t
 		return (this->x * this->x + this->y * this->y);
 	}
 
-	[[nodiscard]] float DistTo(const Vector_t& vecEnd) const
+	[[nodiscard]] float DistTo(const Vector& vecEnd) const
 	{
 		return (*this - vecEnd).Length();
 	}
 
-	[[nodiscard]] constexpr float DistToSqr(const Vector_t& vecEnd) const
+	[[nodiscard]] constexpr float DistToSqr(const Vector& vecEnd) const
 	{
 		return (*this - vecEnd).LengthSqr();
 	}
@@ -282,25 +282,25 @@ struct Vector_t
 
 	/// normalize magnitude of each component of the vector
 	/// @returns: copy of the vector with normalized components
-	[[nodiscard]] Vector_t Normalized() const
+	[[nodiscard]] Vector Normalized() const
 	{
-		Vector_t vecOut = *this;
+		Vector vecOut = *this;
 		vecOut.NormalizeInPlace();
 		return vecOut;
 	}
 
-	[[nodiscard]] constexpr float DotProduct(const Vector_t& vecDot) const
+	[[nodiscard]] constexpr float DotProduct(const Vector& vecDot) const
 	{
 		return (this->x * vecDot.x + this->y * vecDot.y + this->z * vecDot.z);
 	}
 
-	[[nodiscard]] constexpr Vector_t CrossProduct(const Vector_t& vecCross) const
+	[[nodiscard]] constexpr Vector CrossProduct(const Vector& vecCross) const
 	{
 		return { this->y * vecCross.z - this->z * vecCross.y, this->z * vecCross.x - this->x * vecCross.z, this->x * vecCross.y - this->y * vecCross.x };
 	}
 
 	/// @returns: transformed vector by given transformation matrix
-	[[nodiscard]] Vector_t Transform(const Matrix3x4_t& matTransform) const;
+	[[nodiscard]] Vector Transform(const Matrix3x4_t& matTransform) const;
 
 	[[nodiscard]] Vector2D_t ToVector2D() const
 	{
@@ -310,7 +310,7 @@ struct Vector_t
 	/// convert forward direction vector to other direction vectors
 	/// @param[out] pvecRight [optional] output for converted right vector
 	/// @param[out] pvecUp [optional] output for converted up vector
-	void ToDirections(Vector_t* pvecRight, Vector_t* pvecUp) const
+	void ToDirections(Vector* pvecRight, Vector* pvecUp) const
 	{
 		if (std::fabsf(this->x) < 1e-6f && std::fabsf(this->y) < 1e-6f)
 		{
@@ -366,11 +366,11 @@ struct Vector4D_t
 	float x = 0.0f, y = 0.0f, z = 0.0f, w = 0.0f;
 };
 
-struct alignas(16) VectorAligned_t : Vector_t
+struct alignas(16) VectorAligned_t : Vector
 {
 	VectorAligned_t() = default;
 
-	explicit VectorAligned_t(const Vector_t& vecBase)
+	explicit VectorAligned_t(const Vector& vecBase)
 	{
 		this->x = vecBase.x;
 		this->y = vecBase.y;
@@ -378,7 +378,7 @@ struct alignas(16) VectorAligned_t : Vector_t
 		this->w = 0.0f;
 	}
 
-	constexpr VectorAligned_t& operator=(const Vector_t& vecBase)
+	constexpr VectorAligned_t& operator=(const Vector& vecBase)
 	{
 		this->x = vecBase.x;
 		this->y = vecBase.y;

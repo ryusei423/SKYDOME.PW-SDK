@@ -96,18 +96,26 @@ bool InterfacesManager::init()
 		Device->GetImmediateContext((ID3D11DeviceContext**)&DeviceContext);
 		INTERFACES_INITLOG("DeviceContext", DeviceContext);
 	}*/
+	const auto pTier0Handle = MEM::GetModuleBaseHandle(TIER0_DLL);
 
+	const auto pInputSystemRegisterList = GetRegisterList(INPUTSYSTEM_DLL);
+	const auto pSchemaSystemRegisterList = GetRegisterList(SCHEMASYSTEM_DLL);
 
 	CSGOInput = reinterpret_cast<CCSGOInput*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CCSGOINPUT]);
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 
-	const auto pInputSystemRegisterList = GetRegisterList(INPUTSYSTEM_DLL);
+	
 	InputSystem = Capture<CInputSystem>(pInputSystemRegisterList, XorStr("InputSystemVersion00"));
 	INTERFACES_INITLOG("InputSystem", InputSystem);
-	const auto pTier0Handle = MEM::GetModuleBaseHandle(TIER0_DLL);
-	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
+	
 
+	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
 	INTERFACES_INITLOG("MemAlloc", MemAlloc);
+
+	SchemaSystem = Capture<ISchemaSystem>(pSchemaSystemRegisterList, XorStr("SchemaSystem_00"));
+	INTERFACES_INITLOG("SchemaSystem", SchemaSystem);
+
+
 
 	if (CheckNull() != 1337) {
 

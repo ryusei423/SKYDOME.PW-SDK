@@ -1,6 +1,8 @@
 #pragma once
 
+//所有使用a2x偏移的代码都应该引用本文件
 #include "a2x/offsets.hpp"
+#include "a2x/client.dll.hpp"
 
 //实际上用于管理特征码搜索的函数地址
 class OffsetManager
@@ -17,6 +19,11 @@ public:
 		OFFSET_CCSGOINPUT,
 		OFFSET_RELATIVE_MODE_MOUSE,
 		OFFSET_GET_ENTITY_BY_INDEX,
+		OFFSET_GET_BONE,
+		OFFSET_GET_MATRIX_FOR_VIEW,
+		OFFSET_FRAME_STAGE_NOTIFY,
+		OFFSET_GET_FUNCTION,
+		OFFSET_GET_FUNCTION1,
 		OFFSET_MAX
 	};
 

@@ -8,7 +8,7 @@
 // used: m_deg2rad
 //#include "../../sd/utilities/math.h"
 
-void QAngle_t::ToDirections(Vector_t* pvecForward, Vector_t* pvecRight, Vector_t* pvecUp) const
+void QAngle_t::ToDirections(Vector* pvecForward, Vector* pvecRight, Vector* pvecUp) const
 {
 	float flPitchSin, flPitchCos, flYawSin, flYawCos, flRollSin, flRollCos;
 	DirectX::XMScalarSinCos(&flPitchSin, &flPitchCos, M_DEG2RAD(this->x));
@@ -37,7 +37,7 @@ void QAngle_t::ToDirections(Vector_t* pvecForward, Vector_t* pvecRight, Vector_t
 	}
 }
 
-Matrix3x4_t QAngle_t::ToMatrix(const Vector_t& vecOrigin) const
+Matrix3x4_t QAngle_t::ToMatrix(const Vector& vecOrigin) const
 {
 	float flPitchSin, flPitchCos, flYawSin, flYawCos, flRollSin, flRollCos;
 	DirectX::XMScalarSinCos(&flPitchSin, &flPitchCos, M_DEG2RAD(this->x));
