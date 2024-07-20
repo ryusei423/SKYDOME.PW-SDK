@@ -100,23 +100,23 @@ bool InterfacesManager::init()
 
 	const auto pInputSystemRegisterList = GetRegisterList(INPUTSYSTEM_DLL);
 	const auto pSchemaSystemRegisterList = GetRegisterList(SCHEMASYSTEM_DLL);
+	const auto pEngineRegisterList = GetRegisterList(ENGINE2_DLL);
 
 	CSGOInput = reinterpret_cast<CCSGOInput*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CCSGOINPUT]);
-	INTERFACES_INITLOG("CSGOInput", CSGOInput);
-
-	
 	InputSystem = Capture<CInputSystem>(pInputSystemRegisterList, XorStr("InputSystemVersion00"));
+	
+	SchemaSystem = Capture<ISchemaSystem>(pSchemaSystemRegisterList, XorStr("SchemaSystem_00"));
+	GameResourceService = Capture<IGameResourceService>(pEngineRegisterList, XorStr("GameResourceServiceClientV00"));
+	EngineClient = Capture<IEngineClient>(pEngineRegisterList, XorStr("Source2EngineToClient00"));
+	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
+
+	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 	INTERFACES_INITLOG("InputSystem", InputSystem);
 	
-
-	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
-	INTERFACES_INITLOG("MemAlloc", MemAlloc);
-
-	SchemaSystem = Capture<ISchemaSystem>(pSchemaSystemRegisterList, XorStr("SchemaSystem_00"));
 	INTERFACES_INITLOG("SchemaSystem", SchemaSystem);
-
-
-
+	INTERFACES_INITLOG("GameResourceService", GameResourceService);
+	INTERFACES_INITLOG("EngineClient", EngineClient);
+	INTERFACES_INITLOG("MemAlloc", MemAlloc);
 	if (CheckNull() != 1337) {
 
 		LOG(ERROR) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("interfaces_init_fail")), CheckNull());

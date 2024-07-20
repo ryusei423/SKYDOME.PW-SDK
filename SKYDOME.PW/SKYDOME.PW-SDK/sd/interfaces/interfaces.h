@@ -16,8 +16,8 @@ public:
 
 	
 
-	ISwapChainDx11* SwapChainDx11;	//游戏的交换链
-	IDXGISwapChain* SwapChain;	//我们自己创建的交换链
+	ISwapChainDx11* SwapChainDx11 = nullptr;	//游戏的交换链
+	IDXGISwapChain* SwapChain = nullptr;	//我们自己创建的交换链
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* DeviceContext = nullptr;
 	ID3D11RenderTargetView* RenderTargetView = nullptr;
@@ -26,6 +26,9 @@ public:
 	CCSGOInput* CSGOInput = nullptr;
 	IMemAlloc* MemAlloc = nullptr;
 	ISchemaSystem* SchemaSystem = nullptr;
+	CGameEntitySystem* GameEntitySystem = nullptr;
+	IGameResourceService* GameResourceService = nullptr;
+	IEngineClient* EngineClient = nullptr;
 
 };
 

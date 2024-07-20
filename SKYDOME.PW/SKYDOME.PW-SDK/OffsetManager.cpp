@@ -56,6 +56,14 @@ bool OffsetManager::scan()
 	// 48 89 4C 24 ? 48 83 EC ? 48 83 3D - DllVerification2
 	// 44 88 4C 24 ? 4C 89 44 24 ? 48 89 54 24 ? 48 89 4C 24 ? B8 - CUserMessage_DllStatus
 
+	//RVA
+	//41 8B D6 E8 ? ? ? ? 4C 8B F8
+	//E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F 84 35 02 00 00
+	offsets[OFFSET_GET_HITBOX_SET] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 57 48 ?? ?? ?? ?? ?? ?? 8B DA 48 8B F9 E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F ?? ?? ?? ?? ?? 48 8D")));
+
+
+
 	// #STR: "allowed", "ISS: Cursor invisible from '%s'\n", "ISS: Cursor icon from '%s'\n", "ISS: Mouse capture enabled from '%s'\n", "ISS: Mouse capture disabled from '%s'\n", "ISS: Cursor clip %s from '%s'\n", "ISS: Relative mouse %s from '%s'\n", "ISS: Standard cursors from '%s'\n", "disabled", "enabled"
 	offsets[OFFSET_RELATIVE_MODE_MOUSE] = reinterpret_cast<void*>(MEM::FindPattern(INPUTSYSTEM_DLL, 
 		XorStr("40 55 41 57 48 ?? ?? ?? 8B 41 ?? 8B EA 4C 8B F9 85 C0 0F")));

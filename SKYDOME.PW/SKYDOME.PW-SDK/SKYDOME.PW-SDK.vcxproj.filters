@@ -464,5 +464,8 @@
     <ClInclude Include="sd\schema\schema.h">
       <Filter>sd\schema</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\iengineclient.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

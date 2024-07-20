@@ -232,6 +232,7 @@
     <ClInclude Include="sdk\datatypes\viewsetup.h" />
     <ClInclude Include="sdk\entity\CBaseHandle.h" />
     <ClInclude Include="sdk\entity\Entity.h" />
+    <ClInclude Include="sdk\iengineclient.h" />
     <ClInclude Include="sdk\imemalloc.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
     <ClInclude Include="sdk\ischemasystem.h" />

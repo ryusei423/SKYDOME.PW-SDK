@@ -8,7 +8,7 @@ bool C_BaseEntity::IsBasePlayerController()
 	if (pClassInfo == nullptr)
 		return false;
 
-	return FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("C_CSPlayerController");
+	return FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("CCSPlayerController");
 }
 
 bool C_BaseEntity::IsWeapon()
@@ -24,4 +24,28 @@ bool C_BaseEntity::IsWeapon()
 		return false;
 
 	return (pClassInfo->InheritsFrom(pWeaponBaseClass));
+}
+
+static Vector vecEmpty = Vector(0, 0, 0);
+
+const Vector& C_BaseEntity::GetSceneOrigin()
+{
+	if (this->GetGameSceneNode())
+		return GetGameSceneNode()->GetAbsOrigin();
+
+	return vecEmpty;
+}
+
+
+const Vector& CCSPlayerController::GetPawnOrigin()
+{
+	CBaseHandle hPawn = this->GetPawnHandle();
+	if (!hPawn.IsValid())
+		return vecEmpty;
+
+	C_CSPlayerPawn* pPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(hPawn);
+	if (pPawn == nullptr)
+		return vecEmpty;
+
+	return pPawn->GetSceneOrigin();
 }

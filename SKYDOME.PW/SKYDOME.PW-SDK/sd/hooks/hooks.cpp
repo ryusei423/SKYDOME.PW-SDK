@@ -38,6 +38,21 @@ namespace g_hooks {
 		ViewMatrix_t* __fastcall GetMatrixForView(/*CRenderGameSystem**/void* pRenderGameSystem, /*IViewRender**/void* pViewRender, ViewMatrix_t* pOutWorldToView, ViewMatrix_t* pOutViewToProjection, ViewMatrix_t* pOutWorldToProjection, ViewMatrix_t* pOutWorldToPixels);
 		safetyhook::InlineHook hook_GetMatrixForView;
 	}
+
+	namespace FrameStageNotify {
+		void __fastcall FrameStageNotify(void* rcx, int nFrameStage);
+		safetyhook::InlineHook hook_fsn;
+	}
+
+	namespace OnAddEntity {
+		void* __fastcall OnAddEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle);
+		safetyhook::InlineHook hook_OnAddEntity;
+	}
+
+	namespace OnRemoveEntity {
+		void* __fastcall OnRemoveEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle);
+		safetyhook::InlineHook hook_OnRemoveEntity;
+	}
 }
 
 static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
@@ -113,8 +128,8 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 			g_MenuManager->toggle(!g_MenuManager->show_menu);
 			//RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
 		}
-
-		
+		//g_EspDrawManager->MakeFrame();
+		g_EspDrawManager->DrawFrame(ImGui::GetBackgroundDrawList());
 		g_MenuManager->frame(pSwapChain);
 
 
@@ -201,6 +216,33 @@ ViewMatrix_t* __fastcall g_hooks::GetMatrixForView::GetMatrixForView(void* pRend
 }
 
 
+void* __fastcall g_hooks::OnAddEntity::OnAddEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle)
+{
+	return hook_OnAddEntity.call<void*>(rcx, pInstance, hHandle);
+}
+
+
+void* __fastcall g_hooks::OnRemoveEntity::OnRemoveEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle)
+{
+	return hook_OnRemoveEntity.call<void*>(rcx,pInstance,hHandle);
+}
+
+
+
+
+void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFrameStage){
+	hook_fsn.call<void>(rcx,nFrameStage);
+	if (nFrameStage == FRAME_RENDER_END){
+		g_EspDrawManager->MakeFrame();
+
+
+
+	}
+	
+}
+
+
+
 #define HK(N,S,P,I,F)	S = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(P,I)), reinterpret_cast<void*>(F));		\
 					LOG(INFO) << SDlib.StrSystem().printf(g_CheatLocalization->get("hook_log"),N);
 
@@ -242,8 +284,12 @@ bool g_hooks::init()
 
 	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
 
+	HK("OnAddEntity", OnAddEntity::hook_OnAddEntity, g_interfaces->GameResourceService->pGameEntitySystem, 14, g_hooks::OnAddEntity::OnAddEntity);
+	HK("OnRemoveEntity", OnRemoveEntity::hook_OnRemoveEntity, g_interfaces->GameResourceService->pGameEntitySystem, 15, g_hooks::OnRemoveEntity::OnRemoveEntity);
+
 	HK_SIG("RelativeModeMouse",RelativeModeMouse::hook_RelativeModeMouse, g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(RelativeModeMouse::RelativeModeMouse));
 	HK_SIG("GetMatrixForView", GetMatrixForView::hook_GetMatrixForView, g_OffsetManager->offsets[g_OffsetManager->OFFSET_GET_MATRIX_FOR_VIEW], reinterpret_cast<void*>(GetMatrixForView::GetMatrixForView));
+	HK_SIG("FrameStageNotify", FrameStageNotify::hook_fsn, g_OffsetManager->offsets[g_OffsetManager->OFFSET_FRAME_STAGE_NOTIFY], reinterpret_cast<void*>(FrameStageNotify::FrameStageNotify));
 
 
     return 1;
