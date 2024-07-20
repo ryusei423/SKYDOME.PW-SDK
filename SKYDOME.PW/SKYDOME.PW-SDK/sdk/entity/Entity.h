@@ -88,8 +88,8 @@ class CCollisionProperty
 public:
 	//CS_CLASS_NO_INITIALIZER(CCollisionProperty);
 
-	SCHEMA_ADD_FIELD(Vector, GetMins, "CCollisionProperty->m_vecMins");
-	SCHEMA_ADD_FIELD(Vector, GetMaxs, "CCollisionProperty->m_vecMaxs");
+	SCHEMA_ADD_FIELD(Vector, m_vecMins, "CCollisionProperty->m_vecMins");
+	SCHEMA_ADD_FIELD(Vector, m_vecMaxs, "CCollisionProperty->m_vecMaxs");
 };
 
 class CTransform

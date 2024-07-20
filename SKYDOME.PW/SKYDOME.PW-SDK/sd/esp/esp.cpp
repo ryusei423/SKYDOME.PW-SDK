@@ -6,14 +6,25 @@
 void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
 	for (auto& i : manydogs){
-		ImVec2 screen;
-		WorldToScreen(i.pos,&screen);
+		ImVec2 screen,top_screen;
+		
 
-		drawlist->AddLine(ImVec2(0,0),screen, IM_COL32(0, 0, 0, 255));
+		Vector world_origin = i.pos;
+		Vector world_origin_top = world_origin;
+		world_origin_top.z += i.size.y;
 
+		WorldToScreen(world_origin, &screen);
+		WorldToScreen(world_origin_top, &top_screen);
 
+		//drawlist->AddLine(screen, top_screen, IM_COL32_WHITE);
 
+		int box_h = screen.y - top_screen.y;
+		ImVec2 min,max;
+		min = ImVec2(top_screen.x - box_h / 4,top_screen.y);
+		max = ImVec2(top_screen.x + box_h / 4, screen.y);
+		//drawlist->AddRect(min,max, IM_COL32_WHITE);
 
+		drawlist->AddRect(ImVec2(i.box.x,i.box.y), ImVec2(i.box.z, i.box.w), IM_COL32_WHITE);
 	}
 
 
@@ -21,6 +32,10 @@ void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
 
 }
+
+
+
+
 
 //call in fsn
 void EspDrawManager::MakeFrame(){
@@ -37,12 +52,30 @@ void EspDrawManager::MakeFrame(){
 		{
 			auto shit_controller = reinterpret_cast<CCSPlayerController*>(shit);
 			C_CSPlayerPawn* pPlayerPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(shit_controller->GetPawnHandle());
-			LOG(INFO) << shit_controller->GetPawnHealth() << " - " << pPlayerPawn->GetHealth() << " - " << shit_controller->GetHealth() << " - " << shit_controller->IsPawnAlive();
+			//LOG(INFO) << shit_controller->GetPawnHealth() << " - " << pPlayerPawn->GetHealth() << " - " << shit_controller->GetHealth() << " - " << shit_controller->IsPawnAlive();
 
-			std::cout << pPlayerPawn->GetHealth() << "\n";
+			//std::cout << pPlayerPawn->GetHealth() << "\n";
 
-			//if(shit_controller->GetPawnHealth())
-			manydogs.emplace_back(shit_controller->GetPawnOrigin(), ImVec2());
+			if (shit_controller->IsPawnAlive() && pPlayerPawn->GetHealth()) {
+
+				auto& esp = manydogs.emplace_back(shit_controller->GetPawnOrigin(), ImVec2(50, 70));
+
+
+				EspItemElement name;
+				name.pos = EspItemElement::TOP;
+				name.type = EspItemElement::TEXT;
+				name.text = shit_controller->GetPlayerName();
+
+				esp.Elements.emplace_back(name);
+
+
+				ImVec4 box;
+
+				GetEntityBoundingBox(pPlayerPawn,&box);
+
+				esp.box = box;
+			}
+			
 
 
 
@@ -78,5 +111,45 @@ bool EspDrawManager::WorldToScreen(const Vector& vecOrigin, ImVec2* pvecScreen)
 	const ImVec2 vecDisplaySize = ImGui::GetIO().DisplaySize;
 	pvecScreen->x = (vecDisplaySize.x * 0.5f) + (pvecScreen->x * vecDisplaySize.x) * 0.5f;
 	pvecScreen->y = (vecDisplaySize.y * 0.5f) - (pvecScreen->y * vecDisplaySize.y) * 0.5f;
+	return true;
+}
+
+bool EspDrawManager::GetEntityBoundingBox(void* pEntity, ImVec4* pVecOut)
+{
+	auto player = (C_CSPlayerPawn*)pEntity;
+	CCollisionProperty* pCollision = player->GetCollision();
+	if (pCollision == nullptr)
+		return false;
+
+	CGameSceneNode* pGameSceneNode = player->GetGameSceneNode();
+	if (pGameSceneNode == nullptr)
+		return false;
+
+	CTransform nodeToWorldTransform = pGameSceneNode->GetNodeToWorld();
+	const Matrix3x4_t matTransform = nodeToWorldTransform.quatOrientation.ToMatrix(nodeToWorldTransform.vecPosition);
+
+	const Vector vecMins = pCollision->m_vecMins();
+	const Vector vecMaxs = pCollision->m_vecMaxs();
+
+	pVecOut->x = pVecOut->y = 3.402823466e+38F;
+	pVecOut->z = pVecOut->w = -3.402823466e+38F;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		const Vector vecPoint{
+			i & 1 ? vecMaxs.x : vecMins.x,
+			i & 2 ? vecMaxs.y : vecMins.y,
+			i & 4 ? vecMaxs.z : vecMins.z
+		};
+		ImVec2 vecScreen;
+		if (!WorldToScreen(vecPoint.Transform(matTransform), &vecScreen))
+			return false;
+
+		pVecOut->x = MATH::Min(pVecOut->x, vecScreen.x);
+		pVecOut->y = MATH::Min(pVecOut->y, vecScreen.y);
+		pVecOut->z = MATH::Max(pVecOut->z, vecScreen.x);
+		pVecOut->w = MATH::Max(pVecOut->w, vecScreen.y);
+	}
+
 	return true;
 }

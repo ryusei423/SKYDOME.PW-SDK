@@ -128,7 +128,7 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 			g_MenuManager->toggle(!g_MenuManager->show_menu);
 			//RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
 		}
-		//g_EspDrawManager->MakeFrame();
+		g_EspDrawManager->MakeFrame();
 		g_EspDrawManager->DrawFrame(ImGui::GetBackgroundDrawList());
 		g_MenuManager->frame(pSwapChain);
 
@@ -233,8 +233,9 @@ void* __fastcall g_hooks::OnRemoveEntity::OnRemoveEntity(void* rcx, CEntityInsta
 void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFrameStage){
 	hook_fsn.call<void>(rcx,nFrameStage);
 	if (nFrameStage == FRAME_RENDER_END){
-		g_EspDrawManager->MakeFrame();
-
+		//更新看起来有些慢
+		//可能是未经插值的位置？
+		//g_EspDrawManager->MakeFrame();
 
 
 	}

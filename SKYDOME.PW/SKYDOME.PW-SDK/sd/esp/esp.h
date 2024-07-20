@@ -10,9 +10,21 @@
 
 struct EspItemElement
 {
+	enum 
+	{
+		TOP, 
+		LEFT, 
+		RIGHT, 
+		BOTTOM,
+		TEXT,
+		BAR
+
+	};
+
+
 	int pos;
 	int type;
-	ImU32 color;
+	ImU32 color = IM_COL32_WHITE;
 	std::string text;
 	bool show_text;
 	float bar;
@@ -23,6 +35,7 @@ struct EspItemElement
 struct EspItem{
 	Vector pos;
 	ImVec2 size;
+	ImVec4 box;
 	bool outline;
 	std::vector<EspItemElement> Elements;
 };
@@ -37,7 +50,7 @@ public:
 	std::vector<EspItem> manydogs;
 private:
 	
-
+	bool GetEntityBoundingBox(void* pEntity, ImVec4* pVecOut);
 
 
 };
