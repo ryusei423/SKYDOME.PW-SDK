@@ -1,13 +1,15 @@
 #pragma once
 #include"gobal.h"
 
+#include"sdk/entity/Entity.h"
 class CheatData {
 public:
 	HMODULE self_handle;
 
 	FILE* m_ConsoleStream;
 
-	
+	CCSPlayerController* LocalController = nullptr;
+	C_CSPlayerPawn* LocalPawn = nullptr;
 
 
 	bool RelativeLastValue = false;

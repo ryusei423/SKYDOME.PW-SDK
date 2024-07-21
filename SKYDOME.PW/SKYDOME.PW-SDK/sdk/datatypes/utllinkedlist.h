@@ -1,6 +1,7 @@
 #pragma once
-#include "utlmemory.h"
-#include "utlfixedmemory.h"
+
+#include "utlmemory.hpp"
+//#include "utlfixedmemory.h"
 
 // @source: master/public/tier1/utllinkedlist.h
 
@@ -51,7 +52,7 @@ public:
 
 		ConstIterator_t& operator--()
 		{
-			CS_ASSERT(nIndex != pList->Head());
+			SD_ASSERT(nIndex != pList->Head());
 			nIndex = (nIndex == pList->InvalidIndex() ? pList->Tail() : pList->Previous(nIndex));
 			return *this;
 		}
@@ -65,13 +66,13 @@ public:
 
 		bool operator==(const ConstIterator_t& other) const
 		{
-			CS_ASSERT(pList == other.pList);
+			SD_ASSERT(pList == other.pList);
 			return nIndex == other.nIndex;
 		}
 
 		bool operator!=(const ConstIterator_t& other) const
 		{
-			CS_ASSERT(pList == other.pList);
+			SD_ASSERT(pList == other.pList);
 			return nIndex != other.nIndex;
 		}
 
@@ -154,25 +155,25 @@ public:
 
 	T& operator[](const I nIndex)
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return memory[nIndex].element;
 	}
 
 	const T& operator[](const I nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return memory[nIndex].element;
 	}
 
 	[[nodiscard]] T& Element(const I nIndex)
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return memory[nIndex].element;
 	}
 
 	[[nodiscard]] const T& Element(const I nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return memory[nIndex].element;
 	}
 
@@ -188,13 +189,13 @@ public:
 
 	[[nodiscard]] I Previous(const I nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return InternalElement(nIndex).iPrevious;
 	}
 
 	[[nodiscard]] I Next(const I nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return InternalElement(nIndex).iNext;
 	}
 
@@ -238,7 +239,7 @@ public:
 	{
 		if (itLastAlloc == memory.InvalidIterator())
 		{
-			CS_ASSERT(iHead == InvalidIndex() && iTail == InvalidIndex() && iFirstFree == InvalidIndex() && nElementCount == 0);
+			SD_ASSERT(iHead == InvalidIndex() && iTail == InvalidIndex() && iFirstFree == InvalidIndex() && nElementCount == 0);
 			return;
 		}
 
@@ -330,18 +331,22 @@ protected:
 	ListElement_t* pElements;
 };
 
-template <class T>
-class CUtlFixedLinkedList : public CUtlLinkedList<T, std::intptr_t, true, std::intptr_t, CUtlFixedMemory<UtlLinkedListElement_t<T, std::intptr_t>>>
-{
-public:
-	CUtlFixedLinkedList(int nGrowSize = 0, int nInitAllocationCount = 0) :
-		CUtlLinkedList<T, std::intptr_t, true, std::intptr_t, CUtlFixedMemory<UtlLinkedListElement_t<T, std::intptr_t>>>(nGrowSize, nInitAllocationCount) { }
-
-	[[nodiscard]] bool IsValidIndex(std::intptr_t nIndex) const
-	{
-		if (!this->memory.IsIndexValid(nIndex))
-			return false;
-
-		return (this->memory[nIndex].iPrevious != nIndex) || (this->memory[nIndex].iNext == nIndex);
-	}
-};
+//2024/7/21
+// 不清楚这个Fixed版本是拿来干嘛的
+// 不过utlfixedmemory.h要用到接口，包含起来很麻烦，可能要整理成cpp才能编译
+// 暂且这样
+//template <class T>
+//class CUtlFixedLinkedList : public CUtlLinkedList<T, std::intptr_t, true, std::intptr_t, CUtlFixedMemory<UtlLinkedListElement_t<T, std::intptr_t>>>
+//{
+//public:
+//	CUtlFixedLinkedList(int nGrowSize = 0, int nInitAllocationCount = 0) :
+//		CUtlLinkedList<T, std::intptr_t, true, std::intptr_t, CUtlFixedMemory<UtlLinkedListElement_t<T, std::intptr_t>>>(nGrowSize, nInitAllocationCount) { }
+//
+//	[[nodiscard]] bool IsValidIndex(std::intptr_t nIndex) const
+//	{
+//		if (!this->memory.IsIndexValid(nIndex))
+//			return false;
+//
+//		return (this->memory[nIndex].iPrevious != nIndex) || (this->memory[nIndex].iNext == nIndex);
+//	}
+//};

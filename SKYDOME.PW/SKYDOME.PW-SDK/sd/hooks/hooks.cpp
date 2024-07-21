@@ -264,6 +264,12 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 		return rt;
 	}
 
+	//getlocalplayer注释里说 return CBaseHandle index
+	//嗯...先试试能不能用吧
+	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
+	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
+
+
 	/*cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.x = 89.f;
 	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.y += 180.f;*/
 	return rt;

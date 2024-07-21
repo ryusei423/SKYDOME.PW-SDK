@@ -4,11 +4,11 @@
 // used: bit_cast
 #include <bit>
 
-#include "../../common.h"
+#include "../../gobal.h"
 // used: swap
-#include "../../utilities/crt.h"
+#include "../../sd/utilities/crt.h"
 // used: [ext] imu32
-#include "../../../dependencies/imgui/imgui.h"
+#include "../../../external/imgui/imgui.h"
 
 enum
 {
@@ -64,13 +64,13 @@ struct Color_t
 
 	std::uint8_t& operator[](const std::uint8_t nIndex)
 	{
-		CS_ASSERT(nIndex <= COLOR_A); // given index is out of range
+		SD_ASSERT(nIndex <= COLOR_A); // given index is out of range
 		return reinterpret_cast<std::uint8_t*>(this)[nIndex];
 	}
 
 	const std::uint8_t& operator[](const std::uint8_t nIndex) const
 	{
-		CS_ASSERT(nIndex <= COLOR_A); // given index is out of range
+		SD_ASSERT(nIndex <= COLOR_A); // given index is out of range
 		return reinterpret_cast<const std::uint8_t*>(this)[nIndex];
 	}
 

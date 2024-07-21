@@ -30,6 +30,7 @@ public:
 	IGameResourceService* GameResourceService = nullptr;
 	IEngineClient* EngineClient = nullptr;
 	i_trace* Trace = nullptr;
+	IEngineCVar* EngineCVar = nullptr;
 
 };
 

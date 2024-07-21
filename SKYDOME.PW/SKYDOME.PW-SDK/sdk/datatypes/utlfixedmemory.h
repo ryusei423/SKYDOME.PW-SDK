@@ -1,11 +1,13 @@
 #pragma once
-#include "../../common.h"
+#include "../../gobal.h"
 
 // @test: using interfaces in the header | not critical but could blow up someday with thousands of errors or affect to compilation time etc
 // used: interface handles
 #include "../../core/interfaces.h"
 // used: interface declarations
 #include "../interfaces/imemalloc.h"
+
+
 
 // @source: master/public/tier1/utlfixedmemory.h
 
@@ -66,25 +68,25 @@ public:
 
 	T& operator[](std::intptr_t nIndex)
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return *reinterpret_cast<T*>(nIndex);
 	}
 
 	const T& operator[](std::intptr_t nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return *reinterpret_cast<T*>(nIndex);
 	}
 
 	[[nodiscard]] T& Element(const std::intptr_t nIndex)
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return *reinterpret_cast<T*>(nIndex);
 	}
 
 	[[nodiscard]] const T& Element(const std::intptr_t nIndex) const
 	{
-		CS_ASSERT(IsValidIndex(nIndex));
+		SD_ASSERT(IsValidIndex(nIndex));
 		return *reinterpret_cast<T*>(nIndex);
 	}
 
@@ -174,7 +176,7 @@ public:
 		nAllocationCount += nBlockSize;
 
 		BlockHeader_t* pNewBlockHeader = static_cast<BlockHeader_t*>(I::MemAlloc->Alloc(sizeof(BlockHeader_t) + nBlockSize * sizeof(T)));
-		CS_ASSERT(pNewBlockHeader != nullptr); // container overflow
+		SD_ASSERT(pNewBlockHeader != nullptr); // container overflow
 
 		pNewBlockHeader->pNext = nullptr;
 		pNewBlockHeader->nBlockSize = nBlockSize;

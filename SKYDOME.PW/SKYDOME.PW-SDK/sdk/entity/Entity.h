@@ -198,12 +198,7 @@ public:
 	SCHEMA_ADD_FIELD(Vector, GetLastSmokeOverlayColor, "C_CSPlayerPawnBase->m_vLastSmokeOverlayColor");
 	SCHEMA_ADD_FIELD(int, GetSurvivalTeam, "C_CSPlayerPawnBase->m_nSurvivalTeam"); // danger zone
 
-	[[nodiscard]] Vector GetEyePosition() {
 	
-		Vector EyePosition;
-		MEM::CallVFunc<void, 166>(this, &EyePosition);
-		return EyePosition;
-	};
 };
 
 
@@ -216,6 +211,17 @@ public:
 	[[nodiscard]] bool IsOtherEnemy(C_CSPlayerPawn* pOther);
 	[[nodiscard]] int GetAssociatedTeam();
 	[[nodiscard]] bool CanAttack(const float flServerTime);
+
+	[[nodiscard]] bool Visible(C_CSPlayerPawn* local);
+
+
+
+	[[nodiscard]] Vector GetEyePosition() {
+
+		Vector EyePosition;
+		MEM::CallVFunc<void, 166>(this, &EyePosition);
+		return EyePosition;
+	};
 
 	SCHEMA_ADD_FIELD(bool, IsScoped, "C_CSPlayerPawn->m_bIsScoped");
 	SCHEMA_ADD_FIELD(bool, IsDefusing, "C_CSPlayerPawn->m_bIsDefusing");

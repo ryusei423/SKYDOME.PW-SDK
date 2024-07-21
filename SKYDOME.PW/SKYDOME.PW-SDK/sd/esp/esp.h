@@ -33,11 +33,13 @@ struct EspItemElement
 
 //会在每一帧重新创建，
 struct EspItem{
+	
 	Vector pos;
 	Vector eyepos;
 	ImVec2 size;
 	ImVec4 box;
 	bool outline;
+	bool is_visible;
 	std::vector<EspItemElement> Elements;
 };
 

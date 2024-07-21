@@ -2,6 +2,7 @@
 #include "../utilities/memory.h"
 #include "../../a2x/offsets.hpp"
 #include "../interfaces/interfaces.h"
+#include "../../CheatData.h"
 
 void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
@@ -24,11 +25,12 @@ void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 		max = ImVec2(top_screen.x + box_h / 4, screen.y);
 		//drawlist->AddRect(min,max, IM_COL32_WHITE);
 
-		drawlist->AddRect(ImVec2(i.box.x,i.box.y), ImVec2(i.box.z, i.box.w), IM_COL32_WHITE);
+		drawlist->AddRect(ImVec2(i.box.x,i.box.y), ImVec2(i.box.z, i.box.w), i.is_visible ? IM_COL32(255, 0, 0, 255) :IM_COL32_WHITE);
 
-		ImVec2 eyepos_screen;
+
+		/*ImVec2 eyepos_screen;
 		WorldToScreen(i.eyepos,&eyepos_screen);
-		drawlist->AddLine(ImVec2(0,0), eyepos_screen, IM_COL32_WHITE);
+		drawlist->AddLine(ImVec2(0,0), eyepos_screen, IM_COL32_WHITE);*/
 
 	}
 
@@ -80,6 +82,7 @@ void EspDrawManager::MakeFrame(){
 
 				esp.eyepos = pPlayerPawn->GetEyePosition();
 				esp.box = box;
+				esp.is_visible = pPlayerPawn->Visible(g_CheatData->LocalPawn);
 			}
 			
 

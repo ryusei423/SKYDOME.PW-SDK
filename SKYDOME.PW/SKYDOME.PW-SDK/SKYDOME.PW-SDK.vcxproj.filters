@@ -479,5 +479,8 @@
     <ClInclude Include="sdk\datatypes\cstronghandle.hpp">
       <Filter>sdk\datatypes</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\ienginecvar.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

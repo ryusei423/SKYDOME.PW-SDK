@@ -49,3 +49,21 @@ const Vector& CCSPlayerController::GetPawnOrigin()
 
 	return pPawn->GetSceneOrigin();
 }
+
+bool C_CSPlayerPawn::Visible(C_CSPlayerPawn* local)
+{
+	trace_filter_t filter = {};
+	g_interfaces->Trace->Init(filter, local, 0x1C3003, 4, 7);
+
+	game_trace_t trace = {};
+	ray_t ray = {};
+
+	Vector start_eye = local->GetEyePosition();
+	Vector end_eye = this->GetEyePosition();
+
+	g_interfaces->Trace->TraceShape(ray, &start_eye, &end_eye, filter, trace);
+
+	return trace.HitEntity && trace.HitEntity->GetRefEHandle().GetEntryIndex() == this->GetRefEHandle().GetEntryIndex() || trace.Fraction > 0.97f;
+
+
+};

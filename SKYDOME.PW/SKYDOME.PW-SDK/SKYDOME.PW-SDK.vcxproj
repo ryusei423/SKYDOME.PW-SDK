@@ -235,6 +235,7 @@
     <ClInclude Include="sdk\entity\Entity.h" />
     <ClInclude Include="sdk\hitbox\hitbox.h" />
     <ClInclude Include="sdk\iengineclient.h" />
+    <ClInclude Include="sdk\ienginecvar.h" />
     <ClInclude Include="sdk\imemalloc.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
     <ClInclude Include="sdk\ischemasystem.h" />
