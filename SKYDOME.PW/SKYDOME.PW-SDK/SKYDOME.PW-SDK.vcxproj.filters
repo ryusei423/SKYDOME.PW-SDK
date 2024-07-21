@@ -79,6 +79,9 @@
     <Filter Include="sdk\hitbox">
       <UniqueIdentifier>{43ef2720-af67-4079-9a37-470178920899}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\entitycache">
+      <UniqueIdentifier>{02bd4040-7955-406e-9ddd-1e511ad00f53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -209,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="sd\esp\esp.cpp">
       <Filter>sd\esp</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\entitycache\entitycache.cpp">
+      <Filter>sd\entitycache</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -481,6 +487,9 @@
     </ClInclude>
     <ClInclude Include="sdk\ienginecvar.h">
       <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\entitycache\entitycache.h">
+      <Filter>sd\entitycache</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

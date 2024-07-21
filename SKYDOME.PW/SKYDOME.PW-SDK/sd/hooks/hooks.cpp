@@ -11,7 +11,8 @@
 #include "../../external/imgui/imgui_impl_dx11.h"
 
 #include "../menu/menu.h"
-#include"../esp/esp.h"
+#include "../esp/esp.h"
+#include "../entitycache/entitycache.h"
 
 namespace g_hooks {
 
@@ -229,12 +230,16 @@ ViewMatrix_t* __fastcall g_hooks::GetMatrixForView::GetMatrixForView(void* pRend
 
 void* __fastcall g_hooks::OnAddEntity::OnAddEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle)
 {
+	g_EntityCache->OnAdd(pInstance,hHandle);
+
 	return hook_OnAddEntity.call<void*>(rcx, pInstance, hHandle);
 }
 
 
 void* __fastcall g_hooks::OnRemoveEntity::OnRemoveEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle)
 {
+	g_EntityCache->OnRemove(pInstance, hHandle);
+
 	return hook_OnRemoveEntity.call<void*>(rcx,pInstance,hHandle);
 }
 
@@ -266,6 +271,8 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 
 	//getlocalplayer注释里说 return CBaseHandle index
 	//嗯...先试试能不能用吧
+	//好吧它指的是CBaseHandle中的nIndex，而不是CBaseHandle的索引
+	//还是不太熟悉CS2
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 

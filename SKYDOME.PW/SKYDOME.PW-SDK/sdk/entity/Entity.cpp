@@ -50,6 +50,8 @@ const Vector& CCSPlayerController::GetPawnOrigin()
 	return pPawn->GetSceneOrigin();
 }
 
+//通过eyepos进行检查可见性
+//注意它无法穿透玻璃，以及不是那么全面
 bool C_CSPlayerPawn::Visible(C_CSPlayerPawn* local)
 {
 	trace_filter_t filter = {};

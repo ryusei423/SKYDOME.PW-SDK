@@ -158,6 +158,7 @@
     <ClCompile Include="sdk\datatypes\qangle.cpp" />
     <ClCompile Include="sdk\datatypes\vector.cpp" />
     <ClCompile Include="sdk\entity\Entity.cpp" />
+    <ClCompile Include="sd\entitycache\entitycache.cpp" />
     <ClCompile Include="sd\esp\esp.cpp" />
     <ClCompile Include="sd\hooks\hooks.cpp" />
     <ClCompile Include="sd\interfaces\interfaces.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="sdk\ischemasystem.h" />
     <ClInclude Include="sdk\iswapchaindx11.h" />
     <ClInclude Include="sdk\itrace.h" />
+    <ClInclude Include="sd\entitycache\entitycache.h" />
     <ClInclude Include="sd\esp\esp.h" />
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
