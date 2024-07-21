@@ -24,7 +24,18 @@ class CEntityInstance;
 using GameTime_t = std::float_t;
 using GameTick_t = std::int32_t;
 
-
+//听说可以用作可见性检查，不过会比较慢
+//我想会有用，不过暂时说不上来也
+//EntitySpottedState_t m_entitySpottedState;
+//if (target->m_bSpottedByMask & (1 << localPlayer)
+struct EntitySpottedState_t
+{
+private:
+	[[maybe_unused]] uint8_t __pad0009[0x3];
+public:
+	bool m_bSpotted;
+	uint32_t m_bSpottedByMask[2];
+};
 
 class CEntityIdentity
 {
