@@ -29,6 +29,7 @@ public:
 	CGameEntitySystem* GameEntitySystem = nullptr;
 	IGameResourceService* GameResourceService = nullptr;
 	IEngineClient* EngineClient = nullptr;
+	i_trace* Trace = nullptr;
 
 };
 

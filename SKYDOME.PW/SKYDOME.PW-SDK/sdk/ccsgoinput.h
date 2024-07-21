@@ -89,4 +89,10 @@ public:
 
 		return *reinterpret_cast<QAngle_t*>(oGetViewAngles(this, 0));
 	}
+
+	QAngle_t* angViewAngles(){
+		return (QAngle_t*)((ptrdiff_t)this + 0x0BE0);
+	
+	}
+
 };

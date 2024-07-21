@@ -2,7 +2,7 @@
 
 
 
-#include <type_traits>
+//#include <type_traits>
 #include "CBaseHandle.h"
 #include "../datatypes/quaternion.h"
 
@@ -116,10 +116,10 @@ public:
 
 	SCHEMA_ADD_FIELD(bool, IsDormant, "CGameSceneNode->m_bDormant");
 
-	/*CSkeletonInstance* GetSkeletonInstance()
+	CSkeletonInstance* GetSkeletonInstance()
 	{
 		return MEM::CallVFunc<CSkeletonInstance*, 8U>(this);
-	}*/
+	}
 };
 
 
@@ -197,6 +197,13 @@ public:
 	SCHEMA_ADD_FIELD(float, GetFlashDuration, "C_CSPlayerPawnBase->m_flFlashDuration");
 	SCHEMA_ADD_FIELD(Vector, GetLastSmokeOverlayColor, "C_CSPlayerPawnBase->m_vLastSmokeOverlayColor");
 	SCHEMA_ADD_FIELD(int, GetSurvivalTeam, "C_CSPlayerPawnBase->m_nSurvivalTeam"); // danger zone
+
+	[[nodiscard]] Vector GetEyePosition() {
+	
+		Vector EyePosition;
+		MEM::CallVFunc<void, 166>(this, &EyePosition);
+		return EyePosition;
+	};
 };
 
 

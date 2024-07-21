@@ -25,6 +25,17 @@ public:
 		OFFSET_GET_FUNCTION,
 		OFFSET_GET_FUNCTION1,
 		OFFSET_GET_HITBOX_SET,
+
+		OFFSET_TRACE,
+		OFFSET_TRACE_InitializeTraceInfo,
+		OFFSET_TRACE_InitializeTrace,
+		OFFSET_TRACE_Init,
+		OFFSET_TRACE_ClipTraceToPlayers,
+		OFFSET_TRACE_get_trace_info,
+		OFFSET_TRACE_handle_bullet_penetration,
+		OFFSET_TRACE_CreateTrace,
+		OFFSET_TRACE_TraceShape,
+
 		OFFSET_MAX
 	};
 

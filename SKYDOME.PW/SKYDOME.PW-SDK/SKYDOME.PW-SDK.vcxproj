@@ -212,6 +212,7 @@
     <ClInclude Include="sdk\ccsgoinput.h" />
     <ClInclude Include="sdk\cgameentitysystem.h" />
     <ClInclude Include="sdk\datatypes\color.h" />
+    <ClInclude Include="sdk\datatypes\cstronghandle.hpp" />
     <ClInclude Include="sdk\datatypes\keyvalue3.h" />
     <ClInclude Include="sdk\datatypes\matrix.h" />
     <ClInclude Include="sdk\datatypes\qangle.h" />
@@ -232,11 +233,13 @@
     <ClInclude Include="sdk\datatypes\viewsetup.h" />
     <ClInclude Include="sdk\entity\CBaseHandle.h" />
     <ClInclude Include="sdk\entity\Entity.h" />
+    <ClInclude Include="sdk\hitbox\hitbox.h" />
     <ClInclude Include="sdk\iengineclient.h" />
     <ClInclude Include="sdk\imemalloc.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
     <ClInclude Include="sdk\ischemasystem.h" />
     <ClInclude Include="sdk\iswapchaindx11.h" />
+    <ClInclude Include="sdk\itrace.h" />
     <ClInclude Include="sd\esp\esp.h" />
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />

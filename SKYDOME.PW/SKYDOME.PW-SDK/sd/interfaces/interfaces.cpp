@@ -103,6 +103,7 @@ bool InterfacesManager::init()
 	const auto pEngineRegisterList = GetRegisterList(ENGINE2_DLL);
 
 	CSGOInput = reinterpret_cast<CCSGOInput*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CCSGOINPUT]);
+	Trace = reinterpret_cast<i_trace*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_TRACE]);
 	InputSystem = Capture<CInputSystem>(pInputSystemRegisterList, XorStr("InputSystemVersion00"));
 	
 	SchemaSystem = Capture<ISchemaSystem>(pSchemaSystemRegisterList, XorStr("SchemaSystem_00"));
@@ -111,6 +112,7 @@ bool InterfacesManager::init()
 	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
 
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
+	INTERFACES_INITLOG("Trace", Trace);
 	INTERFACES_INITLOG("InputSystem", InputSystem);
 	
 	INTERFACES_INITLOG("SchemaSystem", SchemaSystem);

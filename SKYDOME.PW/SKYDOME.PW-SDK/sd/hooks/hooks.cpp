@@ -53,6 +53,17 @@ namespace g_hooks {
 		void* __fastcall OnRemoveEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle);
 		safetyhook::InlineHook hook_OnRemoveEntity;
 	}
+
+	namespace CreateMove {
+
+		bool __fastcall CreateMove(CCSGOInput* pInput, int nSlot, bool nUnk, std::byte nUnk2);
+		safetyhook::InlineHook hook_CreateMove;
+	}
+
+	namespace ValidateInput {
+		void __fastcall ValidateInput(CCSGOInput* pInput, int unk);
+		safetyhook::InlineHook hook_ValidateInput;
+	}
 }
 
 static BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam) {
@@ -242,6 +253,29 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 	
 }
 
+bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, bool nUnk, std::byte nUnk2){
+	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
+	if(!g_interfaces->EngineClient->IsInGame() && !g_interfaces->EngineClient->IsConnected()){
+		return rt;
+	}
+
+	CUserCmd* cmd = pInput->GetUserCmd();
+	if (!cmd){
+		return rt;
+	}
+
+	/*cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.x = 89.f;
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.y += 180.f;*/
+	return rt;
+}
+
+void __fastcall g_hooks::ValidateInput::ValidateInput(CCSGOInput* pInput, int unk){
+	auto view = pInput->GetViewAngles();
+	hook_ValidateInput.call<void>(pInput,unk);
+	pInput->SetViewAngle(view);
+
+}
+
 
 
 #define HK(N,S,P,I,F)	S = safetyhook::create_inline(reinterpret_cast<void*>(MEM::GetVFunc(P,I)), reinterpret_cast<void*>(F));		\
@@ -284,6 +318,8 @@ bool g_hooks::init()
 	//hook_setmousemode = safetyhook::create_inline(g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(setmousemode));
 
 	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
+	HK("CreateMove", CreateMove::hook_CreateMove, g_interfaces->CSGOInput, 5, g_hooks::CreateMove::CreateMove);
+	HK("ValidateInput", ValidateInput::hook_ValidateInput, g_interfaces->CSGOInput, 7, g_hooks::ValidateInput::ValidateInput);
 
 	HK("OnAddEntity", OnAddEntity::hook_OnAddEntity, g_interfaces->GameResourceService->pGameEntitySystem, 14, g_hooks::OnAddEntity::OnAddEntity);
 	HK("OnRemoveEntity", OnRemoveEntity::hook_OnRemoveEntity, g_interfaces->GameResourceService->pGameEntitySystem, 15, g_hooks::OnRemoveEntity::OnRemoveEntity);

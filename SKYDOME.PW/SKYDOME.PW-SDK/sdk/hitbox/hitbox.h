@@ -1,0 +1,218 @@
+#pragma once
+#include "../entity/Entity.h"
+#include "../datatypes/cstronghandle.hpp"
+
+enum bone_flags : uint32_t {
+	FLAG_NO_BONE_FLAGS = 0x0,
+	FLAG_BONEFLEXDRIVER = 0x4,
+	FLAG_CLOTH = 0x8,
+	FLAG_PHYSICS = 0x10,
+	FLAG_ATTACHMENT = 0x20,
+	FLAG_ANIMATION = 0x40,
+	FLAG_MESH = 0x80,
+	FLAG_HITBOX = 0x100,
+	FLAG_BONE_USED_BY_VERTEX_LOD0 = 0x400,
+	FLAG_BONE_USED_BY_VERTEX_LOD1 = 0x800,
+	FLAG_BONE_USED_BY_VERTEX_LOD2 = 0x1000,
+	FLAG_BONE_USED_BY_VERTEX_LOD3 = 0x2000,
+	FLAG_BONE_USED_BY_VERTEX_LOD4 = 0x4000,
+	FLAG_BONE_USED_BY_VERTEX_LOD5 = 0x8000,
+	FLAG_BONE_USED_BY_VERTEX_LOD6 = 0x10000,
+	FLAG_BONE_USED_BY_VERTEX_LOD7 = 0x20000,
+	FLAG_BONE_MERGE_READ = 0x40000,
+	FLAG_BONE_MERGE_WRITE = 0x80000,
+	FLAG_ALL_BONE_FLAGS = 0xfffff,
+	BLEND_PREALIGNED = 0x100000,
+	FLAG_RIGIDLENGTH = 0x200000,
+	FLAG_PROCEDURAL = 0x400000,
+};
+
+struct alignas(16) bone_data {
+	Vector pos;
+	float scale;
+	Vector4D_t rot;
+};
+
+
+class c_drawcalls
+{
+public:
+	__int32 m_nPrimitiveType; // 0x0000
+	__int32 m_nBaseVertex;	  // 0x0004
+	__int32 m_nVertexCount;	  // 0x0008
+	__int32 m_nStartIndex;	  // 0x000C
+	__int32 m_nIndexCount;	  // 0x0010
+	float	m_flUvDensity;	  // 0x0014
+	float	m_vTintColor[3];  // 0x0018
+	float	m_flAlpha;		  // 0x0024
+	char	pad_0x0028[0xC0]; // 0x0028
+
+}; // Size=0x00E8
+
+class c_bones
+{
+public:
+	const char* m_boneName;		   // 0x0000
+	const char* m_parentName;	   // 0x0008
+	float		m_invBindPose[12]; // 0x0010
+	Vector		m_vecCenter;	   // 0x0040
+	Vector		m_vecSize;		   // 0x004C
+	float		m_flSphereradius;  // 0x0058
+	char		pad_0x005C[0x4];   // 0x005C
+
+}; // Size=0x0060
+
+
+class CRenderMesh
+{
+
+public:
+
+	char		   pad_0x0000[40];	// 0x0000
+	Vector		   m_vMinBounds;		// 0x0028
+	Vector		   m_vMaxBounds;		// 0x0034
+	char		   pad_0x0044[8];		// 0x0044
+	c_drawcalls* m_drawCalls;			// 0x0048
+	char		   pad_0x0050[104];	// 0x0050
+	__int32		   m_skeletoncount;		// 0x00B8
+	char		   pad_0x00BC[4];		// 0x00BC
+	c_bones* m_skeleton;			// 0x00C0
+	char		   pad_0x00C8[112];		// 0x00C8
+
+
+};
+class CRenderM {
+public:
+	CRenderMesh* mesh;
+};
+
+
+
+class CModelSkeleton
+{
+public:
+	CModelSkeleton() = delete;
+	CModelSkeleton(CModelSkeleton&&) = delete;
+	CModelSkeleton(const CModelSkeleton&) = delete;
+
+public:
+	SCHEMA_ADD_OFFSET(CUtlVector<const char*>, vecBoneNames, 0x4);
+	SCHEMA_ADD_OFFSET(CUtlVector<std::uint16_t>, vecBoneParent, 0x18);
+	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneSphere, 0x30);
+	SCHEMA_ADD_OFFSET(CUtlVector<std::uint32_t>, m_nFlag, 0x48);
+	SCHEMA_ADD_OFFSET(CUtlVector<Vector>, m_bonePosParent, 0x60);
+	SCHEMA_ADD_OFFSET(CUtlVector<QuaternionAligned_t>, m_boneRotParent, 0x78);
+	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneScaleParent, 0x90);
+
+};
+
+
+class CModel {
+public:
+	CModel() = delete;
+	CModel(CModel&&) = delete;
+	CModel(const CModel&) = delete;
+public:
+
+	SCHEMA_ADD_OFFSET(const char*, szName, 0x8);
+	SCHEMA_ADD_OFFSET(CModelSkeleton, m_modelSkeleton, 0x188);
+	SCHEMA_ADD_OFFSET(CRenderM*, m_meshes, 0x78);
+	//uint32_t GetHitboxesNum();
+	uint32_t GetHitboxFlags(uint32_t index);
+	const char* GetHitboxName(uint32_t index);
+	uint32_t GetHitboxParent(uint32_t index);
+
+	uint32_t GetHitboxesNum();
+
+};
+
+
+
+class CModelState
+{
+public:
+	CModelState() = delete;
+	CModelState(CModelState&&) = delete;
+	CModelState(const CModelState&) = delete;
+
+	SCHEMA_ADD_FIELD(CStrongHandle< CModel >, m_hModel, "CModelState->m_hModel");
+	SCHEMA_ADD_OFFSET(CTransform*, BoneTransform, 0x80);
+
+	bone_data* GetHitboxData() noexcept {
+		bone_data* boneDataPtr = *reinterpret_cast<bone_data**>(this + 0x80);
+
+		if (boneDataPtr == nullptr)
+			boneDataPtr = *reinterpret_cast<bone_data**>(reinterpret_cast<uintptr_t>(this) + 0x80);
+
+		SD_ASSERT(boneDataPtr != nullptr);
+
+		return boneDataPtr;
+	}
+
+
+	Vector GetHitboxPos(uint32_t index) {
+		auto hitbox = this->GetHitboxData();
+		if (!hitbox)
+			return nullptr;
+
+		if (!(this->m_hModel()->GetHitboxFlags(index) & bone_flags::FLAG_HITBOX))
+			return nullptr;
+
+		auto parent_index = this->m_hModel()->GetHitboxParent(index);
+		if (parent_index == -1)
+			return nullptr;
+
+		return hitbox[index].pos;
+	}
+
+	Vector4D_t GetHitboxRotation(uint32_t index) {
+		auto hitbox = this->GetHitboxData();
+		if (!hitbox)
+			return 0;
+
+		if (!(this->m_hModel()->GetHitboxFlags(index) & bone_flags::FLAG_HITBOX))
+			return 0;
+
+		auto parent_index = this->m_hModel()->GetHitboxParent(index);
+		if (parent_index == -1)
+			return 0;
+
+		return hitbox[index].rot;
+	}
+
+	const char* GetHitboxName(uint32_t index) {
+		auto hitbox = this->GetHitboxData();
+		if (!hitbox)
+			return nullptr;
+
+		if (!(this->m_hModel()->GetHitboxFlags(index) & bone_flags::FLAG_HITBOX))
+			return nullptr;
+
+		auto parent_index = this->m_hModel()->GetHitboxParent(index);
+		if (parent_index == -1)
+			return nullptr;
+
+		return this->m_hModel()->GetHitboxName(index);
+	}
+};
+
+
+
+class CSkeletonInstance
+{
+public:
+	CSkeletonInstance() = delete;
+	CSkeletonInstance(CSkeletonInstance&&) = delete;
+	CSkeletonInstance(const CSkeletonInstance&) = delete;
+
+	SCHEMA_ADD_FIELD(CModelState, GetModel, "CSkeletonInstance->m_modelState");
+	SCHEMA_ADD_FIELD(bool, m_bIsAnimationEnabled, "CSkeletonInstance->m_bIsAnimationEnabled");
+	SCHEMA_ADD_FIELD(bool, m_bUseParentRenderBounds, "CSkeletonInstance->m_bUseParentRenderBounds");
+	SCHEMA_ADD_FIELD(bool, m_bDisableSolidCollisionsForHierarchy, "CSkeletonInstance->m_bDisableSolidCollisionsForHierarchy");
+	SCHEMA_ADD_FIELD(bool, m_bDirtyMotionType, "CSkeletonInstance->m_bDirtyMotionType");
+	SCHEMA_ADD_FIELD(bool, m_bIsGeneratingLatchedParentSpaceState, "CSkeletonInstance->m_bIsGeneratingLatchedParentSpaceState");
+	SCHEMA_ADD_FIELD(uint8_t, m_nHitboxSet, "CSkeletonInstance->m_nHitboxSet");
+	/*void get_bone_data(bone_data& data, int index);
+	void CS_FASTCALL calc_world_space_bones(uint32_t parent, uint32_t mask);
+	void CS_FASTCALL spoofed_calc_world_space_bones(uint32_t mask);*/
+};

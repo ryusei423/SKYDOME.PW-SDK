@@ -7,5 +7,6 @@
 #include"sdk/ischemasystem.h"
 #include"sdk/cgameentitysystem.h"
 #include"sdk/iengineclient.h"
+#include"sdk/itrace.h"
 
 #include"sdk/entity/Entity.h"

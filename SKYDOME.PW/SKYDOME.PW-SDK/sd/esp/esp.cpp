@@ -25,6 +25,11 @@ void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 		//drawlist->AddRect(min,max, IM_COL32_WHITE);
 
 		drawlist->AddRect(ImVec2(i.box.x,i.box.y), ImVec2(i.box.z, i.box.w), IM_COL32_WHITE);
+
+		ImVec2 eyepos_screen;
+		WorldToScreen(i.eyepos,&eyepos_screen);
+		drawlist->AddLine(ImVec2(0,0), eyepos_screen, IM_COL32_WHITE);
+
 	}
 
 
@@ -58,7 +63,7 @@ void EspDrawManager::MakeFrame(){
 
 			if (shit_controller->IsPawnAlive() && pPlayerPawn->GetHealth()) {
 
-				auto& esp = manydogs.emplace_back(shit_controller->GetPawnOrigin(), ImVec2(50, 70));
+				auto& esp = manydogs.emplace_back(shit_controller->GetPawnOrigin(), pPlayerPawn->GetEyePosition(), ImVec2(50, 70));
 
 
 				EspItemElement name;
@@ -73,6 +78,7 @@ void EspDrawManager::MakeFrame(){
 
 				GetEntityBoundingBox(pPlayerPawn,&box);
 
+				esp.eyepos = pPlayerPawn->GetEyePosition();
 				esp.box = box;
 			}
 			

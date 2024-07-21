@@ -46,7 +46,7 @@ bool OffsetManager::scan()
 
 	// #STR: "CountFilesNeedTrustCheck", "CountFilesCompletedTrustCheck", "BSecureAllowed", "CountItemsToReport", "GetTotalFilesLoaded"
 	offsets[OFFSET_GET_FUNCTION] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
-		XorStr("48 89 5C 24 10 56 48 83 EC 30 8B 05")));
+		XorStr("48 89 4C 24 ? 48 83 EC ? 48 8B 44 24 ? 48 83 78 ? ? 74 ? 48 8B 44 24")));
 
 	// #STR: "ntdll.dll", "NtOpenFile", "NtQueryInformationThread", "kernelbase.dll", "LoadLibraryExW", "kernel32.dll", "GetCurrentThreadStackLimits", "GetVersionExA", "gameoverlayrenderer64.dll"
 	offsets[OFFSET_GET_FUNCTION1] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
@@ -62,6 +62,38 @@ bool OffsetManager::scan()
 	offsets[OFFSET_GET_HITBOX_SET] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
 		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 57 48 ?? ?? ?? ?? ?? ?? 8B DA 48 8B F9 E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F ?? ?? ?? ?? ?? 48 8D")));
 
+
+	//#STR: "invalid_bone", "default", "invalid_hitbox"
+	//这个字符串的函数并不是我们要找的，但是我们要找的函数是唯一调用这个函数的
+	offsets[OFFSET_TRACE_InitializeTraceInfo] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 57 48 ?? ?? ?? 48 8B D9 33 FF 48 ?? ?? ?? ?? ?? ?? 48"/*"48 89 5C 24 08 57 48 83 EC 20 48 8B D9 33 FF 48 8B 0D"*/)));
+
+	offsets[OFFSET_TRACE_InitializeTrace] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 5C 24 08 57 48 83 EC 20 48 8B D9 33 FF 48 8B 0D")));
+	//这俩是一个，但是我为其中一个重新生成了带有通配符的特征码
+	//或许可以用的久一点?
+
+	offsets[OFFSET_TRACE] = *reinterpret_cast<void**>(MEM::GetAbsoluteAddress(MEM::FindPattern(CLIENT_DLL, 
+		XorStr("4C 8B 3D ? ? ? ? 24 C9 0C 49 66 0F 7F 45 ?")), 0x3));
+
+	offsets[OFFSET_TRACE_Init] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 57 48 ?? ?? ?? 0F B6 ?? ?? 33 F6"/*"48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 0F B6 41 37 33"*/)));
+
+	offsets[OFFSET_TRACE_ClipTraceToPlayers] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 8B C4 55 56 48 8D ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 48 89 ?? ?? 49"/*"48 8B C4 55 56 48 8D A8 58"*/)));
+
+	offsets[OFFSET_TRACE_get_trace_info] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 48 89 ?? ?? ?? 57 48 ?? ?? ?? 48 8B E9 0F 29"/*"48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 60 48 8B E9 0F"*/)));
+
+	offsets[OFFSET_TRACE_handle_bullet_penetration] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 8B C4 44 89 ?? ?? 55 57 41 55 41 57 48 8D"/*"48 8B C4 44 89 48 20 55 57 41 55"*/)));
+
+	offsets[OFFSET_TRACE_CreateTrace] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 48 89 ?? ?? ?? 57 41 56 41 57 48 ?? ?? ?? F2"/*"48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 40 F2"*/)));
+
+	// #STR: "Physics/TraceShape (Client)"
+	offsets[OFFSET_TRACE_TraceShape] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 48 89 ?? ?? ?? 48 89 ?? ?? ?? 55 41 54 41 55 41 56 41 57 48 8D ?? ?? ?? ?? ?? ?? B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 2B E0 65"/*"48 89 5C 24 10 48 89 74 24 18 48 89 7C 24 20 48 89 4C 24 08 55 41 54 41 55 41 56 41 57 48 8D"*/)));
 
 
 	// #STR: "allowed", "ISS: Cursor invisible from '%s'\n", "ISS: Cursor icon from '%s'\n", "ISS: Mouse capture enabled from '%s'\n", "ISS: Mouse capture disabled from '%s'\n", "ISS: Cursor clip %s from '%s'\n", "ISS: Relative mouse %s from '%s'\n", "ISS: Standard cursors from '%s'\n", "disabled", "enabled"
