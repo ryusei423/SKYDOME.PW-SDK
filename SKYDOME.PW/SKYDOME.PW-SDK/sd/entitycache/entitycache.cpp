@@ -4,9 +4,9 @@ void EntityCache::OnAdd(CEntityInstance* inst, CBaseHandle handle){
     CCSPlayerController* pEntity = (CCSPlayerController*)inst;
     if (!pEntity) return;
 
-    // 只储存联网实体
+    // 只储存联网实体 不要缓存本地玩家
     // https://developer.valvesoftware.com/wiki/Entity_limit#Source_2_limits
-    if (handle.GetEntryIndex() >= 16384) return;
+    if (handle.GetEntryIndex() >= 16384 || handle.GetEntryIndex() == g_interfaces->EngineClient->GetLocalPlayer()) return;
 
     if (pEntity->IsBasePlayerController()) {
         LOG(INFO) << "ADD: " << handle.GetEntryIndex();

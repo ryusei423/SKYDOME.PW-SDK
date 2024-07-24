@@ -82,6 +82,9 @@
     <Filter Include="sd\entitycache">
       <UniqueIdentifier>{02bd4040-7955-406e-9ddd-1e511ad00f53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\ragebot">
+      <UniqueIdentifier>{a9a6831f-7d99-42d7-94da-f05a666f41c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="sd\entitycache\entitycache.cpp">
       <Filter>sd\entitycache</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\ragebot\ragebot.cpp">
+      <Filter>sd\ragebot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +496,9 @@
     </ClInclude>
     <ClInclude Include="sd\entitycache\entitycache.h">
       <Filter>sd\entitycache</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\ragebot\ragebot.h">
+      <Filter>sd\ragebot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

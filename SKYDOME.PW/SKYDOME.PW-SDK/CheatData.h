@@ -13,6 +13,7 @@ public:
 
 
 	bool RelativeLastValue = false;
+	bool IsRelative = false;
 
 };
 

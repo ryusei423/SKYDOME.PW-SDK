@@ -64,4 +64,10 @@ public:
 	{
 		return MEM::CallVFunc<const char*, 82U>(this);
 	}
+
+	//或许它属于ISource2Client
+	void ExecuteClientCmdUnrestricted(const char* szCommand)
+	{
+		MEM::CallVFunc<void, 43U>(this, 0, szCommand, 0x7FFEF001);
+	}
 };

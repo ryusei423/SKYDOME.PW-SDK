@@ -219,7 +219,10 @@ class C_CSPlayerPawn : public C_CSPlayerPawnBase
 public:
 	//CS_CLASS_NO_INITIALIZER(C_CSPlayerPawn);
 
-	[[nodiscard]] bool IsOtherEnemy(C_CSPlayerPawn* pOther);
+	[[nodiscard]] bool IsEnemy(C_CSPlayerPawn* pOther) {
+		return this->GetTeam() != pOther->GetTeam();
+	};
+
 	[[nodiscard]] int GetAssociatedTeam();
 	[[nodiscard]] bool CanAttack(const float flServerTime);
 

@@ -211,6 +211,7 @@ void CreateConsole() {
 #include "OffsetManager.h"
 #include "sd/interfaces/interfaces.h"
 #include "sd/hooks/hooks.h"
+#include "sd/menu/config.h"
 uintptr_t __stdcall init_main(const HMODULE h_module) {
 
 	g_CheatLocalization->setcn();

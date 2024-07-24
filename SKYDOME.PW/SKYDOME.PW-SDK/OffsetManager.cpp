@@ -100,8 +100,12 @@ bool OffsetManager::scan()
 	offsets[OFFSET_RELATIVE_MODE_MOUSE] = reinterpret_cast<void*>(MEM::FindPattern(INPUTSYSTEM_DLL, 
 		XorStr("40 55 41 57 48 ?? ?? ?? 8B 41 ?? 8B EA 4C 8B F9 85 C0 0F")));
 	
+	//CMaterialSystem2 -> 30
+	offsets[OFFSET_CREATE_MATERIAL] = reinterpret_cast<void*>(MEM::FindPattern(MATERIAL_SYSTEM2_DLL,
+		XorStr("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05")));
 	
-
+	offsets[OFFSET_CreateMaterialResource] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("40 53 48 83 EC 20 48 8B 01 48 8B D9 44")));
 
 	int nullptr_cout = 0;
 

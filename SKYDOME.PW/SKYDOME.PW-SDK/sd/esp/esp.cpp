@@ -82,6 +82,7 @@ void EspDrawManager::MakeFrame(){
 
 				esp.eyepos = pPlayerPawn->GetEyePosition();
 				esp.box = box;
+				if(g_CheatData->LocalPawn)
 				esp.is_visible = pPlayerPawn->Visible(g_CheatData->LocalPawn);
 			}
 			

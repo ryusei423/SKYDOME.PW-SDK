@@ -13,6 +13,7 @@
 #include "../menu/menu.h"
 #include "../esp/esp.h"
 #include "../entitycache/entitycache.h"
+#include "../ragebot/ragebot.h"
 
 namespace g_hooks {
 
@@ -64,6 +65,13 @@ namespace g_hooks {
 	namespace ValidateInput {
 		void __fastcall ValidateInput(CCSGOInput* pInput, int unk);
 		safetyhook::InlineHook hook_ValidateInput;
+	}
+
+	namespace TestHook {
+
+		__int64 __fastcall SetRelative(__int64 a1, bool a2);
+		safetyhook::InlineHook hook_SetRelative;
+
 	}
 }
 
@@ -194,9 +202,30 @@ void* __fastcall g_hooks::RelativeModeMouse::RelativeModeMouse(void* a1, int a2)
 {
 	//开启ISS输出
 	//LOG(INFO) << "a1 + 0x28 -> " << *((unsigned int*) a1 + 0x28);
-	//*((bool*)((void*)a1) + 0x40) = true;
+	*((bool*)((void*)a1) + 0x40) = true;
 
 	auto rt = hook_RelativeModeMouse.call<void*>(a1, a2);
+	
+	if (g_interfaces->EngineClient->IsConnected() && g_interfaces->EngineClient->IsInGame()){
+		std::cout << rt << "\n";
+		LOG(INFO) << a1 << " - " << a2 << "  rt->" << std::hex << rt;
+
+		if ((ptrdiff_t)rt == 0xFFFFFFFF){
+			g_CheatData->IsRelative = false;
+		}
+
+		if ((ptrdiff_t)rt != 0xFFFFFFFF && (rt == NULL || (ptrdiff_t)rt > 0x1000000)){
+			g_CheatData->IsRelative = true;
+		}
+		else
+		{
+			g_CheatData->IsRelative = false;
+		}
+	}
+
+	
+
+
 
 	/*LOG(INFO) << a1 << " - " << a2 << "  rt->"<<std::hex << rt;
 
@@ -276,7 +305,7 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 
-
+	g_RageBot->run(cmd);
 	/*cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.x = 89.f;
 	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.y += 180.f;*/
 	return rt;
@@ -287,6 +316,15 @@ void __fastcall g_hooks::ValidateInput::ValidateInput(CCSGOInput* pInput, int un
 	hook_ValidateInput.call<void>(pInput,unk);
 	pInput->SetViewAngle(view);
 
+}
+
+
+__int64 __fastcall g_hooks::TestHook::SetRelative(__int64 a1, bool a2){
+
+	//LOG(DEBUG) << a2;
+
+	g_CheatData->IsRelative = a2;
+	return hook_SetRelative.call<__int64>(a1,a2);
 }
 
 
@@ -334,10 +372,17 @@ bool g_hooks::init()
 	HK("CreateMove", CreateMove::hook_CreateMove, g_interfaces->CSGOInput, 5, g_hooks::CreateMove::CreateMove);
 	HK("ValidateInput", ValidateInput::hook_ValidateInput, g_interfaces->CSGOInput, 7, g_hooks::ValidateInput::ValidateInput);
 
+	//sig:40 53 48 ?? ?? ?? 0F B6 DA
+	//被 OFFSET_RELATIVE_MODE_MOUSE 调用
+	//OFFSET_RELATIVE_MODE_MOUSE 实际是一个用于调整鼠标的综合函数，它调用此函数来设置相对模式
+	//已经不再需要那个钩子
+	HK("SetRelative", TestHook::hook_SetRelative, g_interfaces->InputSystem, 78, g_hooks::TestHook::SetRelative);
+
+
 	HK("OnAddEntity", OnAddEntity::hook_OnAddEntity, g_interfaces->GameResourceService->pGameEntitySystem, 14, g_hooks::OnAddEntity::OnAddEntity);
 	HK("OnRemoveEntity", OnRemoveEntity::hook_OnRemoveEntity, g_interfaces->GameResourceService->pGameEntitySystem, 15, g_hooks::OnRemoveEntity::OnRemoveEntity);
 
-	HK_SIG("RelativeModeMouse",RelativeModeMouse::hook_RelativeModeMouse, g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(RelativeModeMouse::RelativeModeMouse));
+	//HK_SIG("RelativeModeMouse",RelativeModeMouse::hook_RelativeModeMouse, g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(RelativeModeMouse::RelativeModeMouse));
 	HK_SIG("GetMatrixForView", GetMatrixForView::hook_GetMatrixForView, g_OffsetManager->offsets[g_OffsetManager->OFFSET_GET_MATRIX_FOR_VIEW], reinterpret_cast<void*>(GetMatrixForView::GetMatrixForView));
 	HK_SIG("FrameStageNotify", FrameStageNotify::hook_fsn, g_OffsetManager->offsets[g_OffsetManager->OFFSET_FRAME_STAGE_NOTIFY], reinterpret_cast<void*>(FrameStageNotify::FrameStageNotify));
 

@@ -9,6 +9,7 @@
 #include "../hooks/hooks.h"
 
 #include "widget.h"
+#include "config.h"
 
 
 static auto GetCorrectDXGIFormat(DXGI_FORMAT currentFormat) {
@@ -217,9 +218,14 @@ inline ImFont* MenuManager::GetDpiFont(std::string font) {
 static ImVec4 vTextColor(1.0F, 1.0F, 1.0F, 1.0F);
 static imanim::ImVec4Anim* pColorAnim = nullptr;
 
+#include "../../CheatData.h"
 void MenuManager::frame(IDXGISwapChain* pSwapChain)
 {
-
+	if (!show_menu && g_CheatData->IsRelative)
+	{
+		g_OffsetManager->fnSetRelativeMouseMode(!show_menu);
+		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
+	}
 
 
 	if (show_menu)
@@ -277,7 +283,7 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		
 		static bool shit = false;
-		ImGui::Checkbox(U8ST("一键开转"), &shit);
+		//ImGui::Checkbox(U8ST("一键开转"), &g_ConfigManager->configs["1"].bl);
 		ImGui::EndChild();
 
 
@@ -355,6 +361,7 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		if (ImGuiW::Button(U8ST("合法自瞄\n用合法的方式赢得胜利  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale),0,cur_tab == 0,anim_alpha[0], anim_size[0])) cur_tab = 0;
 		if (ImGuiW::Button(U8ST("暴力自瞄\n使用一切手段击败敌人  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 1, anim_alpha[1], anim_size[1])) cur_tab = 1;
+		if (ImGuiW::Button(U8ST("超感视觉\n人话：esp             "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 2, anim_alpha[2], anim_size[2])) cur_tab = 2;
 
 		ImGui::PopFont();
 
