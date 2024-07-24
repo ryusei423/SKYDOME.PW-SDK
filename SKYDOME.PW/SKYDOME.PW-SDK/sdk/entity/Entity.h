@@ -12,6 +12,8 @@
 #include "../../sd/interfaces/interfaces.h"
 #include "../../sd/utilities/fnv1a.h"
 
+//#include "Weapon.h"
+#include "../hitbox/hitbox.h"
 
 #define _OFFSET(TYPE, NAME, OFFSET)                                                                 \
 	[[nodiscard]] __forceinline std::add_lvalue_reference_t<TYPE> NAME()                                          \
@@ -122,8 +124,8 @@ public:
 	SCHEMA_ADD_FIELD(Vector, GetAbsOrigin, "CGameSceneNode->m_vecAbsOrigin");
 	SCHEMA_ADD_FIELD(Vector, GetRenderOrigin, "CGameSceneNode->m_vRenderOrigin");
 
-	SCHEMA_ADD_FIELD(QAngle_t, GetAngleRotation, "CGameSceneNode->m_angRotation");
-	SCHEMA_ADD_FIELD(QAngle_t, GetAbsAngleRotation, "CGameSceneNode->m_angAbsRotation");
+	SCHEMA_ADD_FIELD(QAngle, GetAngleRotation, "CGameSceneNode->m_angRotation");
+	SCHEMA_ADD_FIELD(QAngle, GetAbsAngleRotation, "CGameSceneNode->m_angAbsRotation");
 
 	SCHEMA_ADD_FIELD(bool, IsDormant, "CGameSceneNode->m_bDormant");
 
@@ -133,7 +135,13 @@ public:
 	}
 };
 
-
+class EntSubClassVDataBase {
+public:
+	template <typename T> requires std::derived_from<T, EntSubClassVDataBase>
+	inline T* as() {
+		return (T*)this;
+	}
+};
 
 class C_BaseEntity : public CEntityInstance
 {
@@ -164,7 +172,7 @@ public:
 	SCHEMA_ADD_FIELD(std::int32_t, GetHealth, "C_BaseEntity->m_iHealth");
 	SCHEMA_ADD_FIELD(std::int32_t, GetMaxHealth, "C_BaseEntity->m_iMaxHealth");
 	SCHEMA_ADD_FIELD(float, GetWaterLevel, "C_BaseEntity->m_flWaterLevel");
-	SCHEMA_ADD_FIELD_OFFSET(void*, GetVData, "C_BaseEntity->m_nSubclassID", 0x8);
+	SCHEMA_ADD_FIELD_OFFSET(EntSubClassVDataBase*, m_pVDataBase, "C_BaseEntity->m_nSubclassID", 0x8);
 };
 
 class CGlowProperty;
@@ -213,7 +221,7 @@ public:
 };
 
 
-
+class C_CSWeaponBase;
 class C_CSPlayerPawn : public C_CSPlayerPawnBase
 {
 public:
@@ -228,7 +236,7 @@ public:
 
 	[[nodiscard]] bool Visible(C_CSPlayerPawn* local);
 
-
+	[[nodiscard]] C_CSWeaponBase* ActiveWeapon();
 
 	[[nodiscard]] Vector GetEyePosition() {
 
@@ -236,6 +244,9 @@ public:
 		MEM::CallVFunc<void, 166>(this, &EyePosition);
 		return EyePosition;
 	};
+
+	SCHEMA_ADD_OFFSET(CUtlVectorSimple< QAngle >, m_aimPunchCache, 0x14F0);
+	SCHEMA_ADD_OFFSET(QAngle, m_aimPunchAngle, 0x177C);
 
 	SCHEMA_ADD_FIELD(bool, IsScoped, "C_CSPlayerPawn->m_bIsScoped");
 	SCHEMA_ADD_FIELD(bool, IsDefusing, "C_CSPlayerPawn->m_bIsDefusing");

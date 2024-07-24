@@ -18,9 +18,13 @@ class RageBot {
 public:
 
 	void run(CUserCmd* cmd);
+	void RemoveRecoil();
 	bool FindTarget();
 	std::vector<RageBotTarget> noobs;
 	std::vector<RageBotPoint> points;
+private:
+	QAngle ang_;
+	CUserCmd* cur_cmd;
 };
 
 

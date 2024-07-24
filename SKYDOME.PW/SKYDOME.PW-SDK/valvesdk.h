@@ -9,5 +9,6 @@
 #include"sdk/iengineclient.h"
 #include"sdk/itrace.h"
 #include"sdk/ienginecvar.h"
+#include"sdk/iglobalvars.h"
 
 #include"sdk/entity/Entity.h"

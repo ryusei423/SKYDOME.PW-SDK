@@ -5,7 +5,7 @@
 // used: m_rad2deg
 //#include "../../utilities/math.h"
 
-[[nodiscard]] QAngle_t Matrix3x4_t::ToAngles() const
+[[nodiscard]] QAngle Matrix3x4_t::ToAngles() const
 {
 	// extract the basis vectors from the matrix. since we only need the z component of the up vector, we don't get x and y
 	const Vector vecForward = this->GetForward();

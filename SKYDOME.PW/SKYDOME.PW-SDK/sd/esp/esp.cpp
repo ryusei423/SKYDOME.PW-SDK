@@ -3,6 +3,7 @@
 #include "../../a2x/offsets.hpp"
 #include "../interfaces/interfaces.h"
 #include "../../CheatData.h"
+#include "../menu/config.h"
 
 void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
@@ -25,7 +26,10 @@ void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 		max = ImVec2(top_screen.x + box_h / 4, screen.y);
 		//drawlist->AddRect(min,max, IM_COL32_WHITE);
 
-		drawlist->AddRect(ImVec2(i.box.x,i.box.y), ImVec2(i.box.z, i.box.w), i.is_visible ? IM_COL32(255, 0, 0, 255) :IM_COL32_WHITE);
+		if (*g_ConfigManager->GetBool("esp_box")){
+			drawlist->AddRect(ImVec2(i.box.x, i.box.y), ImVec2(i.box.z, i.box.w), i.is_visible ? IM_COL32(255, 0, 0, 255) : IM_COL32_WHITE);
+		}
+		
 
 
 		/*ImVec2 eyepos_screen;

@@ -5,7 +5,7 @@
 #include <cmath>
 
 // forward declarations
-struct QAngle_t;
+struct QAngle;
 struct Matrix3x4_t;
 
 // @source: master/public/mathlib/vector.h
@@ -350,7 +350,7 @@ struct Vector
 	}
 
 	/// @returns: 2D angles converted from direction vector
-	[[nodiscard]] QAngle_t ToAngles() const;
+	[[nodiscard]] QAngle ToAngles() const;
 
 	/// @returns: matrix converted from forward direction vector
 	[[nodiscard]] Matrix3x4_t ToMatrix() const;

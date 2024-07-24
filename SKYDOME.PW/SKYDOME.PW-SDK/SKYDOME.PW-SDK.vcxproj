@@ -158,10 +158,12 @@
     <ClCompile Include="sdk\datatypes\qangle.cpp" />
     <ClCompile Include="sdk\datatypes\vector.cpp" />
     <ClCompile Include="sdk\entity\Entity.cpp" />
+    <ClCompile Include="sdk\hitbox\hitbox.cpp" />
     <ClCompile Include="sd\entitycache\entitycache.cpp" />
     <ClCompile Include="sd\esp\esp.cpp" />
     <ClCompile Include="sd\hooks\hooks.cpp" />
     <ClCompile Include="sd\interfaces\interfaces.cpp" />
+    <ClCompile Include="sd\legit\legitbot.cpp" />
     <ClCompile Include="sd\menu\anim\AbstractAnimation.cpp" />
     <ClCompile Include="sd\menu\anim\AnimationGroup.cpp" />
     <ClCompile Include="sd\menu\anim\Easing.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="sd\utilities\pointer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="a2x\animationsystem.dll.hpp" />
     <ClInclude Include="a2x\client.dll.hpp" />
     <ClInclude Include="a2x\engine2.dll.hpp" />
     <ClInclude Include="a2x\interfaces.hpp" />
@@ -235,9 +238,11 @@
     <ClInclude Include="sdk\datatypes\viewsetup.h" />
     <ClInclude Include="sdk\entity\CBaseHandle.h" />
     <ClInclude Include="sdk\entity\Entity.h" />
+    <ClInclude Include="sdk\entity\Weapon.h" />
     <ClInclude Include="sdk\hitbox\hitbox.h" />
     <ClInclude Include="sdk\iengineclient.h" />
     <ClInclude Include="sdk\ienginecvar.h" />
+    <ClInclude Include="sdk\iglobalvars.h" />
     <ClInclude Include="sdk\imemalloc.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
     <ClInclude Include="sdk\ischemasystem.h" />
@@ -247,6 +252,7 @@
     <ClInclude Include="sd\esp\esp.h" />
     <ClInclude Include="sd\hooks\hooks.h" />
     <ClInclude Include="sd\interfaces\interfaces.h" />
+    <ClInclude Include="sd\legit\legitbot.h" />
     <ClInclude Include="sd\localization\localization.h" />
     <ClInclude Include="sd\menu\anim\AbstractAnimation.h" />
     <ClInclude Include="sd\menu\anim\AnimationGroup.h" />

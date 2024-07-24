@@ -213,6 +213,66 @@ inline ImFont* MenuManager::GetDpiFont(std::string font) {
 	return nullptr;
 
 };
+
+
+void MenuManager::ShowEsp(){
+	ImGui::BeginChild("player_esp", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+	make_header(U8ST("玩家视觉"));
+
+	ImGui::Checkbox(U8ST("启用透视"), g_ConfigManager->GetBool("esp_enable"));
+	ImGui::Checkbox(U8ST("玩家方框"), g_ConfigManager->GetBool("esp_box"));
+
+	ImGui::EndChild();
+}
+
+void MenuManager::ShowMisc(){
+
+
+
+
+	ImGui::BeginChild("config", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+
+	make_header(U8ST("参数保存"));
+
+
+	static bool shit = false;
+	//ImGui::Checkbox(U8ST("一键开转"), &g_ConfigManager->configs["1"].bl);
+
+	
+
+
+	ImGui::EndChild();
+
+
+	ImGui::SameLine();
+
+
+	ImGui::BeginChild("misc", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+
+	make_header(U8ST("其他设置"));
+
+
+	const char* dpi_str[] = { "75%", "100%" , "125%" , "150%", "175%" };
+	ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
+
+	ImGui::EndChild();
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 #include "anim/ImVec4Anim.h"
 
 static ImVec4 vTextColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -269,60 +329,15 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		ImGui::Text(U8ST("软件处于测试阶段，所以不要在任何你关心的账户上使用它。"));
 		ImGui::Text(U8ST("我们不对发生的任何禁令负责。"));
 
+		switch (cur_tab)
+		{
+			case 2:ShowEsp(); break;
+			case 3:ShowMisc(); break;
 
-		ImGui::BeginChild("misc_main", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, ImGuiWindowFlags_MenuBar);
-
-		if (ImGui::BeginMenuBar()) {
-
-			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
-			ImGui::Text(U8ST("其他设置:"));
-			ImGui::PopStyleVar();
-			ImGui::EndMenuBar();
-
+		default:
+			break;
 		}
-
 		
-		static bool shit = false;
-		//ImGui::Checkbox(U8ST("一键开转"), &g_ConfigManager->configs["1"].bl);
-		ImGui::EndChild();
-
-
-		ImGui::SameLine();
-
-		ImGui::BeginChild("misc_", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY , ImGuiWindowFlags_MenuBar);
-
-		if (ImGui::BeginMenuBar()) {
-
-			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
-			ImGui::Text(U8ST("设置:"));
-			ImGui::PopStyleVar();
-			ImGui::EndMenuBar();
-
-		}
-
-
-		const char* dpi_str[] = { "75%", "100%" , "125%" , "150%", "175%" };
-		ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
-
-		ImGui::EndChild();
-
-
-		ImGui::BeginChild("misc_1", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, ImGuiWindowFlags_MenuBar);
-
-		if (ImGui::BeginMenuBar()) {
-
-			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
-			ImGui::Text(U8ST("设置1:"));
-			ImGui::PopStyleVar();
-			ImGui::EndMenuBar();
-
-		}
-
-
-		
-		ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
-
-		ImGui::EndChild();
 
 
 		ImGui::PopFont();
@@ -353,7 +368,6 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		}
 		ImGui::EndChild();
 
-
 		ImGui::PushFont(GetDpiFont("main_small"));
 		
 		static int anim_alpha[7];
@@ -361,7 +375,9 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		if (ImGuiW::Button(U8ST("合法自瞄\n用合法的方式赢得胜利  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale),0,cur_tab == 0,anim_alpha[0], anim_size[0])) cur_tab = 0;
 		if (ImGuiW::Button(U8ST("暴力自瞄\n使用一切手段击败敌人  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 1, anim_alpha[1], anim_size[1])) cur_tab = 1;
-		if (ImGuiW::Button(U8ST("超感视觉\n人话：esp             "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 2, anim_alpha[2], anim_size[2])) cur_tab = 2;
+		if (ImGuiW::Button(U8ST("超感视觉\n说人话就是esp         "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 2, anim_alpha[2], anim_size[2])) cur_tab = 2;
+		if (ImGuiW::Button(U8ST("其他设置\n有用的小功能          "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 3, anim_alpha[3], anim_size[3])) cur_tab = 3;
+		if (ImGuiW::Button(U8ST("用户面板\n登陆你的论坛账号！    "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 4, anim_alpha[4], anim_size[4])) cur_tab = 4;
 
 		ImGui::PopFont();
 
@@ -415,6 +431,25 @@ bool probabilityTrigger(double probability) {
 	return randNum < probability;
 }
 
+
+void MenuManager::make_header(std::string name, const char* font){
+
+	ImGui::SetCursorPos(ImVec2(0, 0));
+	if (ImGui::BeginChild("header", logo_size_scale, true, ImGuiWindowFlags_NoDecoration)) {
+
+		ImVec2 text_size = ImGui::CalcTextSize(name.c_str());
+
+		ImGui::SetCursorPos(ImVec2(12 * menu_dpi_scale, (logo_size_scale.y / 2) - (text_size.y / 2)));
+
+		ImGui::PushFont(GetDpiFont(font));
+
+		ImGui::Text(name.c_str());
+
+		ImGui::PopFont();
+
+	}ImGui::EndChild();
+
+}
 
 //在菜单出现时，启动淡出
 void MenuManager::on_menu_open()

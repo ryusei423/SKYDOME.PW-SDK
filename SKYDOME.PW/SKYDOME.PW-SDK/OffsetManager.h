@@ -3,6 +3,7 @@
 //所有使用a2x偏移的代码都应该引用本文件
 #include "a2x/offsets.hpp"
 #include "a2x/client.dll.hpp"
+#include "a2x/animationsystem.dll.hpp"
 
 //实际上用于管理特征码搜索的函数地址
 class OffsetManager
@@ -26,9 +27,14 @@ public:
 		OFFSET_GET_FUNCTION1,
 		OFFSET_CREATE_MATERIAL,
 		OFFSET_CreateMaterialResource,
-
+		OFFSET_GOBALVARS,
 
 		OFFSET_GET_HITBOX_SET,
+		//OFFSET_HITBOX_TO_WORLD_TRANSFORMS,
+		OFFSET_GET_HITBOX_PARENT,
+		OFFSET_GET_HITBOX_FLAGS,
+		OFFSET_GET_HITBOX_NAME,
+		OFFSET_GET_HITBOXS_NUM,
 
 		OFFSET_TRACE,
 		OFFSET_TRACE_InitializeTraceInfo,

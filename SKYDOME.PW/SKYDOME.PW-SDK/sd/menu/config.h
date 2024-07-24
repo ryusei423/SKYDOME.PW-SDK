@@ -41,7 +41,10 @@ public:
 
 	}
 
+	inline bool* GetBool(const char* n) { return &configs[n].bl; };
+
 	void init() {
+		configs["esp_enable"] = ConfigItem(false);
 		configs["esp_box"] = ConfigItem(false);
 	}
 

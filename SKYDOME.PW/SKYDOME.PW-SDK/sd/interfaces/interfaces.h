@@ -31,6 +31,7 @@ public:
 	IEngineClient* EngineClient = nullptr;
 	i_trace* Trace = nullptr;
 	IEngineCVar* EngineCVar = nullptr;
+	IGlobalVars* GlobalVars = nullptr;
 
 };
 

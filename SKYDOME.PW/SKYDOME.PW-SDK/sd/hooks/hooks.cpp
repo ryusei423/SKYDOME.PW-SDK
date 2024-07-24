@@ -14,6 +14,7 @@
 #include "../esp/esp.h"
 #include "../entitycache/entitycache.h"
 #include "../ragebot/ragebot.h"
+#include "../menu/config.h"
 
 namespace g_hooks {
 
@@ -148,8 +149,13 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 			g_MenuManager->toggle(!g_MenuManager->show_menu);
 			//RelativeModeMouse::hook_RelativeModeMouse.call<__int64>(g_interfaces->InputSystem , g_MenuManager->show_menu ? false : g_CheatData->RelativeLastValue);
 		}
-		g_EspDrawManager->MakeFrame();
-		g_EspDrawManager->DrawFrame(ImGui::GetBackgroundDrawList());
+		
+		if (*g_ConfigManager->GetBool(XorStr("esp_enable"))){
+			g_EspDrawManager->MakeFrame();
+			g_EspDrawManager->DrawFrame(ImGui::GetBackgroundDrawList());
+		}
+		
+
 		g_MenuManager->frame(pSwapChain);
 
 

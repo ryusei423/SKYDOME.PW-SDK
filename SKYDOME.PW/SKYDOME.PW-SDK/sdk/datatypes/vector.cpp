@@ -15,7 +15,7 @@
 	};
 }
 
-[[nodiscard]] QAngle_t Vector::ToAngles() const
+[[nodiscard]] QAngle Vector::ToAngles() const
 {
 	float flPitch, flYaw;
 	if (this->x == 0.0f && this->y == 0.0f)

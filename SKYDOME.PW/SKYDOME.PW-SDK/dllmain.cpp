@@ -233,9 +233,13 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 	SD_ASSERT(rt);
 	rt = g_SchemaManager->init(XorStr("client.dll"));
 	SD_ASSERT(rt);
+	rt = g_SchemaManager->init(XorStr("animationsystem.dll"));
+	SD_ASSERT(rt);
 	
 	rt = g_hooks::init();
 	SD_ASSERT(rt);
+
+	g_ConfigManager->init();
 	
 	return 0;
 }

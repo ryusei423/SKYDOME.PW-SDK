@@ -1,7 +1,7 @@
 #pragma once
 
 
-// used: QAngle_t
+// used: QAngle
 #include "qangle.h"
 // used: MEM_PAD
 #include "../../sd/utilities/memory.h"
@@ -144,7 +144,7 @@ static_assert(sizeof(CBasePB) == 0x18);
 class CMsgQAngle : public CBasePB
 {
 public:
-	QAngle_t angValue; // 0x18
+	QAngle angValue; // 0x18
 };
 static_assert(sizeof(CMsgQAngle) == 0x28);
 
@@ -279,7 +279,7 @@ public:
 		return csgoUserCmd.inputHistoryField.pRep->tElements[nIndex];
 	}
 
-	void SetSubTickAngle(const QAngle_t& angView)
+	void SetSubTickAngle(const QAngle& angView)
 	{
 		for (int i = 0; i < this->csgoUserCmd.inputHistoryField.pRep->nAllocatedSize; i++)
 		{

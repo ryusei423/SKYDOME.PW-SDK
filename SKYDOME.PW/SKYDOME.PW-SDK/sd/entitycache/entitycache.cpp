@@ -36,3 +36,8 @@ void EntityCache::OnRemove(CEntityInstance* inst, CBaseHandle handle){
     
 
 }
+
+bool CachedEntity::UpdatePawn(){
+    this->Pawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(this->Controller->GetPawnHandle());
+    return this->Pawn;
+}

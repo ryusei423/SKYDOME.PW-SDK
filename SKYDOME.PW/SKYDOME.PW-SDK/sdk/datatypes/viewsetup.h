@@ -5,7 +5,7 @@
 
 // used: Vector
 #include "vector.h"
-// used: qangle_t
+// used: QAngle
 #include "qangle.h"
 
 class CViewSetup
@@ -21,7 +21,7 @@ public:
 	float flFovViewmodel; // 0x04DC
 	Vector vecOrigin; // 0x04E0
 	MEM_PAD(0xC); // 0x04EC
-	QAngle_t angView; // 0x04F8
+	QAngle angView; // 0x04F8
 	MEM_PAD(0x14); // 0x0504
 	float flAspectRatio; // 0x0518
 };

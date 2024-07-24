@@ -50,7 +50,7 @@ public:
 	MEM_PAD(0x89)
 	bool bInThirdPerson;
 	MEM_PAD(0x6);
-	QAngle_t angThirdPersonAngles;
+	QAngle angThirdPersonAngles;
 	MEM_PAD(0xE);
 	std::int32_t nSequenceNumber;
 	std::int32_t nOldSequenceNumber;
@@ -65,10 +65,10 @@ public:
 		return &arrCommands[nSequenceNumber % MULTIPLAYER_BACKUP];
 	}
 
-	void SetViewAngle(QAngle_t& angView)
+	void SetViewAngle(QAngle& angView)
 	{
 		// @ida: this got called before GetMatricesForView
-		using fnSetViewAngle = std::int64_t(__fastcall*)(void*, std::int32_t, QAngle_t&);
+		using fnSetViewAngle = std::int64_t(__fastcall*)(void*, std::int32_t, QAngle&);
 		static auto oSetViewAngle = reinterpret_cast<fnSetViewAngle>(MEM::FindPattern(CLIENT_DLL, XorStr("85 D2 75 3F 48")));
 
 		#ifdef CS_PARANOID
@@ -78,7 +78,7 @@ public:
 		oSetViewAngle(this, 0, std::ref(angView));
 	}
 
-	QAngle_t GetViewAngles()
+	QAngle GetViewAngles()
 	{
 		using fnGetViewAngles = std::int64_t(__fastcall*)(CCSGOInput*, std::int32_t);
 		static auto oGetViewAngles = reinterpret_cast<fnGetViewAngles>(MEM::FindPattern(CLIENT_DLL, XorStr("4C 8B C1 85 D2 74 08 48 8D 05 ? ? ? ? C3")));
@@ -87,11 +87,11 @@ public:
 		CS_ASSERT(oGetViewAngles != nullptr);
 		#endif
 
-		return *reinterpret_cast<QAngle_t*>(oGetViewAngles(this, 0));
+		return *reinterpret_cast<QAngle*>(oGetViewAngles(this, 0));
 	}
 
-	QAngle_t* angViewAngles(){
-		return (QAngle_t*)((ptrdiff_t)this + 0x0BE0);
+	QAngle* angViewAngles(){
+		return (QAngle*)((ptrdiff_t)this + 0x0BE0);
 	
 	}
 

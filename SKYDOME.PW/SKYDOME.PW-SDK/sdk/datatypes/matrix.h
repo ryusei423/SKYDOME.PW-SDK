@@ -10,7 +10,7 @@
 #include "../../gobal.h"
 
 // forward declarations
-struct QAngle_t;
+struct QAngle;
 
 #pragma pack(push, 4)
 using Matrix3x3_t = float[3][3];
@@ -136,7 +136,7 @@ struct Matrix3x4_t
 	}
 
 	/// @returns: angles converted from this matrix
-	[[nodiscard]] QAngle_t ToAngles() const;
+	[[nodiscard]] QAngle ToAngles() const;
 
 	float arrData[3][4] = {};
 };

@@ -106,6 +106,7 @@ bool InterfacesManager::init()
 	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
 	CSGOInput = reinterpret_cast<CCSGOInput*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CCSGOINPUT]);
 	Trace = reinterpret_cast<i_trace*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_TRACE]);
+	GlobalVars = reinterpret_cast<IGlobalVars*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_GOBALVARS]);
 	InputSystem = Capture<CInputSystem>(pInputSystemRegisterList, XorStr("InputSystemVersion00"));
 	SchemaSystem = Capture<ISchemaSystem>(pSchemaSystemRegisterList, XorStr("SchemaSystem_00"));
 	GameResourceService = Capture<IGameResourceService>(pEngineRegisterList, XorStr("GameResourceServiceClientV00"));

@@ -85,6 +85,9 @@
     <Filter Include="sd\ragebot">
       <UniqueIdentifier>{a9a6831f-7d99-42d7-94da-f05a666f41c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\legitbot">
+      <UniqueIdentifier>{4ed59a4d-83a5-4595-af7e-65c5cb58e530}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -221,6 +224,12 @@
     </ClCompile>
     <ClCompile Include="sd\ragebot\ragebot.cpp">
       <Filter>sd\ragebot</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\legit\legitbot.cpp">
+      <Filter>sd\legitbot</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\hitbox\hitbox.cpp">
+      <Filter>sdk\hitbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,6 +508,18 @@
     </ClInclude>
     <ClInclude Include="sd\ragebot\ragebot.h">
       <Filter>sd\ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\legit\legitbot.h">
+      <Filter>sd\legitbot</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\iglobalvars.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\entity\Weapon.h">
+      <Filter>sdk\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="a2x\animationsystem.dll.hpp">
+      <Filter>a2x</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

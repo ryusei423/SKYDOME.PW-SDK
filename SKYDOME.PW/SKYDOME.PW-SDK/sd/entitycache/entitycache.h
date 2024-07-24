@@ -9,6 +9,7 @@ struct CachedEntity{
 	inline bool Valid() {
 		return Controller && Pawn;
 	}
+	bool UpdatePawn();
 	CBaseHandle handle;
 	CCSPlayerController* Controller;
 	C_CSPlayerPawn* Pawn;

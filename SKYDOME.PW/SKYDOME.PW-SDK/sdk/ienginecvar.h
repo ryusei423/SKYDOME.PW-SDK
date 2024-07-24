@@ -92,7 +92,7 @@ union CVValue_t
 	Vector2D_t vec2;
 	Vector vec3;
 	Vector4D_t vec4;
-	QAngle_t ang;
+	QAngle ang;
 };
 
 class CConVar

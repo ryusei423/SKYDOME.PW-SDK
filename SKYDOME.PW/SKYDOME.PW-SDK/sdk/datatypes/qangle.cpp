@@ -8,12 +8,12 @@
 // used: m_deg2rad
 //#include "../../sd/utilities/math.h"
 
-void QAngle_t::ToDirections(Vector* pvecForward, Vector* pvecRight, Vector* pvecUp) const
+void QAngle::ToDirections(Vector* pvecForward, Vector* pvecRight, Vector* pvecUp) const
 {
 	float flPitchSin, flPitchCos, flYawSin, flYawCos, flRollSin, flRollCos;
-	DirectX::XMScalarSinCos(&flPitchSin, &flPitchCos, M_DEG2RAD(this->x));
-	DirectX::XMScalarSinCos(&flYawSin, &flYawCos, M_DEG2RAD(this->y));
-	DirectX::XMScalarSinCos(&flRollSin, &flRollCos, M_DEG2RAD(this->z));
+	DirectX::XMScalarSinCos(&flPitchSin, &flPitchCos, M_DEG2RAD(this->pitch));
+	DirectX::XMScalarSinCos(&flYawSin, &flYawCos, M_DEG2RAD(this->yaw));
+	DirectX::XMScalarSinCos(&flRollSin, &flRollCos, M_DEG2RAD(this->roll));
 
 	if (pvecForward != nullptr)
 	{
@@ -37,12 +37,12 @@ void QAngle_t::ToDirections(Vector* pvecForward, Vector* pvecRight, Vector* pvec
 	}
 }
 
-Matrix3x4_t QAngle_t::ToMatrix(const Vector& vecOrigin) const
+Matrix3x4_t QAngle::ToMatrix(const Vector& vecOrigin) const
 {
 	float flPitchSin, flPitchCos, flYawSin, flYawCos, flRollSin, flRollCos;
-	DirectX::XMScalarSinCos(&flPitchSin, &flPitchCos, M_DEG2RAD(this->x));
-	DirectX::XMScalarSinCos(&flYawSin, &flYawCos, M_DEG2RAD(this->y));
-	DirectX::XMScalarSinCos(&flRollSin, &flRollCos, M_DEG2RAD(this->z));
+	DirectX::XMScalarSinCos(&flPitchSin, &flPitchCos, M_DEG2RAD(this->pitch));
+	DirectX::XMScalarSinCos(&flYawSin, &flYawCos, M_DEG2RAD(this->yaw));
+	DirectX::XMScalarSinCos(&flRollSin, &flRollCos, M_DEG2RAD(this->roll));
 
 	return {
 		(flPitchCos * flYawCos), (flRollSin * flPitchSin * flYawCos + flRollCos * -flYawSin), (flRollCos * flPitchSin * flYawCos + -flRollSin * -flYawSin), vecOrigin.x,

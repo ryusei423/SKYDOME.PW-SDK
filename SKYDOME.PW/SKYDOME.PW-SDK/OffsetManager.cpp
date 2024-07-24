@@ -62,6 +62,18 @@ bool OffsetManager::scan()
 	offsets[OFFSET_GET_HITBOX_SET] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
 		XorStr("48 89 ?? ?? ?? 48 89 ?? ?? ?? 57 48 ?? ?? ?? ?? ?? ?? 8B DA 48 8B F9 E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F ?? ?? ?? ?? ?? 48 8D")));
 
+	offsets[OFFSET_GET_HITBOX_PARENT] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("85 D2 78 17 3B 91 78")));
+
+	offsets[OFFSET_GET_HITBOX_FLAGS] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("85 D2 78 16 3B 91")));
+
+	offsets[OFFSET_GET_HITBOX_NAME] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("85 D2 78 25 3B 91")));
+
+	offsets[OFFSET_GET_HITBOXS_NUM] = reinterpret_cast<void*>(MEM::GetAbsoluteAddress(MEM::FindPattern(CLIENT_DLL,
+		XorStr("E8 ? ? ? ? 8B D8 48 C7 44 24 50 00 00 00 00")), 1, 0));
+
 
 	//#STR: "invalid_bone", "default", "invalid_hitbox"
 	//这个字符串的函数并不是我们要找的，但是我们要找的函数是唯一调用这个函数的
@@ -107,6 +119,9 @@ bool OffsetManager::scan()
 	offsets[OFFSET_CreateMaterialResource] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
 		XorStr("40 53 48 83 EC 20 48 8B 01 48 8B D9 44")));
 
+	offsets[OFFSET_GOBALVARS] = *reinterpret_cast<void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, 
+		XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));
+
 	int nullptr_cout = 0;
 
 	for (int i = 0; i < OFFSET_MAX; i++) {
@@ -136,7 +151,7 @@ bool OffsetManager::scan()
 		// 计算时间差，单位为秒
 		std::chrono::duration<double> elapsed = end - start;
 		// 输出结果
-		LOG(ERROR) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("offset_manager_scan_fail")), OFFSET_MAX, nullptr_cout);
+		LOG(FATAL) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("offset_manager_scan_fail")), OFFSET_MAX, nullptr_cout);
 
 	}
 

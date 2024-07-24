@@ -2,6 +2,23 @@
 #include "../entity/Entity.h"
 #include "../datatypes/cstronghandle.hpp"
 
+class CTransform;
+
+enum HITBOXES : uint32_t {
+	HEAD = 6,
+	NECK = 5,
+	CHEST = 4,
+	RIGHT_CHEST = 8,
+	LEFT_CHEST = 13,
+	STOMACH = 3,
+	PELVIS = 2,
+	CENTER = 1,
+	L_LEG = 23,
+	L_FEET = 24,
+	R_LEG = 26,
+	R_FEET = 27
+};
+
 enum bone_flags : uint32_t {
 	FLAG_NO_BONE_FLAGS = 0x0,
 	FLAG_BONEFLEXDRIVER = 0x4,
@@ -86,6 +103,26 @@ public:
 	CRenderMesh* mesh;
 };
 
+class CHitBox {
+public:
+	//SCHEMA_ADD_FIELD(Vector, m_vMinBounds, "CHitBox->m_vMinBounds");
+	//SCHEMA_ADD_FIELD(Vector, m_vMaxBounds, "CHitBox->m_vMaxBounds");
+	SCHEMA_ADD_OFFSET(Vector, m_vMinBounds, cs2_dumper::schemas::animationsystem_dll::CHitBox::m_vMinBounds);
+	SCHEMA_ADD_OFFSET(Vector, m_vMaxBounds, cs2_dumper::schemas::animationsystem_dll::CHitBox::m_vMaxBounds);
+	
+
+private:
+	// Size of 'CHitBox' class. Can be obtainted through the SchemaSystem.
+	// Must have this here or we can't iterate the 'm_HitBoxes' vector that stores
+	// CHitBox directly and not by a pointer.
+	char pad[0x70];
+};
+
+class CHitBoxSet {
+public:
+	//SCHEMA_ADD_FIELD(CUtlVector<CHitBox>, m_HitBoxes, "CHitBoxSet->m_HitBoxes");
+	SCHEMA_ADD_OFFSET(CUtlVector<CHitBox>, m_HitBoxes, cs2_dumper::schemas::animationsystem_dll::CHitBoxSet::m_HitBoxes);
+};
 
 
 class CModelSkeleton
@@ -96,13 +133,21 @@ public:
 	CModelSkeleton(const CModelSkeleton&) = delete;
 
 public:
-	SCHEMA_ADD_OFFSET(CUtlVector<const char*>, vecBoneNames, 0x4);
+	/*SCHEMA_ADD_OFFSET(CUtlVector<const char*>, vecBoneNames, 0x4);
 	SCHEMA_ADD_OFFSET(CUtlVector<std::uint16_t>, vecBoneParent, 0x18);
 	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneSphere, 0x30);
 	SCHEMA_ADD_OFFSET(CUtlVector<std::uint32_t>, m_nFlag, 0x48);
 	SCHEMA_ADD_OFFSET(CUtlVector<Vector>, m_bonePosParent, 0x60);
 	SCHEMA_ADD_OFFSET(CUtlVector<QuaternionAligned_t>, m_boneRotParent, 0x78);
-	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneScaleParent, 0x90);
+	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneScaleParent, 0x90);*/
+
+	SCHEMA_ADD_OFFSET(CUtlVector<const char*>, vecBoneNames, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_boneName);
+	SCHEMA_ADD_OFFSET(CUtlVector<std::uint16_t>, vecBoneParent, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_nParent);
+	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneSphere, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_boneSphere);
+	SCHEMA_ADD_OFFSET(CUtlVector<std::uint32_t>, m_nFlag, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_nFlag);
+	SCHEMA_ADD_OFFSET(CUtlVector<Vector>, m_bonePosParent, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_bonePosParent);
+	SCHEMA_ADD_OFFSET(CUtlVector<QuaternionAligned_t>, m_boneRotParent, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_boneRotParent);
+	SCHEMA_ADD_OFFSET(CUtlVector<float>, m_boneScaleParent, cs2_dumper::schemas::animationsystem_dll::ModelSkeletonData_t::m_boneScaleParent);
 
 };
 
@@ -114,10 +159,15 @@ public:
 	CModel(const CModel&) = delete;
 public:
 
-	SCHEMA_ADD_OFFSET(const char*, szName, 0x8);
+	/*SCHEMA_ADD_OFFSET(const char*, szName, 0x8);
 	SCHEMA_ADD_OFFSET(CModelSkeleton, m_modelSkeleton, 0x188);
-	SCHEMA_ADD_OFFSET(CRenderM*, m_meshes, 0x78);
-	//uint32_t GetHitboxesNum();
+	SCHEMA_ADD_OFFSET(CRenderM*, m_meshes, 0x78);*/
+
+	SCHEMA_ADD_OFFSET(const char*, szName, cs2_dumper::schemas::animationsystem_dll::PermModelData_t::m_name);
+	SCHEMA_ADD_OFFSET(CModelSkeleton, m_modelSkeleton, cs2_dumper::schemas::animationsystem_dll::PermModelData_t::m_modelSkeleton);
+	SCHEMA_ADD_OFFSET(CRenderM*, m_meshes, cs2_dumper::schemas::animationsystem_dll::PermModelData_t::m_refMeshes);
+
+
 	uint32_t GetHitboxFlags(uint32_t index);
 	const char* GetHitboxName(uint32_t index);
 	uint32_t GetHitboxParent(uint32_t index);
