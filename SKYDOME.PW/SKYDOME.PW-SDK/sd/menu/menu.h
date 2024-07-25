@@ -18,6 +18,7 @@ public:
 	ImColor color = ImColor(9.f / 255.f,104.f / 255.f,247.f / 255.f);
 
 private:
+	void ShowRage();
 	void ShowEsp();
 	void ShowMisc();
 	void make_header(std::string name,const char* font = "main_small");

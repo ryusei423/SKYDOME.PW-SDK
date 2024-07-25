@@ -33,7 +33,7 @@ void RageBot::run(CUserCmd* cmd){
 		//cmd->SetSubTickAngle(shit);
 		ang_ = shit;
 		cmd->nButtons.nValue |= IN_ATTACK;
-
+		cmd->nButtons.nValueChanged |= IN_ATTACK;
 		/*cmd->csgoUserCmd.nAttack1StartHistoryIndex = cmd->csgoUserCmd.inputHistoryField.nCurrentSize - 1;
 		cmd->csgoUserCmd.nAttack2StartHistoryIndex = cmd->csgoUserCmd.inputHistoryField.nCurrentSize - 1;
 		cmd->csgoUserCmd.nAttack3StartHistoryIndex = cmd->csgoUserCmd.inputHistoryField.nCurrentSize - 1;*/
@@ -83,7 +83,7 @@ bool RageBot::FindTarget(){
 			continue;
 
 		
-		points.emplace_back(/*player.Pawn->GetEyePosition()*/player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD));
+		points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*/player.Pawn->GetHitBoxPos(0));
 
 	}
 

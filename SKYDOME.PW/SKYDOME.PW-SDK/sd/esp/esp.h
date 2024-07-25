@@ -28,19 +28,18 @@ struct EspItemElement
 	std::string text;
 	bool show_text;
 	float bar;
-
+	
 };
 
 //会在每一帧重新创建，
 struct EspItem{
 	
 	Vector pos;
-	Vector eyepos;
-	ImVec2 size;
+	Vector head;
 	ImVec4 box;
-	bool outline;
 	bool is_visible;
 	std::vector<EspItemElement> Elements;
+
 };
 
 class EspDrawManager

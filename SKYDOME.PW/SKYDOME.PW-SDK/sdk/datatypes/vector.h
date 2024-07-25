@@ -294,6 +294,11 @@ struct Vector
 		return (this->x * vecDot.x + this->y * vecDot.y + this->z * vecDot.z);
 	}
 
+	[[nodiscard]] float DotProductAbsolute(const Vector& rhs) const 
+	{ 
+		return std::abs(x * rhs.x) + std::abs(y * rhs.y) + std::abs(z * rhs.z); 
+	}
+
 	[[nodiscard]] constexpr Vector CrossProduct(const Vector& vecCross) const
 	{
 		return { this->y * vecCross.z - this->z * vecCross.y, this->z * vecCross.x - this->x * vecCross.z, this->x * vecCross.y - this->y * vecCross.x };

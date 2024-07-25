@@ -103,6 +103,8 @@ public:
 	CRenderMesh* mesh;
 };
 
+
+//Center = (min + max) / 2
 class CHitBox {
 public:
 	//SCHEMA_ADD_FIELD(Vector, m_vMinBounds, "CHitBox->m_vMinBounds");

@@ -5,104 +5,45 @@
 #include "../../CheatData.h"
 #include "../menu/config.h"
 
+
 void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
 	for (auto& i : manydogs){
-		ImVec2 screen,top_screen;
-		
 
-		Vector world_origin = i.pos;
-		Vector world_origin_top = world_origin;
-		world_origin_top.z += i.size.y;
-
-		WorldToScreen(world_origin, &screen);
-		WorldToScreen(world_origin_top, &top_screen);
-
-		//drawlist->AddLine(screen, top_screen, IM_COL32_WHITE);
-
-		int box_h = screen.y - top_screen.y;
-		ImVec2 min,max;
-		min = ImVec2(top_screen.x - box_h / 4,top_screen.y);
-		max = ImVec2(top_screen.x + box_h / 4, screen.y);
-		//drawlist->AddRect(min,max, IM_COL32_WHITE);
 
 		if (*g_ConfigManager->GetBool("esp_box")){
 			drawlist->AddRect(ImVec2(i.box.x, i.box.y), ImVec2(i.box.z, i.box.w), i.is_visible ? IM_COL32(255, 0, 0, 255) : IM_COL32_WHITE);
 		}
-		
-
-
-		/*ImVec2 eyepos_screen;
-		WorldToScreen(i.eyepos,&eyepos_screen);
-		drawlist->AddLine(ImVec2(0,0), eyepos_screen, IM_COL32_WHITE);*/
 
 	}
-
-
-	//drawlist->AddLine(ImVec2(0, 0), ImVec2(1920,1080), IM_COL32(0, 0, 0, 255));
-
 
 }
 
 
 
 
-
-//call in fsn
+#include "../entitycache/entitycache.h"
 void EspDrawManager::MakeFrame(){
 	manydogs.clear();
 
-	for (int i = 2; i < g_interfaces->GameResourceService->pGameEntitySystem->GetHighestEntityIndex(); i++)
-	{
-		auto shit = g_interfaces->GameResourceService->pGameEntitySystem->Get(i);
-		if (shit == nullptr)
+
+	for (auto i = 0; i < g_EntityCache->players.size(); i++) {
+		auto& player = g_EntityCache->players[i];
+		if (player.Controller)
+			player.UpdatePawn();
+
+		if (!player.Valid())
 			continue;
 
 
-		if (shit->IsBasePlayerController())
-		{
-			auto shit_controller = reinterpret_cast<CCSPlayerController*>(shit);
-			C_CSPlayerPawn* pPlayerPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(shit_controller->GetPawnHandle());
-			//LOG(INFO) << shit_controller->GetPawnHealth() << " - " << pPlayerPawn->GetHealth() << " - " << shit_controller->GetHealth() << " - " << shit_controller->IsPawnAlive();
-
-			//std::cout << pPlayerPawn->GetHealth() << "\n";
-
-			if (shit_controller->IsPawnAlive() && pPlayerPawn->GetHealth()) {
-
-				auto& esp = manydogs.emplace_back(shit_controller->GetPawnOrigin(), pPlayerPawn->GetEyePosition(), ImVec2(50, 70));
-
-
-				EspItemElement name;
-				name.pos = EspItemElement::TOP;
-				name.type = EspItemElement::TEXT;
-				name.text = shit_controller->GetPlayerName();
-
-				esp.Elements.emplace_back(name);
-
-
-				ImVec4 box;
-
-				GetEntityBoundingBox(pPlayerPawn,&box);
-
-				esp.eyepos = pPlayerPawn->GetEyePosition();
-				esp.box = box;
-				if(g_CheatData->LocalPawn)
-				esp.is_visible = pPlayerPawn->Visible(g_CheatData->LocalPawn);
-			}
-			
-
-
-
-		}
+		if (player.Controller->IsPawnAlive() && player.Pawn->GetHealth()) {
+			auto& esp = manydogs.emplace_back(player.Controller->GetPawnOrigin());
+			GetEntityBoundingBox(player.Pawn, &esp.box);
 		
+		}
 
-
-
-	} 
 	
-
-
-
+	}
 
 
 }

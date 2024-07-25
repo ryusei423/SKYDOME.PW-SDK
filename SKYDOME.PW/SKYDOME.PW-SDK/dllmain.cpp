@@ -14,9 +14,34 @@
 #include "CheatData.h"
 #include "sd/schema/schema.h"
 
+
 INITIALIZE_EASYLOGGINGPP
 
+#include <DbgHelp.h>
+void printStackTrace() {
+	void* stack[100];
+	unsigned short frames;
+	SYMBOL_INFO* symbol;
+	HANDLE process;
 
+	process = GetCurrentProcess();
+
+	SymInitialize(process, NULL, TRUE);
+	frames = CaptureStackBackTrace(0, 100, stack, NULL);
+	symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
+	symbol->MaxNameLen = 255;
+	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+	for (int i = 0; i < frames; i++) {
+		SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
+		printf("%i: %s - 0x%0X\n", frames - i - 1, symbol->Name, symbol->Address);
+	}
+
+	free(symbol);
+}
+
+//在使用manual map时，其中大部分有关地址的东西都不好用
+//或许只有当前地址能供分析
 LONG WINAPI VectoredHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 {
 
@@ -130,9 +155,9 @@ LONG WINAPI VectoredHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 		exceptionCause << (const char*)u8"\n看起来异常发生于我们自身，地址是0x" << std::hex << crashedModuleOffset << (const char*)u8"\n很糟糕的事情,对吧?，但是话说回来...这更有助于排查错误。\n";
 	}
 	else
-		exceptionCause << (const char*)u8"\n看起来异常发生于" << crashedModuleName << " : 0x" << std::hex << crashedModuleOffset << (const char*)u8"\n很高兴它不在我们的模块中,但是话说回来...不管怎么说是我们导致异常发生的吧？很抱歉不能查看堆栈调用...\n";
+		exceptionCause << (const char*)u8"\n看起来异常发生于" << crashedModuleName << " : 0x" << std::hex << crashedModuleOffset << (const char*)u8"\n很高兴它不在我们的模块中,但是话说回来...不管怎么说是我们导致异常发生的...\n";
 
-	exceptionCause << (const char*)u8"\n来看一下寄存器吧...不过我想没有什么用..." << "\n";
+	exceptionCause << (const char*)u8"\n来看一下寄存器吧,不过这对分析的帮助并不大..." << "\n";
 	CONTEXT* context = ExceptionInfo->ContextRecord;
 	exceptionCause << (const char*)u8"寄存器转储:" << std::endl;
 	exceptionCause << (const char*)u8"  RAX: 0x" << std::hex << context->Rax << std::endl;
@@ -147,15 +172,46 @@ LONG WINAPI VectoredHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 	exceptionCause << (const char*)u8"  RFLAGS: 0x" << std::hex << context->EFlags << std::endl;
 
 	
-	exceptionCause << (const char*)u8"\n请向总部发送此报告,这有助于他们确定发生了什么然后修复此错误。";
-	exceptionCause << std::endl;
 	
-	if (crashedModuleHandle != g_CheatData->self_handle) {
-		exceptionCause << (const char*)u8"\n虽然说没有调用堆栈的情况下自身以外的异常十分难以分析，但是提交报告也会带来些许帮助呢。(聊胜于无";
-		exceptionCause << std::endl;
+	
+	void* stack[100];
+	unsigned short frames;
+	SYMBOL_INFO* symbol;
+	HANDLE process;
+
+	process = GetCurrentProcess();
+
+	SymInitialize(process, NULL, TRUE);
+	frames = CaptureStackBackTrace(0, 100, stack, NULL);
+	symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
+	symbol->MaxNameLen = 255;
+	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+	if (frames > 1){
+		exceptionCause << (const char*)u8"\n接下来开始展示调用堆栈,这是帮助总部修复错误的重要信息！";
+		exceptionCause << (const char*)u8"\n截图报告时请务必包含整个消息框！\n";
+
+		for (int i = 0; i < frames; i++) {
+			SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
+			//printf("%i: %s - 0x%0X\n", frames - i - 1, symbol->Name, symbol->Address);
+
+
+			exceptionCause << " " << frames - i - 1 << " - " << symbol->Name << " - " << symbol->Address << "\n";
+		}
+
+		exceptionCause << (const char*)u8"\n请向总部发送此报告,这有助于他们确定发生了什么然后修复此错误。";
 
 	}
-	
+	else{
+		exceptionCause << (const char*)u8"\n抱歉,无法获得调用堆栈。\n";
+		exceptionCause << (const char*)u8"\n我在写下这些代码时考虑过分发一个特别的版本，能够正常获得调试信息的版本。";
+		exceptionCause << (const char*)u8"\n不过很明显,这非常容易被检测,由于imgui的原因我无法加密所有字符串,或者加密字符串意义已经不大了。";
+		exceptionCause << (const char*)u8"\n或许如果我足够了解底层原理,我可以找出在特殊情况下正常获得调试信息的方法。";
+		exceptionCause << (const char*)u8"\n...";
+	}
+
+	free(symbol);
+
 
 	//MessageBoxA(0, std::to_string(long long(ExceptionInfo->ExceptionRecord->ExceptionCode)).c_str(), "ENTROPY", MB_OK | MB_ICONERROR);
 	//auto msg_wchar = SDlib.StrSystem().Stringtowstring(exceptionCause.str());
@@ -163,6 +219,8 @@ LONG WINAPI VectoredHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 	MessageBoxW(NULL, msg_wchar.c_str(), L"舰长...本次的作战记录整理好了...不太顺利呢", MB_OK | MB_ICONERROR);
 	//GetCurrentStackTrace(ExceptionInfo->ContextRecord);
 	//delete msg_wchar;
+
+	
 
 	return EXCEPTION_CONTINUE_SEARCH;
 }
@@ -233,9 +291,6 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 	SD_ASSERT(rt);
 	rt = g_SchemaManager->init(XorStr("client.dll"));
 	SD_ASSERT(rt);
-	rt = g_SchemaManager->init(XorStr("animationsystem.dll"));
-	SD_ASSERT(rt);
-	
 	rt = g_hooks::init();
 	SD_ASSERT(rt);
 

@@ -68,4 +68,48 @@ bool C_CSPlayerPawn::Visible(C_CSPlayerPawn* local)
 	return trace.HitEntity && trace.HitEntity->GetRefEHandle().GetEntryIndex() == this->GetRefEHandle().GetEntryIndex() || trace.Fraction > 0.97f;
 
 
-};
+}
+
+bool C_CSPlayerPawn::GetHitboxMinMax(int i,Vector& min, Vector& max){
+	constexpr int MAX_HITBOXES = 64;
+
+	CHitBoxSet* hitboxSet = GetHitboxSet(0);
+	if (!hitboxSet) return false;
+
+	CHitBox* hitbox = &hitboxSet->m_HitBoxes()[i];
+	if (!hitbox) return false;
+
+	CTransform hitBoxTransforms[MAX_HITBOXES];
+	int hitBoxCount = HitboxToWorldTransforms(hitboxSet, hitBoxTransforms);
+	if (!hitBoxCount) return false;
+
+	const Matrix3x4_t hitBoxMatrix = hitBoxTransforms[i].ToMatrix();
+	Vector worldMins, worldMaxs;
+
+	MATH::TransformAABB(hitBoxMatrix, hitbox->m_vMinBounds(), hitbox->m_vMaxBounds(), worldMins, worldMaxs);
+	
+	min = worldMins;
+	max = worldMaxs;
+	
+	return true;
+}
+
+Vector C_CSPlayerPawn::GetHitBoxPos(int hitbox)
+{
+	Vector min, max;
+	if(GetHitboxMinMax(hitbox,min,max))
+	return (min + max) * 0.5;
+
+	return Vector(0,0,0);
+}
+
+
+CHitBoxSet* C_CSPlayerPawn::GetHitboxSet(int i){
+	using fnGetHitboxSet = CHitBoxSet*(__fastcall*)(void* ,int);
+	return reinterpret_cast<fnGetHitboxSet>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_GET_HITBOX_SET])(this,i);
+}
+
+int C_CSPlayerPawn::HitboxToWorldTransforms(CHitBoxSet* hitBoxSet, CTransform* hitboxToWorld){
+	using fnHitboxToWorldTransforms =  int(__fastcall*)(void*, CHitBoxSet*, CTransform*, int);
+	return reinterpret_cast<fnHitboxToWorldTransforms>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_HITBOX_TO_WORLD_TRANSFORMS])(this,hitBoxSet,hitboxToWorld,1024);
+}

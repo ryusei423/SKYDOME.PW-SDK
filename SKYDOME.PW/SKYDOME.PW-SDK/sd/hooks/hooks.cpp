@@ -104,6 +104,14 @@ static LRESULT hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return true;
 
+	//在菜单打开时可以移动，但是不能开火
+	//菜单打开时啥都不能干的挂，coder要么不玩游戏，要么是弱智，还有一种可能是只有一只手的残疾人
+	if (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP){
+		if (g_MenuManager->show_menu)
+			return true;
+	}
+
+
 	return CallWindowProc(g_hooks::DX11::o_WndProc, hWnd, uMsg, wParam, lParam);
 }
 
@@ -311,9 +319,16 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 
-	g_RageBot->run(cmd);
+	if (*g_ConfigManager->GetBool("ragebot_enable"))
+		g_RageBot->run(cmd);
 	/*cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.x = 89.f;
 	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.y += 180.f;*/
+
+
+
+
+
+
 	return rt;
 }
 

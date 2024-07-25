@@ -74,6 +74,11 @@ bool OffsetManager::scan()
 	offsets[OFFSET_GET_HITBOXS_NUM] = reinterpret_cast<void*>(MEM::GetAbsoluteAddress(MEM::FindPattern(CLIENT_DLL,
 		XorStr("E8 ? ? ? ? 8B D8 48 C7 44 24 50 00 00 00 00")), 1, 0));
 
+	//RVA
+	//E8 ? ? ? ? 45 33 F6 4C 63 E0 ptr.Absolute(1, 0);
+	offsets[OFFSET_HITBOX_TO_WORLD_TRANSFORMS] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 ?? ?? ?? 55 57 41 54 41 56 41 57 48 ?? ?? ?? 45")));
+
 
 	//#STR: "invalid_bone", "default", "invalid_hitbox"
 	//这个字符串的函数并不是我们要找的，但是我们要找的函数是唯一调用这个函数的

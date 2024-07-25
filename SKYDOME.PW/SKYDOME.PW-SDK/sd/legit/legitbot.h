@@ -4,7 +4,11 @@
 
 struct LegitBotTarget {
 	CachedEntity player;
+};
 
+//我们只储存骨骼中心点
+struct LegitBotPoint {
+	Vector point;
 
 };
 
@@ -14,10 +18,14 @@ public:
 
 	void run(CUserCmd* cmd);
 	bool FindTarget();
-	std::vector<LegitBotTarget> noobs;
+	
 
 private:
 	void TriggerBot();
+	void Scan();
+
+	std::vector<LegitBotTarget> noobs;
+	std::vector<LegitBotPoint> points;
 
 	CUserCmd* cur_cmd;
 	C_CSWeaponBase* weapon;

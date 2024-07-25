@@ -85,6 +85,8 @@ void EditStyle() {
 	colors[ImGuiCol_WindowBg] = ImVec4(28.f / 255.f, 28.f / 255.f, 28.f / 255.f, 1.0f);
 
 	colors[ImGuiCol_Button] = ImVec4(25.f / 255.f, 25.f / 255.f, 25.f / 255.f, 1.0f);
+
+	colors[ImGuiCol_Border] = ImVec4(36.f / 255.f, 36.f / 255.f, 36.f / 255.f, 1.0f);
 }
 
 void MenuManager::TryFindDpi() {
@@ -215,6 +217,26 @@ inline ImFont* MenuManager::GetDpiFont(std::string font) {
 };
 
 
+void MenuManager::ShowRage(){
+	ImGui::BeginChild("ragebot_config", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+	make_header(U8ST("武器参数"));
+
+	ImGui::Checkbox(U8ST("启用"), g_ConfigManager->GetBool("ragebot_enable"));
+
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+
+	ImGui::BeginChild("ragebot_set", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+
+	make_header(U8ST("瞄准选项"));
+
+
+	ImGui::EndChild();
+
+}
+
 void MenuManager::ShowEsp(){
 	ImGui::BeginChild("player_esp", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
 	make_header(U8ST("玩家视觉"));
@@ -278,6 +300,9 @@ void MenuManager::ShowMisc(){
 static ImVec4 vTextColor(1.0F, 1.0F, 1.0F, 1.0F);
 static imanim::ImVec4Anim* pColorAnim = nullptr;
 
+static ImVec4 MenuAlpha(1.0F, 1.0F, 1.0F, 1.0F);
+static imanim::ImVec4Anim* MenuAlphaAnim = nullptr;
+
 #include "../../CheatData.h"
 void MenuManager::frame(IDXGISwapChain* pSwapChain)
 {
@@ -287,6 +312,11 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		g_OffsetManager->fnSetWindowMouseGrab(g_interfaces->InputSystem->GetSDLWindow(), !show_menu);
 	}
 
+	#ifdef _DEBUG
+		ImGui::ShowDemoWindow();
+	#endif // _DEBUG
+
+	
 
 	if (show_menu)
 	{
@@ -298,6 +328,10 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		ImVec2 main_windows_pos;
 
 		ImGui::SetNextWindowSize(menu_size_scale);
+
+		ImGui::GetStyle().Alpha = MenuAlpha.w;
+		color.Value.w = MenuAlpha.w;
+
 		ImGui::Begin("SKYDOME",0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
 
 		main_windows_pos = ImGui::GetWindowPos();
@@ -323,6 +357,8 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		}
 		ImGui::EndChild();
 
+		ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y) - ImVec2(0, 2), ImGui::GetWindowPos() + logo_size_scale - ImVec2(0, 2), color);
+
 		ImGui::PushFont(GetDpiFont("main"));
 
 
@@ -331,6 +367,7 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		switch (cur_tab)
 		{
+			case 1:ShowRage(); break;
 			case 2:ShowEsp(); break;
 			case 3:ShowMisc(); break;
 
@@ -367,6 +404,8 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		}
 		ImGui::EndChild();
+
+		ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y) - ImVec2(0, 2), ImGui::GetWindowPos() + logo_size_scale - ImVec2(0, 2), color);
 
 		ImGui::PushFont(GetDpiFont("main_small"));
 		
@@ -449,6 +488,8 @@ void MenuManager::make_header(std::string name, const char* font){
 
 	}ImGui::EndChild();
 
+	//ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y), ImGui::GetWindowPos() + logo_size_scale, color);
+
 }
 
 //在菜单出现时，启动淡出
@@ -463,7 +504,11 @@ void MenuManager::on_menu_open()
 		pColorAnim = new imanim::ImVec4Anim(&vTextColor);
 	}
 
-	
+	if (MenuAlphaAnim == nullptr)
+	{
+		// Create the animation and attach it to the ImVec4 used to color the text
+		MenuAlphaAnim = new imanim::ImVec4Anim(&MenuAlpha);
+	}
 
 	if (probabilityTrigger(0.1)) {
 		// Animate from white text to red text
@@ -484,9 +529,11 @@ void MenuManager::on_menu_open()
 		logo_text_d = logo_text;
 	}
 	
-	
-
-
+	MenuAlphaAnim->setStartValue(ImVec4(1, 1, 1, 0));
+	MenuAlphaAnim->setEndValue(ImVec4(1, 1, 1, 1));
+	MenuAlphaAnim->setDuration(0.3f);
+	MenuAlphaAnim->setEasingCurve(imanim::EasingCurve::Type::InQuart);
+	MenuAlphaAnim->start();
 }
 
 void MenuManager::on_anim_frame()
@@ -514,4 +561,5 @@ void MenuManager::on_anim_frame()
 	
 
 	pColorAnim->update();
+	MenuAlphaAnim->update();
 }

@@ -29,6 +29,9 @@
 /// floor
 #define M_FLOOR(VALUE) floor(VALUE)
 
+#include "../../sdk/datatypes/matrix.h"
+#include "../../sdk/datatypes/vector.h"
+
 /*
  * MATHEMATICS
  * - basic trigonometry, algebraic mathematical functions and constants
@@ -85,6 +88,8 @@ namespace MATH
 	{
 		return value != 0 && (value & (value - 1)) == 0;
 	}
+
+	void TransformAABB(const Matrix3x4_t& transform, const Vector& minsIn, const Vector& maxsIn, Vector& minsOut, Vector& maxsOut);
 
 	/* @section: random using game's exports */
 	inline int(__cdecl* fnRandomSeed)(int iSeed) = nullptr;
