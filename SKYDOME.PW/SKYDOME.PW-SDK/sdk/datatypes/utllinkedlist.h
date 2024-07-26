@@ -206,10 +206,10 @@ public:
 
 	[[nodiscard]] bool IsValidIndex(const I nIndex) const
 	{
-		if (!memory.IsValidIndex(nIndex))
+		if (!memory.IsIdxValid(nIndex))
 			return false;
 
-		if (memory.IsIndexAfter(nIndex, itLastAlloc))
+		if (memory.IsIdxAfter(nIndex, itLastAlloc))
 			return false; // don't read values that have been allocated, but not constructed
 
 		return (memory[nIndex].iPrevious != nIndex) || (memory[nIndex].iNext == nIndex);

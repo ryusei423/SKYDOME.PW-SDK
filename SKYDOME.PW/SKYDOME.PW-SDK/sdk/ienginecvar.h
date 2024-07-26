@@ -116,35 +116,35 @@ public:
 	MEM_PAD(0x40);
 	CUtlLinkedList<CConVar*> listConvars;
 
-	//CConVar* Find(FNV1A_t uHashedName)
-	//{
-	//	for (int i = I::Cvar->listConvars.Head(); i != I::Cvar->listConvars.InvalidIndex(); i = I::Cvar->listConvars.Next(i))
-	//	{
-	//		CConVar* pConVar = I::Cvar->listConvars.Element(i);
-	//		if (pConVar == nullptr)
-	//			continue;
+	CConVar* Find(const char* name)
+	{
+		for (int i = this->listConvars.Head(); i != this->listConvars.InvalidIndex(); i = this->listConvars.Next(i))
+		{
+			CConVar* pConVar = this->listConvars.Element(i);
+			if (pConVar == nullptr)
+				continue;
 
-	//		if (FNV1A::Hash(pConVar->szName) == uHashedName)
-	//			return pConVar;
-	//	}
+			if (FNV1A::Hash(pConVar->szName) == FNV1A::Hash(name)/*strcmp(pConVar->szName,name) == 0*/)
+				return pConVar;
+		}
 
-	//	SD_ASSERT(false); // invalid convar name
-	//	return nullptr;
-	//}
+		SD_ASSERT(false); // invalid convar name
+		return nullptr;
+	}
 
-	//void UnlockHiddenCVars()
-	//{
-	//	for (int i = I::Cvar->listConvars.Head(); i != I::Cvar->listConvars.InvalidIndex(); i = I::Cvar->listConvars.Next(i))
-	//	{
-	//		CConVar* pConVar = I::Cvar->listConvars.Element(i);
-	//		if (pConVar == nullptr)
-	//			continue;
+	void UnlockHiddenCVars()
+	{
+		for (int i = this->listConvars.Head(); i != this->listConvars.InvalidIndex(); i = this->listConvars.Next(i))
+		{
+			CConVar* pConVar = this->listConvars.Element(i);
+			if (pConVar == nullptr)
+				continue;
 
-	//		if (pConVar->nFlags & FCVAR_HIDDEN)
-	//			pConVar->nFlags &= ~FCVAR_HIDDEN;
+			if (pConVar->nFlags & FCVAR_HIDDEN)
+				pConVar->nFlags &= ~FCVAR_HIDDEN;
 
-	//		if (pConVar->nFlags & FCVAR_DEVELOPMENTONLY)
-	//			pConVar->nFlags &= ~FCVAR_DEVELOPMENTONLY;
-	//	}
-	//}
+			if (pConVar->nFlags & FCVAR_DEVELOPMENTONLY)
+				pConVar->nFlags &= ~FCVAR_DEVELOPMENTONLY;
+		}
+	}
 };

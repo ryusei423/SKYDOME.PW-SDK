@@ -39,6 +39,35 @@ public:
 	uint32_t m_bSpottedByMask[2];
 };
 
+
+enum HitGroup_t : std::uint32_t {
+	HITGROUP_INVALID = -1,
+	HITGROUP_GENERIC = 0,
+	HITGROUP_HEAD = 1,
+	HITGROUP_CHEST = 2,
+	HITGROUP_STOMACH = 3,
+	HITGROUP_LEFTARM = 4,
+	HITGROUP_RIGHTARM = 5,
+	HITGROUP_LEFTLEG = 6,
+	HITGROUP_RIGHTLEG = 7,
+	HITGROUP_NECK = 8,
+	HITGROUP_UNUSED = 9,
+	HITGROUP_GEAR = 10,
+	HITGROUP_SPECIAL = 11,
+	HITGROUP_COUNT = 12,
+};
+
+
+class CPlayer_ItemServices {
+public:
+	SCHEMA_ADD_FIELD(bool, m_bHasDefuser, "CCSPlayer_ItemServices->m_bHasDefuser");
+	SCHEMA_ADD_FIELD(bool, m_bHasHelmet, "CCSPlayer_ItemServices->m_bHasHelmet");
+	SCHEMA_ADD_FIELD(bool, m_bHasHeavyArmor, "CCSPlayer_ItemServices->m_bHasHeavyArmor");
+};
+
+
+
+
 class CEntityIdentity
 {
 public:
@@ -202,6 +231,8 @@ public:
 	SCHEMA_ADD_FIELD_OFFSET(EntSubClassVDataBase*, m_pVDataBase, "C_BaseEntity->m_nSubclassID", 0x8);
 };
 
+
+
 class CGlowProperty;
 
 class C_BaseModelEntity : public C_BaseEntity
@@ -219,14 +250,25 @@ public:
 	SCHEMA_ADD_FIELD(std::float_t, GetSimulationTime, "C_BaseModelEntity->m_flSimulationTime");
 };
 
+class CPlayer_WeaponServices : public C_BaseModelEntity
+{
+public:
+
+	SCHEMA_ADD_OFFSET(GameTime_t, m_flNextAttack, 0xB8);
+	SCHEMA_ADD_FIELD(CBaseHandle, m_hActiveWeapon, "CPlayer_WeaponServices->m_hActiveWeapon");
+	SCHEMA_ADD_FIELD(uint16_t[32], m_iAmmo, "CPlayer_WeaponServices->m_iAmmo");
+
+};
+
+
 class C_BasePlayerPawn : public C_BaseModelEntity
 {
 public:
 	//CS_CLASS_NO_INITIALIZER(C_BasePlayerPawn);
 
 	SCHEMA_ADD_FIELD(CBaseHandle, GetControllerHandle, "C_BasePlayerPawn->m_hController");
-	//SCHEMA_ADD_FIELD(CCSPlayer_WeaponServices*, GetWeaponServices, "C_BasePlayerPawn->m_pWeaponServices");
-	//SCHEMA_ADD_FIELD(CPlayer_ItemServices*, GetItemServices, "C_BasePlayerPawn->m_pItemServices");
+	SCHEMA_ADD_FIELD(CPlayer_WeaponServices*, GetWeaponServices, "C_BasePlayerPawn->m_pWeaponServices");
+	SCHEMA_ADD_FIELD(CPlayer_ItemServices*, GetItemServices, "C_BasePlayerPawn->m_pItemServices");
 	//SCHEMA_ADD_FIELD(CPlayer_CameraServices*, GetCameraServices, "C_BasePlayerPawn->m_pCameraServices");
 };
 
@@ -255,15 +297,13 @@ class C_CSPlayerPawn : public C_CSPlayerPawnBase
 public:
 	//CS_CLASS_NO_INITIALIZER(C_CSPlayerPawn);
 
-	[[nodiscard]] bool IsEnemy(C_CSPlayerPawn* pOther) {
-		return this->GetTeam() != pOther->GetTeam();
-	};
+	[[nodiscard]] bool IsEnemy(C_CSPlayerPawn* pOther);
 
 	[[nodiscard]] int GetAssociatedTeam();
 	[[nodiscard]] bool CanAttack(const float flServerTime);
 
 	[[nodiscard]] bool Visible(C_CSPlayerPawn* local);
-
+	[[nodiscard]] bool hasArmour(const int hitgroup);
 	[[nodiscard]] bool GetHitboxMinMax(int hitbox,Vector& min,Vector& max);
 	[[nodiscard]] Vector GetHitBoxPos(int hitbox);
 	[[nodiscard]] C_CSWeaponBase* ActiveWeapon();

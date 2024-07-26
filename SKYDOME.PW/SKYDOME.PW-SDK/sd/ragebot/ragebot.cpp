@@ -1,5 +1,6 @@
 #include "ragebot.h"
 #include "../../CheatData.h"
+#include "penetration.h"
 
 QAngle CalcAngle(const Vector& src, const Vector& dst) {
 	QAngle vAngle;
@@ -42,7 +43,7 @@ void RageBot::run(CUserCmd* cmd){
 	RemoveRecoil();
 
 	cmd->SetSubTickAngle(ang_);
-
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue = ang_;
 	//if ((cmd->nButtons.nValue & IN_ATTACK) && cmd->csgoUserCmd.nAttack1StartHistoryIndex != -1){
 	//	std::cout << "1 - >" << cmd->csgoUserCmd.nAttack1StartHistoryIndex << "\n";
 	//	std::cout << "2 - >" << cmd->csgoUserCmd.nAttack2StartHistoryIndex << "\n";
@@ -73,19 +74,52 @@ void RageBot::RemoveRecoil(){
 }
 
 
-
+#include "../../sdk/entity/Weapon.h"
 bool RageBot::FindTarget(){
+
+	auto weapon = g_CheatData->LocalPawn->ActiveWeapon();
+
+	if (!weapon) {
+		return false;
+	}
+
 	for (auto i = 0; i < g_EntityCache->players.size(); i++){
 		auto& player = g_EntityCache->players[i];
 		player.Pawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(player.Controller->GetPawnHandle());
 
-		if (!player.Valid() || !player.Controller->IsPawnAlive() || player.Pawn->GetHealth() <= 0 || !player.Pawn->IsEnemy(g_CheatData->LocalPawn) ||!player.Pawn->Visible(g_CheatData->LocalPawn))
+		if (!player.Valid() || !player.Controller->IsPawnAlive() || player.Pawn->GetHealth() <= 0 || !player.Pawn->IsEnemy(g_CheatData->LocalPawn) /*||!player.Pawn->Visible(g_CheatData->LocalPawn)*/)
 			continue;
 
 		
-		points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*/player.Pawn->GetHitBoxPos(0));
+
+		float damage = 0;
+		bool canHit = false;
+		F::AUTOWALL::c_auto_wall::data_t data;
+		F::AUTOWALL::g_auto_wall->pen(data, g_CheatData->LocalPawn->GetEyePosition(), player.Pawn->GetHitBoxPos(0), player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
+		if (data.m_can_hit) {
+			points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*/player.Pawn->GetHitBoxPos(0));
+		}
+
+		
 
 	}
 
 	return noobs.size();
+}
+
+bool RageBot::CanRunRage(){
+	if (!g_interfaces->EngineClient->IsInGame() || 
+		!g_interfaces->EngineClient->IsConnected() ||
+		!g_CheatData->LocalController || 
+		!g_CheatData->LocalPawn
+		
+		
+		
+		){
+
+	}
+
+
+
+	return false;
 }

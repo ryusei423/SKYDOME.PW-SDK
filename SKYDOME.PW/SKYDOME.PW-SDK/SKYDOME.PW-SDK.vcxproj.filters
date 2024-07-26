@@ -88,6 +88,9 @@
     <Filter Include="sd\legitbot">
       <UniqueIdentifier>{4ed59a4d-83a5-4595-af7e-65c5cb58e530}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sd\movement">
+      <UniqueIdentifier>{016c417f-d315-432d-8eda-5ee7f1a98061}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="sdk\hitbox\hitbox.cpp">
       <Filter>sdk\hitbox</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\ragebot\penetration.cpp">
+      <Filter>sd\ragebot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -520,6 +526,15 @@
     </ClInclude>
     <ClInclude Include="a2x\animationsystem.dll.hpp">
       <Filter>a2x</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\ragebot\penetration.h">
+      <Filter>sd\ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\entity\const.h">
+      <Filter>sdk\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\movement\movement.h">
+      <Filter>sd\movement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

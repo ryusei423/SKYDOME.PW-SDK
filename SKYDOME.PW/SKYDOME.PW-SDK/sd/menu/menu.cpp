@@ -411,6 +411,7 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		
 		static int anim_alpha[7];
 		static int anim_size[7];
+		anim_alpha[cur_tab] = MenuAlpha.w * 255.f;
 
 		if (ImGuiW::Button(U8ST("合法自瞄\n用合法的方式赢得胜利  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale),0,cur_tab == 0,anim_alpha[0], anim_size[0])) cur_tab = 0;
 		if (ImGuiW::Button(U8ST("暴力自瞄\n使用一切手段击败敌人  "), ImVec2(tab_size_scale.x - ImGui::GetStyle().ItemSpacing.x * 2, 70 * menu_dpi_scale), 0, cur_tab == 1, anim_alpha[1], anim_size[1])) cur_tab = 1;

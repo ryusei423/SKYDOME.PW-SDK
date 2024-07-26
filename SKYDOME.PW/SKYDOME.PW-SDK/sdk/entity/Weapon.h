@@ -59,24 +59,24 @@ public:
 
 class CCSWeaponBaseVData : public BasePlayerWeaponVData {
 public:
-	SCHEMA_ADD_OFFSET(const char*, m_szName, 0xC20);
-	SCHEMA_ADD_OFFSET(uint32_t, m_WeaponType, 0x248);
-	SCHEMA_ADD_OFFSET(CSWeaponCategory, m_WeaponCategory, 0x24C);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flSpread, 0xC54);
-	SCHEMA_ADD_OFFSET(float, m_flHeadshotMultiplier, 0xD44);
-	SCHEMA_ADD_OFFSET(float, m_flArmorRatio, 0xD48);
-	SCHEMA_ADD_OFFSET(float, m_flPenetration, 0xD4C);
-	SCHEMA_ADD_OFFSET(float, m_flRange, 0xD50);
-	SCHEMA_ADD_OFFSET(float, m_flRangeModifier, 0xD54);
-	SCHEMA_ADD_OFFSET(bool, m_bIsFullAuto, 0xC3C);
+	SCHEMA_ADD_OFFSET(const char*, m_szName, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_szName);
+	SCHEMA_ADD_OFFSET(uint32_t, m_WeaponType, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_WeaponType);
+	SCHEMA_ADD_OFFSET(CSWeaponCategory, m_WeaponCategory, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_WeaponCategory);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flSpread, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flSpread);
+	SCHEMA_ADD_OFFSET(float, m_flHeadshotMultiplier, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flHeadshotMultiplier);
+	SCHEMA_ADD_OFFSET(float, m_flArmorRatio, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flArmorRatio);
+	SCHEMA_ADD_OFFSET(float, m_flPenetration, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flPenetration);
+	SCHEMA_ADD_OFFSET(float, m_flRange, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRange);
+	SCHEMA_ADD_OFFSET(float, m_flRangeModifier, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRangeModifier);
+	SCHEMA_ADD_OFFSET(bool, m_bIsFullAuto, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_bIsFullAuto);
 
-	SCHEMA_ADD_OFFSET(int32_t, m_nDamage, 0xD40);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyCrouch, 0xC5C);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyStand, 0xC64);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyJump, 0xC6C);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyMove, 0xC8C);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flCycleTime, 0xC44);
-	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flMaxSpeed, 0xC4C);
+	SCHEMA_ADD_OFFSET(int32_t, m_nDamage, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_nDamage);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyCrouch, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flInaccuracyCrouch);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyStand, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flInaccuracyStand);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyJump, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flInaccuracyJump);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyMove, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flInaccuracyMove);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flCycleTime, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flCycleTime);
+	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flMaxSpeed, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flMaxSpeed);
 
 
 };
@@ -92,9 +92,12 @@ class C_CSWeaponBase : public CBasePlayerWeapon {
 public:
 	void AddStattrakEntity();
 	void AddNametagEntity();
-	SCHEMA_ADD_OFFSET(CCSWeaponBaseVData*, datawep, 0x368);
-	SCHEMA_ADD_OFFSET(int32_t, m_zoomLevel, 0x1A70);
-	SCHEMA_ADD_OFFSET(bool, m_bInReload, 0x1744);
+	SCHEMA_ADD_OFFSET(CCSWeaponBaseVData*, datawep, /*0x368*/0x360);
+	//SCHEMA_ADD_OFFSET(int32_t, m_zoomLevel, 0x1A70);
+	//SCHEMA_ADD_OFFSET(bool, m_bInReload, 0x1744);
+	SCHEMA_ADD_FIELD(int32_t, m_zoomLevel, "C_CSWeaponBaseGun->m_bInReload");
+	SCHEMA_ADD_FIELD(bool, m_bInReload, "C_CSWeaponBase->m_bInReload");
+
 	SCHEMA_ADD_FIELD(float, m_fAccuracyPenalty, "C_CSWeaponBase->m_fAccuracyPenalty");
 	SCHEMA_ADD_FIELD(CSWeaponMode, m_weaponMode, "C_CSWeaponBase->m_weaponMode");
 	SCHEMA_ADD_FIELD(int, m_iOriginalTeamNumber, "C_CSWeaponBase->m_iOriginalTeamNumber");

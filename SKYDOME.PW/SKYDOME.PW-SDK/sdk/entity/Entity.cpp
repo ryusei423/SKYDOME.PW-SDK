@@ -50,6 +50,12 @@ const Vector& CCSPlayerController::GetPawnOrigin()
 	return pPawn->GetSceneOrigin();
 }
 
+bool C_CSPlayerPawn::IsEnemy(C_CSPlayerPawn* pOther){
+	auto mp_teammates_are_enemies = g_interfaces->EngineCVar->Find("mp_teammates_are_enemies");
+	
+	return mp_teammates_are_enemies->value.i1 ? true : this->GetTeam() != pOther->GetTeam();
+};
+
 //通过eyepos进行检查可见性
 //注意它无法穿透玻璃，以及不是那么全面
 bool C_CSPlayerPawn::Visible(C_CSPlayerPawn* local)
@@ -68,6 +74,24 @@ bool C_CSPlayerPawn::Visible(C_CSPlayerPawn* local)
 	return trace.HitEntity && trace.HitEntity->GetRefEHandle().GetEntryIndex() == this->GetRefEHandle().GetEntryIndex() || trace.Fraction > 0.97f;
 
 
+}
+
+bool C_CSPlayerPawn::hasArmour(const int hitgroup){
+	if (!this->GetItemServices())
+		return false;
+
+	switch (hitgroup) {
+	case HITGROUP_HEAD:
+		return this->GetItemServices()->m_bHasHelmet();
+	case HITGROUP_GENERIC:
+	case HITGROUP_CHEST:
+	case HITGROUP_STOMACH:
+	case HITGROUP_LEFTARM:
+	case HITGROUP_RIGHTARM:
+		return true;
+	default:
+		return false;
+	}
 }
 
 bool C_CSPlayerPawn::GetHitboxMinMax(int i,Vector& min, Vector& max){
@@ -101,6 +125,19 @@ Vector C_CSPlayerPawn::GetHitBoxPos(int hitbox)
 	return (min + max) * 0.5;
 
 	return Vector(0,0,0);
+}
+
+C_CSWeaponBase* C_CSPlayerPawn::ActiveWeapon()
+{
+	CPlayer_WeaponServices* WeaponServices = this->GetWeaponServices();
+	if (!WeaponServices)
+		return nullptr;
+
+	auto ActiveWeapon = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSWeaponBase>(WeaponServices->m_hActiveWeapon());
+	if (!ActiveWeapon)
+		return nullptr;
+
+	return ActiveWeapon;
 }
 
 

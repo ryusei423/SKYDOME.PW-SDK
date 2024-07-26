@@ -182,6 +182,7 @@
     <ClCompile Include="sd\menu\anim\Utils.cpp" />
     <ClCompile Include="sd\menu\menu.cpp" />
     <ClCompile Include="sd\menu\widget.cpp" />
+    <ClCompile Include="sd\ragebot\penetration.cpp" />
     <ClCompile Include="sd\ragebot\ragebot.cpp" />
     <ClCompile Include="sd\schema\schema.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="sdk\datatypes\vector.h" />
     <ClInclude Include="sdk\datatypes\viewsetup.h" />
     <ClInclude Include="sdk\entity\CBaseHandle.h" />
+    <ClInclude Include="sdk\entity\const.h" />
     <ClInclude Include="sdk\entity\Entity.h" />
     <ClInclude Include="sdk\entity\Weapon.h" />
     <ClInclude Include="sdk\hitbox\hitbox.h" />
@@ -276,6 +278,8 @@
     <ClInclude Include="sd\menu\fonts\Roboto-Bold.h" />
     <ClInclude Include="sd\menu\menu.h" />
     <ClInclude Include="sd\menu\widget.h" />
+    <ClInclude Include="sd\movement\movement.h" />
+    <ClInclude Include="sd\ragebot\penetration.h" />
     <ClInclude Include="sd\ragebot\ragebot.h" />
     <ClInclude Include="sd\schema\schema.h" />
     <ClInclude Include="sd\utilities\crt.h" />

@@ -291,11 +291,11 @@ void* __fastcall g_hooks::OnRemoveEntity::OnRemoveEntity(void* rcx, CEntityInsta
 
 void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFrameStage){
 	hook_fsn.call<void>(rcx,nFrameStage);
-	if (nFrameStage == FRAME_RENDER_END){
+	if (nFrameStage == FRAME_NET_UPDATE_END){
 		//更新看起来有些慢
 		//可能是未经插值的位置？
 		//g_EspDrawManager->MakeFrame();
-
+		
 
 	}
 	
@@ -319,6 +319,7 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
 	if (*g_ConfigManager->GetBool("ragebot_enable"))
 		g_RageBot->run(cmd);
 	/*cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.x = 89.f;
