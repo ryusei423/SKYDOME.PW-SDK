@@ -24,11 +24,17 @@ void PlayerLog::Log(){
 		
 		lag_record_t new_data(player.Pawn);
 
+		
+
 		if (records.empty()){
 			records.emplace_front(new_data);
 			continue;
 		}
-
+		//地图已更改
+		if (new_data.m_flSimulationTime < records[0].m_flSimulationTime) {
+			records.clear();
+			continue;
+		}
 		if (new_data.m_flSimulationTime > records[0].m_flSimulationTime) {
 			records.emplace_front(new_data);
 			continue;

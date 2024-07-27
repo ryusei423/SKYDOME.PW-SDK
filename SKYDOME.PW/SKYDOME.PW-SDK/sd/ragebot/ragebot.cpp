@@ -128,7 +128,7 @@ bool RageBot::FindTarget(){
 
 			pt.tick = TIME_TO_TICKS(/*player.Pawn->GetSimulationTime()*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].m_flSimulationTime);
 			pt.tick = ((0.5 + (float)(g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].m_flSimulationTime)) / 0.015625);
-
+			pt.tick -= 1;
 		}
 
 		backup.recover(player.Pawn);
@@ -166,19 +166,21 @@ void RageBot::SetCmdTick(int tick, int history){
 	}
 
 	if (History->sv_interp0) {
-		History->sv_interp0->nSrcTick = tick + 1;
-		History->sv_interp0->nDstTick = tick;
+		History->sv_interp0->nSrcTick = tick;
+		History->sv_interp0->nDstTick = tick + 1;
+		History->sv_interp1->flFraction = 0.f;
 	}
 
 	if (History->sv_interp1) {
-		History->sv_interp1->nSrcTick = tick + 1;
-		History->sv_interp1->nDstTick = tick;
+		History->sv_interp1->nSrcTick = tick;
+		History->sv_interp1->nDstTick = tick + 1;
+		History->sv_interp1->flFraction = 0.f;
 	}
 
-	if (History->player_interp) {
+	/*if (History->player_interp) {
 		History->player_interp->nSrcTick = tick + 1;
 		History->player_interp->nDstTick = tick;
-	}
+	}*/
 
 
 }
