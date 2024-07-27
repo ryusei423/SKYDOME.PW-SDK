@@ -228,6 +228,7 @@ public:
 	SCHEMA_ADD_FIELD(std::int32_t, GetHealth, "C_BaseEntity->m_iHealth");
 	SCHEMA_ADD_FIELD(std::int32_t, GetMaxHealth, "C_BaseEntity->m_iMaxHealth");
 	SCHEMA_ADD_FIELD(float, GetWaterLevel, "C_BaseEntity->m_flWaterLevel");
+	SCHEMA_ADD_FIELD(std::float_t, GetSimulationTime, "C_BaseEntity->m_flSimulationTime");
 	SCHEMA_ADD_FIELD_OFFSET(EntSubClassVDataBase*, m_pVDataBase, "C_BaseEntity->m_nSubclassID", 0x8);
 };
 
@@ -247,7 +248,8 @@ public:
 	SCHEMA_ADD_FIELD(GameTick_t, GetCreationTick, "C_BaseModelEntity->m_nCreationTick");
 	SCHEMA_ADD_FIELD(CBaseHandle, GetMoveParent, "C_BaseModelEntity->m_hOldMoveParent");
 	SCHEMA_ADD_FIELD(std::float_t, GetAnimTime, "C_BaseModelEntity->m_flAnimTime");
-	SCHEMA_ADD_FIELD(std::float_t, GetSimulationTime, "C_BaseModelEntity->m_flSimulationTime");
+	
+
 };
 
 class CPlayer_WeaponServices : public C_BaseModelEntity
@@ -265,6 +267,7 @@ class C_BasePlayerPawn : public C_BaseModelEntity
 {
 public:
 	//CS_CLASS_NO_INITIALIZER(C_BasePlayerPawn);
+	SCHEMA_ADD_FIELD(Vector, m_vOldOrigin, "C_BasePlayerPawn->m_vOldOrigin");
 
 	SCHEMA_ADD_FIELD(CBaseHandle, GetControllerHandle, "C_BasePlayerPawn->m_hController");
 	SCHEMA_ADD_FIELD(CPlayer_WeaponServices*, GetWeaponServices, "C_BasePlayerPawn->m_pWeaponServices");
@@ -300,8 +303,7 @@ public:
 	[[nodiscard]] bool IsEnemy(C_CSPlayerPawn* pOther);
 
 	[[nodiscard]] int GetAssociatedTeam();
-	[[nodiscard]] bool CanAttack(const float flServerTime);
-
+	[[nodiscard]] bool CanShoot(int tick = 0,bool forrage = true);
 	[[nodiscard]] bool Visible(C_CSPlayerPawn* local);
 	[[nodiscard]] bool hasArmour(const int hitgroup);
 	[[nodiscard]] bool GetHitboxMinMax(int hitbox,Vector& min,Vector& max);
@@ -309,12 +311,18 @@ public:
 	[[nodiscard]] C_CSWeaponBase* ActiveWeapon();
 	[[nodiscard]] CHitBoxSet* GetHitboxSet(int i);
 	[[nodiscard]] int HitboxToWorldTransforms(CHitBoxSet* hitBoxSet, CTransform* hitboxToWorld);
+	
 
 	[[nodiscard]] Vector GetEyePosition() {
 
 		Vector EyePosition;
 		MEM::CallVFunc<void, 166>(this, &EyePosition);
 		return EyePosition;
+	};
+
+	[[nodiscard]] Vector CalcEyePosition() {
+
+		return m_vOldOrigin() + GetViewOffset();
 	};
 
 	SCHEMA_ADD_OFFSET(CUtlVectorSimple< QAngle >, m_aimPunchCache, 0x14F0);

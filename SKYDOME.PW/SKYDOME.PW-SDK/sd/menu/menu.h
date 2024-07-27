@@ -2,6 +2,16 @@
 #include "../interfaces/interfaces.h"
 #include "../../external/imgui/imgui.h"
 
+struct DebugData{
+	std::string name;
+	int it;
+	float ft;
+	bool bl;
+
+	int type;
+
+};
+
 class MenuManager
 {
 public:
@@ -10,6 +20,10 @@ public:
 	void CreateRenderTarget(IDXGISwapChain* pSwapChain);//创建渲染目标
 	void frame(IDXGISwapChain* pSwapChain);//不需额外处理，只需调用宾狗和结束
 	void toggle(bool state);
+
+	DebugData& AddDebug(DebugData d) {
+		return debugs.emplace_back(d);
+	};
 
 	bool show_menu = false;
 	int toggle_mouse = 0;
@@ -89,7 +103,7 @@ private:
 
 	std::unordered_map<std::string, ImFont*> fonts;
 
-
+	std::vector<DebugData> debugs;
 };
 
 inline MenuManager* g_MenuManager = new MenuManager;

@@ -182,7 +182,9 @@
     <ClCompile Include="sd\menu\anim\Utils.cpp" />
     <ClCompile Include="sd\menu\menu.cpp" />
     <ClCompile Include="sd\menu\widget.cpp" />
+    <ClCompile Include="sd\movement\movement.cpp" />
     <ClCompile Include="sd\ragebot\penetration.cpp" />
+    <ClCompile Include="sd\ragebot\playerlog.cpp" />
     <ClCompile Include="sd\ragebot\ragebot.cpp" />
     <ClCompile Include="sd\schema\schema.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
@@ -248,6 +250,7 @@
     <ClInclude Include="sdk\entity\Entity.h" />
     <ClInclude Include="sdk\entity\Weapon.h" />
     <ClInclude Include="sdk\hitbox\hitbox.h" />
+    <ClInclude Include="sdk\iclient.h" />
     <ClInclude Include="sdk\iengineclient.h" />
     <ClInclude Include="sdk\ienginecvar.h" />
     <ClInclude Include="sdk\iglobalvars.h" />
@@ -280,6 +283,7 @@
     <ClInclude Include="sd\menu\widget.h" />
     <ClInclude Include="sd\movement\movement.h" />
     <ClInclude Include="sd\ragebot\penetration.h" />
+    <ClInclude Include="sd\ragebot\playerlog.h" />
     <ClInclude Include="sd\ragebot\ragebot.h" />
     <ClInclude Include="sd\schema\schema.h" />
     <ClInclude Include="sd\utilities\crt.h" />

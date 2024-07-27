@@ -43,7 +43,9 @@ private: \
     char UNIQUE_NAME1(pad_)[SIZE]; \
 public:
 
-
+#define TICK_INTERVAL			/*(g_interfaces->GlobalVars->flIntervalPerTick)*/1.f / 64.f
+#define TIME_TO_TICKS( dt )		( (int)( 0.5 + (float)(dt) / TICK_INTERVAL ) )
+#define TICKS_TO_TIME( t )		( TICK_INTERVAL *( t ) )
 
 //它使用上面的一些东西，在define之后编译
 #include "sd/localization/localization.h"

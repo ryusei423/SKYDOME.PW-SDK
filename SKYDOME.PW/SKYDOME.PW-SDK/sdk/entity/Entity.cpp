@@ -56,6 +56,49 @@ bool C_CSPlayerPawn::IsEnemy(C_CSPlayerPawn* pOther){
 	return mp_teammates_are_enemies->value.i1 ? true : this->GetTeam() != pOther->GetTeam();
 };
 
+#include "Weapon.h"
+
+bool C_CSPlayerPawn::CanShoot(int tick,bool forrage){
+	if (!tick)
+		tick = g_interfaces->GlobalVars->nTickCount;
+
+	CPlayer_WeaponServices* WeaponServices = this->GetWeaponServices();
+	if (!WeaponServices)
+		return false;
+
+	auto ActiveWeapon = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSWeaponBase>(WeaponServices->m_hActiveWeapon());
+	if (!ActiveWeapon)
+		return false;
+
+	auto data = ActiveWeapon->datawep();
+	if (!data)
+		return false;
+
+	if (ActiveWeapon->clip1() <= 0)
+		return false;
+
+	if (data->m_WeaponType() == WEAPONTYPE_KNIFE || data->m_WeaponType() == WEAPONTYPE_FISTS) 
+		return forrage ? false : true;
+	
+		
+
+	//看起来原子的作者已经测试过这些了
+	//如果效果不好我会再调查的
+	/*
+	auto next_attack  = (WeaponServices->m_flNextAttack());
+	auto next_2 =  WeaponServices->m_flNextAttack() * I::GlobalVars->flIntervalPerTick;
+	auto next_3 = static_cast<float>(WeaponServices->m_flNextAttack() * I::GlobalVars->flIntervalPerTick);
+	*/
+
+	auto primary_tick = ActiveWeapon->m_nNextPrimaryAttackTick();
+
+	if (primary_tick > tick) {
+		return false;
+	}
+
+	return true;
+}
+
 //通过eyepos进行检查可见性
 //注意它无法穿透玻璃，以及不是那么全面
 bool C_CSPlayerPawn::Visible(C_CSPlayerPawn* local)

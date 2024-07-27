@@ -10,5 +10,6 @@
 #include"sdk/itrace.h"
 #include"sdk/ienginecvar.h"
 #include"sdk/iglobalvars.h"
+#include"sdk/iclient.h"
 
 #include"sdk/entity/Entity.h"

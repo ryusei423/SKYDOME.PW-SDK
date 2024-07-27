@@ -14,7 +14,10 @@
 #include "../esp/esp.h"
 #include "../entitycache/entitycache.h"
 #include "../ragebot/ragebot.h"
+#include "../ragebot/playerlog.h"
 #include "../menu/config.h"
+#include "../movement/movement.h"
+
 
 namespace g_hooks {
 
@@ -163,6 +166,13 @@ HRESULT __stdcall g_hooks::DX11::Present(IDXGISwapChain* pSwapChain, UINT uSyncI
 			g_EspDrawManager->DrawFrame(ImGui::GetBackgroundDrawList());
 		}
 		
+		if (!g_interfaces->EngineClient->IsInGame()||
+			!g_interfaces->EngineClient->IsConnected()){
+			if (g_interfaces->GlobalVars){
+				g_interfaces->GlobalVars = nullptr;
+			}
+			
+		}
 
 		g_MenuManager->frame(pSwapChain);
 
@@ -295,6 +305,15 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 		//更新看起来有些慢
 		//可能是未经插值的位置？
 		//g_EspDrawManager->MakeFrame();
+		if (g_interfaces->EngineClient->IsConnected()&&
+			g_interfaces->EngineClient->IsInGame()&&
+			g_CheatData->LocalController &&
+			g_CheatData->LocalController->IsPawnAlive()&&
+			g_CheatData->LocalPawn){
+			g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->GetAbsVelocity() * 0.03);
+		}
+
+		g_PlayerLog->Log();
 		
 
 	}
@@ -304,7 +323,12 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, bool nUnk, std::byte nUnk2){
 	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
 	if(!g_interfaces->EngineClient->IsInGame() && !g_interfaces->EngineClient->IsConnected()){
+		g_interfaces->GlobalVars = nullptr;
 		return rt;
+	}
+	if (!g_interfaces->GlobalVars){
+		g_interfaces->GlobalVars = *reinterpret_cast<IGlobalVars**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL,
+			XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));;
 	}
 
 	CUserCmd* cmd = pInput->GetUserCmd();
@@ -319,15 +343,18 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 
+	g_MovementManager->InitTick(cmd);
+
+
 	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
 	if (*g_ConfigManager->GetBool("ragebot_enable"))
 		g_RageBot->run(cmd);
-	/*cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.x = 89.f;
-	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.y += 180.f;*/
 
 
 
 
+	g_MovementManager->EndTick(cmd);
 
 
 	return rt;

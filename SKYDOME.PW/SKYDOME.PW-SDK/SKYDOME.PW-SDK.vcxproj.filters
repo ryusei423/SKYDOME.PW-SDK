@@ -237,6 +237,12 @@
     <ClCompile Include="sd\ragebot\penetration.cpp">
       <Filter>sd\ragebot</Filter>
     </ClCompile>
+    <ClCompile Include="sd\movement\movement.cpp">
+      <Filter>sd\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="sd\ragebot\playerlog.cpp">
+      <Filter>sd\ragebot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\safetyhook\safetyhook.hpp">
@@ -535,6 +541,12 @@
     </ClInclude>
     <ClInclude Include="sd\movement\movement.h">
       <Filter>sd\movement</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\iclient.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\ragebot\playerlog.h">
+      <Filter>sd\ragebot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

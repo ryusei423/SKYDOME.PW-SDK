@@ -1,6 +1,7 @@
 #include "ragebot.h"
 #include "../../CheatData.h"
 #include "penetration.h"
+#include "playerlog.h"
 
 QAngle CalcAngle(const Vector& src, const Vector& dst) {
 	QAngle vAngle;
@@ -17,6 +18,16 @@ QAngle CalcAngle(const Vector& src, const Vector& dst) {
 	return vAngle;
 }
 
+float calc_lerp() noexcept {
+
+	const float cl_interp = g_interfaces->EngineCVar->Find("cl_interp")->value.fl;
+	auto lerp = cl_interp / 64.f;
+
+	if (lerp <= cl_interp)
+		lerp = cl_interp;
+
+	return lerp;
+}
 
 void RageBot::run(CUserCmd* cmd){
 
@@ -25,31 +36,39 @@ void RageBot::run(CUserCmd* cmd){
 	points.clear();
 	noobs.clear();
 
-	FindTarget();
+	if(!CanRunRage())
+		return;
 
 	if (points.size()){
-
-		QAngle shit = CalcAngle(g_CheatData->LocalPawn->GetEyePosition(),points[0].point);
+		auto eye = g_CheatData->LocalPawn->GetEyePosition();
+		//eye = g_CheatData->LocalPawn->CalcEyePosition();
+		QAngle shit = CalcAngle(eye,points[0].point);
 
 		//cmd->SetSubTickAngle(shit);
 		ang_ = shit;
 		cmd->nButtons.nValue |= IN_ATTACK;
 		cmd->nButtons.nValueChanged |= IN_ATTACK;
-		/*cmd->csgoUserCmd.nAttack1StartHistoryIndex = cmd->csgoUserCmd.inputHistoryField.nCurrentSize - 1;
-		cmd->csgoUserCmd.nAttack2StartHistoryIndex = cmd->csgoUserCmd.inputHistoryField.nCurrentSize - 1;
-		cmd->csgoUserCmd.nAttack3StartHistoryIndex = cmd->csgoUserCmd.inputHistoryField.nCurrentSize - 1;*/
+
+		cmd->csgoUserCmd.nAttack1StartHistoryIndex = 0;
+
+		cmd->csgoUserCmd.CheckAndSetBits(ECSGOUserCmdBits::CSGOUSERCMD_BITS_ATTACK1START);
+
+		std::cout << "tick: " << points[0].tick << std::endl;
+		SetCmdTick(points[0].tick);
+		
+		cmd->csgoUserCmd.pBaseCmd->flForwardMove = 0.f;
+		cmd->csgoUserCmd.pBaseCmd->flSideMove = 0.f;
+		cmd->csgoUserCmd.pBaseCmd->flUpMove = 0.f;
+
+		
 	}
+	
 
 	RemoveRecoil();
 
 	cmd->SetSubTickAngle(ang_);
-	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue = ang_;
-	//if ((cmd->nButtons.nValue & IN_ATTACK) && cmd->csgoUserCmd.nAttack1StartHistoryIndex != -1){
-	//	std::cout << "1 - >" << cmd->csgoUserCmd.nAttack1StartHistoryIndex << "\n";
-	//	std::cout << "2 - >" << cmd->csgoUserCmd.nAttack2StartHistoryIndex << "\n";
-	//	std::cout << "3 - >" << cmd->csgoUserCmd.nAttack3StartHistoryIndex << "\n";
-	//}
 
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue = ang_;
 
 
 }
@@ -90,36 +109,76 @@ bool RageBot::FindTarget(){
 		if (!player.Valid() || !player.Controller->IsPawnAlive() || player.Pawn->GetHealth() <= 0 || !player.Pawn->IsEnemy(g_CheatData->LocalPawn) /*||!player.Pawn->Visible(g_CheatData->LocalPawn)*/)
 			continue;
 
+		if (g_PlayerLog->logs[player.handle.GetEntryIndex()].record.empty())
+			continue;
 		
+		lag_record_t backup(player.Pawn);
 
+		g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].recover(player.Pawn);
+		//目前，用计算位置扫描。用虚函数eyepos射击
+		//计算位置基于oldorigin，这确保我们真的能击中目标
+		//但是它不能用于角度计算，这是个十分贫民窟的解决方法，在适当的时候我会想办法调查eyepos相关的东西
 		float damage = 0;
 		bool canHit = false;
 		F::AUTOWALL::c_auto_wall::data_t data;
-		F::AUTOWALL::g_auto_wall->pen(data, g_CheatData->LocalPawn->GetEyePosition(), player.Pawn->GetHitBoxPos(0), player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
-		if (data.m_can_hit) {
-			points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*/player.Pawn->GetHitBoxPos(0));
+		F::AUTOWALL::g_auto_wall->pen(data, g_CheatData->LocalPawn->CalcEyePosition()/*g_CheatData->net_update_end_eyepos*//*g_CheatData->LocalPawn->GetEyePosition()*/, /*player.Pawn->GetHitBoxPos(0)*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].matrix[6].pos, player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
+		if (data.m_can_hit && data.m_dmg >= 100.f) {
+			auto& pt = points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*//*player.Pawn->GetHitBoxPos(0)*/
+				g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].matrix[6].pos);
+
+			pt.tick = TIME_TO_TICKS(/*player.Pawn->GetSimulationTime()*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].m_flSimulationTime);
+			pt.tick = ((0.5 + (float)(g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].m_flSimulationTime)) / 0.015625);
+
 		}
 
-		
-
+		backup.recover(player.Pawn);
+		//noobs.emplace_back(player);
 	}
 
-	return noobs.size();
+	return points.size();
 }
+
 
 bool RageBot::CanRunRage(){
 	if (!g_interfaces->EngineClient->IsInGame() || 
 		!g_interfaces->EngineClient->IsConnected() ||
 		!g_CheatData->LocalController || 
-		!g_CheatData->LocalPawn
-		
-		
-		
-		){
+		!g_CheatData->LocalPawn ||
+		!g_CheatData->LocalPawn->GetHealth() ||		
+		!g_CheatData->LocalPawn->CanShoot() ||
+		!FindTarget()){
+
+		return false;
 
 	}
 
+	return true;
+}
+
+void RageBot::SetCmdTick(int tick, int history){
+
+	auto History = cur_cmd->GetInputHistoryEntry(history);
+	History->nRenderTickCount = tick + 1;
+
+	if (History->cl_interp) {
+		History->cl_interp->nSrcTick = tick + 1;
+		History->cl_interp->nDstTick = tick;
+	}
+
+	if (History->sv_interp0) {
+		History->sv_interp0->nSrcTick = tick + 1;
+		History->sv_interp0->nDstTick = tick;
+	}
+
+	if (History->sv_interp1) {
+		History->sv_interp1->nSrcTick = tick + 1;
+		History->sv_interp1->nDstTick = tick;
+	}
+
+	if (History->player_interp) {
+		History->player_interp->nSrcTick = tick + 1;
+		History->player_interp->nDstTick = tick;
+	}
 
 
-	return false;
 }

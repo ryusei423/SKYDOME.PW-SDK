@@ -13,6 +13,7 @@
 #include "external/StackWalker/StackWalker.h"
 #include "CheatData.h"
 #include "sd/schema/schema.h"
+#include "sd/menu/menu.h"
 
 
 INITIALIZE_EASYLOGGINGPP
@@ -295,6 +296,7 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 	SD_ASSERT(rt);
 
 	g_ConfigManager->init();
+	//g_MenuManager->toggle(true);
 	
 	return 0;
 }

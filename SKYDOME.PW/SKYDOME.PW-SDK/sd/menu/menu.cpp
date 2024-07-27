@@ -247,6 +247,8 @@ void MenuManager::ShowEsp(){
 	ImGui::EndChild();
 }
 
+bool show_demo_window;
+bool show_debug_window;
 void MenuManager::ShowMisc(){
 
 
@@ -276,6 +278,19 @@ void MenuManager::ShowMisc(){
 
 	const char* dpi_str[] = { "75%", "100%" , "125%" , "150%", "175%" };
 	ImGui::Combo(U8ST("DPI缩放"), &dpi, dpi_str, IM_ARRAYSIZE(dpi_str));
+
+	#ifdef _DEBUG
+		ImGui::Checkbox(U8ST("显示演示窗口"), &show_demo_window);
+		ImGui::Checkbox(U8ST("显示调试窗口"), &show_debug_window);
+	#endif // _DEBUG
+
+	
+
+
+	if(ImGui::Button(U8ST("更新GLOBALVARS")))
+		g_interfaces->GlobalVars = *reinterpret_cast<IGlobalVars**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL,
+			XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));;
+
 
 	ImGui::EndChild();
 
@@ -313,6 +328,8 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 	}
 
 	#ifdef _DEBUG
+	
+	if(show_demo_window)
 		ImGui::ShowDemoWindow();
 	#endif // _DEBUG
 
@@ -422,6 +439,27 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		ImGui::PopFont();
 
 		ImGui::End();
+
+
+
+		ImGui::Begin("SKYDOME_DEBUG", 0, /*ImGuiWindowFlags_NoResize |*/ ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
+
+		make_header(U8ST("SKYDOME.PW - 调试"));
+
+
+
+
+		ImGui::End();
+
+
+
+
+
+
+
+
+
+
 	}
 
 

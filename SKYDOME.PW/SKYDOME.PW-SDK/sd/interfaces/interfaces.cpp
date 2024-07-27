@@ -102,6 +102,7 @@ bool InterfacesManager::init()
 	const auto pSchemaSystemRegisterList = GetRegisterList(SCHEMASYSTEM_DLL);
 	const auto pEngineRegisterList = GetRegisterList(ENGINE2_DLL);
 	const auto pTier0RegisterList = GetRegisterList(TIER0_DLL);
+	const auto pClientRegisterList = GetRegisterList(CLIENT_DLL);
 
 	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
 	CSGOInput = reinterpret_cast<CCSGOInput*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CCSGOINPUT]);
@@ -112,6 +113,7 @@ bool InterfacesManager::init()
 	GameResourceService = Capture<IGameResourceService>(pEngineRegisterList, XorStr("GameResourceServiceClientV00"));
 	EngineClient = Capture<IEngineClient>(pEngineRegisterList, XorStr("Source2EngineToClient00"));
 	EngineCVar = Capture<IEngineCVar>(pTier0RegisterList, XorStr("VEngineCvar00"));
+	Client = Capture<IClient>(pClientRegisterList, XorStr("Source2Client00"));
 
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 	INTERFACES_INITLOG("Trace", Trace);

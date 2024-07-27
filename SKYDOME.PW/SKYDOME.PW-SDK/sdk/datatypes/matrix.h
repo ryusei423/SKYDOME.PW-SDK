@@ -14,6 +14,7 @@ struct QAngle;
 
 #pragma pack(push, 4)
 using Matrix3x3_t = float[3][3];
+using Matrix4x2_t = float[4][2];
 
 struct Matrix3x4_t
 {

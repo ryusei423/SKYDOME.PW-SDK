@@ -190,7 +190,7 @@ public:
 	SCHEMA_ADD_FIELD(CStrongHandle< CModel >, m_hModel, "CModelState->m_hModel");
 	SCHEMA_ADD_OFFSET(CTransform*, BoneTransform, 0x80);
 
-	bone_data* GetHitboxData() noexcept {
+	bone_data* GetBoneData() noexcept {
 		bone_data* boneDataPtr = *reinterpret_cast<bone_data**>(this + 0x80);
 
 		if (boneDataPtr == nullptr)
@@ -202,8 +202,8 @@ public:
 	}
 
 
-	Vector GetHitboxPos(uint32_t index) {
-		auto hitbox = this->GetHitboxData();
+	Vector GetBonePos(uint32_t index) {
+		auto hitbox = this->GetBoneData();
 		if (!hitbox)
 			return nullptr;
 
@@ -217,8 +217,8 @@ public:
 		return hitbox[index].pos;
 	}
 
-	Vector4D_t GetHitboxRotation(uint32_t index) {
-		auto hitbox = this->GetHitboxData();
+	Vector4D_t GetBoneRotation(uint32_t index) {
+		auto hitbox = this->GetBoneData();
 		if (!hitbox)
 			return 0;
 
@@ -232,8 +232,8 @@ public:
 		return hitbox[index].rot;
 	}
 
-	const char* GetHitboxName(uint32_t index) {
-		auto hitbox = this->GetHitboxData();
+	const char* GetBoneName(uint32_t index) {
+		auto hitbox = this->GetBoneData();
 		if (!hitbox)
 			return nullptr;
 
@@ -264,6 +264,18 @@ public:
 	SCHEMA_ADD_FIELD(bool, m_bDirtyMotionType, "CSkeletonInstance->m_bDirtyMotionType");
 	SCHEMA_ADD_FIELD(bool, m_bIsGeneratingLatchedParentSpaceState, "CSkeletonInstance->m_bIsGeneratingLatchedParentSpaceState");
 	SCHEMA_ADD_FIELD(uint8_t, m_nHitboxSet, "CSkeletonInstance->m_nHitboxSet");
+	
+	std::uint32_t get_bone_count(){
+		return *reinterpret_cast<std::uint32_t*>(std::uintptr_t(this) + 0x1CC);
+	}
+
+	MEM_PAD(0x1CC); //0x0000
+	int m_nBoneCount; //0x01CC
+	MEM_PAD(0x18); //0x01D0
+	int m_nMask; //0x01E8
+	MEM_PAD(0x4); //0x01EC 
+	Matrix4x2_t* m_pBoneCache; //0x01F0
+
 	/*void get_bone_data(bone_data& data, int index);
 	void CS_FASTCALL calc_world_space_bones(uint32_t parent, uint32_t mask);
 	void CS_FASTCALL spoofed_calc_world_space_bones(uint32_t mask);*/
