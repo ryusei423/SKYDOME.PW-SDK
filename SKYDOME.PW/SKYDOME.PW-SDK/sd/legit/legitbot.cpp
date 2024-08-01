@@ -18,7 +18,7 @@ bool LegitBot::FindTarget(){
 		auto& player = g_EntityCache->players[i];
 		
 
-		if (!player.UpdatePawn() || !player.Valid() || !player.Controller->IsPawnAlive() || player.Pawn->GetHealth() <= 0 || !player.Pawn->IsEnemy(g_CheatData->LocalPawn) || !player.Pawn->Visible(g_CheatData->LocalPawn))
+		if (!player.UpdatePawn() || !player.Valid() || !player.Controller->IsPawnAlive() || player.Pawn->m_iHealth() <= 0 || !player.Pawn->IsEnemy(g_CheatData->LocalPawn) || !player.Pawn->Visible(g_CheatData->LocalPawn))
 			continue;
 
 		noobs.emplace_back(player);

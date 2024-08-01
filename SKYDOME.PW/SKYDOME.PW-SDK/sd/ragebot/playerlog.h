@@ -5,22 +5,58 @@
 class lag_record_t {
 public:
 	lag_record_t(C_CSPlayerPawn* pawn) {
-		m_flSimulationTime = pawn->GetSimulationTime();
-		bone_count = pawn->GetGameSceneNode()->GetSkeletonInstance()->get_bone_count();
+		m_flSimulationTime = pawn->m_flSimulationTime();
+		m_angEyeAngles = pawn->m_angEyeAngles();
 
-		if (pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetBoneData() && bone_count && pawn->GetGameSceneNode()->GetSkeletonInstance()->m_pBoneCache){
-			memcpy(&matrix, pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetBoneData(), bone_count * sizeof(bone_data));
-			memcpy(&bone_cache, pawn->GetGameSceneNode()->GetSkeletonInstance()->m_pBoneCache, bone_count * sizeof(Matrix4x2_t));
+		auto scenenode = pawn->m_pGameSceneNode();
+
+		m_vRenderOrigin = scenenode->m_vRenderOrigin();
+		m_vecAbsOrigin = scenenode->m_vecAbsOrigin();
+		m_vecOrigin = scenenode->m_vecOrigin();
+
+		m_angRotation = scenenode->m_angRotation();
+		m_angAbsRotation = scenenode->m_angAbsRotation();
+
+		CSkeletonInstance* skeleton = scenenode->GetSkeletonInstance();
+		if (!skeleton)
+			return;
+
+		skeleton->CalculateWorldSpaceBones(FLAG_HITBOX);
+
+		bone_count = skeleton->get_bone_count();
+		if (skeleton->GetModel().GetBoneData() && bone_count && skeleton->m_pBoneCache){
+			memcpy(&matrix, skeleton->GetModel().GetBoneData(), bone_count * sizeof(bone_data));
+			memcpy(&bone_cache, skeleton->m_pBoneCache, bone_count * sizeof(Matrix4x2_t));
 		}
+
 		
 	}
 	void recover(C_CSPlayerPawn* pawn) {
-		if (bone_count){
-			memcpy(pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetBoneData(), &matrix, bone_count * sizeof(bone_data));
-			memcpy(pawn->GetGameSceneNode()->GetSkeletonInstance()->m_pBoneCache, &bone_cache, bone_count * sizeof(Matrix4x2_t));
+		pawn->m_angEyeAngles() = m_angEyeAngles;
+
+		auto scenenode = pawn->m_pGameSceneNode();
+
+		scenenode->m_vRenderOrigin() = m_vRenderOrigin;
+		scenenode->m_vecAbsOrigin() = m_vecAbsOrigin;
+		scenenode->m_vecOrigin() = m_vecOrigin;
+
+		scenenode->m_angRotation() = m_angRotation;
+		scenenode->m_angAbsRotation() = m_angAbsRotation;
+
+		CSkeletonInstance* skeleton = scenenode->GetSkeletonInstance();
+		if (!skeleton)
+			return;
+
+		if (skeleton->GetModel().GetBoneData() && bone_count && skeleton->m_pBoneCache){
+			memcpy(skeleton->GetModel().GetBoneData(), &matrix, bone_count * sizeof(bone_data));
+			memcpy(skeleton->m_pBoneCache, &bone_cache, bone_count * sizeof(Matrix4x2_t));
 		}
 		
+
 	};
+
+	Vector m_vecOrigin, m_vecAbsOrigin, m_vRenderOrigin;
+	QAngle m_angRotation, m_angAbsRotation, m_angEyeAngles;
 
 	int bone_count;
 	bone_data matrix[128];

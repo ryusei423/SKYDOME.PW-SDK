@@ -124,6 +124,19 @@ bool OffsetManager::scan()
 	offsets[OFFSET_CreateMaterialResource] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
 		XorStr("40 53 48 83 EC 20 48 8B 01 48 8B D9 44")));
 
+	offsets[OFFSET_GET_CLIENT_INTERP] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 ?? ?? ?? 0F 29 ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? BA ?? ?? ?? ?? 0F 29 ?? ?? ?? E8 ?? ?? ?? ??")));
+
+	// CCSGOINPUT -> 15 调试函数
+	// #STR: "cl: CreateMove - Invalid player history [ %d, %d, %.3f ] f
+	// 这个函数调用此函数来获得结果
+	offsets[OFFSET_CalculateInterpInfos] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 48 8B F9 48 8D 44 24")));
+
+	// #STR: "Bone merge bones from parent were invalid: parent model '%, "C:\\buildworker\\csgo_rel_win64\\build\\src\\game\\shared\"
+	offsets[OFFSET_CalculateWorldSpaceBones] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("40 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8D 6C 24 ? 48 8B F1")));
+
 	offsets[OFFSET_GOBALVARS] = *reinterpret_cast<void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, 
 		XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));
 

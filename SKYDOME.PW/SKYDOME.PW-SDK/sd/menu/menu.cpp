@@ -86,7 +86,7 @@ void EditStyle() {
 
 	colors[ImGuiCol_Button] = ImVec4(25.f / 255.f, 25.f / 255.f, 25.f / 255.f, 1.0f);
 
-	colors[ImGuiCol_Border] = ImVec4(36.f / 255.f, 36.f / 255.f, 36.f / 255.f, 1.0f);
+	colors[ImGuiCol_Border] = ImVec4(36.f / 255.f, 36.f / 255.f, 36.f / 255.f, 150.f / 255.f);
 }
 
 void MenuManager::TryFindDpi() {
@@ -171,7 +171,7 @@ bool MenuManager::init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 
 	logo_texts.push_back(U8ST("花无凋零之日 / 意无传达之时"));
-	logo_texts.push_back(U8ST("故事总是拥有美好的开始 / 却总是难以得到美好的结局"));
+	//logo_texts.push_back(U8ST("故事总是拥有美好的开始 / 却总是难以得到美好的结局"));
 	logo_texts.push_back(U8ST("美艳不可方物 / 清丽可涤尘世"));
 
 	return true;
@@ -218,21 +218,48 @@ inline ImFont* MenuManager::GetDpiFont(std::string font) {
 
 
 void MenuManager::ShowRage(){
-	ImGui::BeginChild("ragebot_config", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+	ImGui::Columns(2, nullptr, false);
+	ImGui::SetColumnOffset(1, 275.9 * menu_dpi_scale);
+
+	ImGui::BeginChild("ragebot_config", ImVec2(child_windows_size.x, ImGui::GetContentRegionAvail().y), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
 	make_header(U8ST("武器参数"));
 
-	ImGui::Checkbox(U8ST("启用"), g_ConfigManager->GetBool("ragebot_enable"));
-
+	
+	
+	
 	ImGui::EndChild();
 
-	ImGui::SameLine();
+	ImGui::Spacing();
+	
 
 
-	ImGui::BeginChild("ragebot_set", ImVec2(child_windows_size.x, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+	ImGui::BeginChild("ragebot_aa", ImVec2(child_windows_size.x, ImGui::GetContentRegionAvail().y), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
+
+	make_header(U8ST("反瞄准"));
+	ImGuiW::Checkbox(U8ST("启用"), g_ConfigManager->GetBool("antiaim_enable"));
+
+	const char* aa_pitch_str[] = { U8ST("关闭"), U8ST("低头"),U8ST("抬头"),U8ST("零"),U8ST("抖动") };
+	ImGui::Combo(U8ST("俯仰"), &g_ConfigManager->configs["ragebot_pitch"].it, aa_pitch_str, IM_ARRAYSIZE(aa_pitch_str));
+
+	const char* aa_yaw_str[] = { U8ST("关闭"), U8ST("向后") };
+	ImGui::Combo(U8ST("偏航"), &g_ConfigManager->configs["ragebot_yaw"].it, aa_yaw_str, IM_ARRAYSIZE(aa_yaw_str));
+
+	static int tmp = 50;
+	static int min = 100;
+	static int max = 0;
+	ImGui::SetCursorPosY(ImGui::GetCursorPos().y + 8);
+	ImGuiW::SliderScalar(U8ST("测试"), ImGuiDataType_S32, &tmp, &min, &max, "%d%%", 0);
+	ImGui::EndChild();
+	ImGui::NextColumn();
+
+
+
+
+	ImGui::BeginChild("ragebot_set", ImVec2(child_windows_size.x, ImGui::GetContentRegionAvail().y), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
 
 	make_header(U8ST("瞄准选项"));
-
-
+	ImGuiW::Checkbox(U8ST("启用"), g_ConfigManager->GetBool("ragebot_enable"));
+	ImGuiW::Checkbox(U8ST("调试攻击cmd信息"), g_ConfigManager->GetBool("ragebot_debug_cmd_info"));
 	ImGui::EndChild();
 
 }

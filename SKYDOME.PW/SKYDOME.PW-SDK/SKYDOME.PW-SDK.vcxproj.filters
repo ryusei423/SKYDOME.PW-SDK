@@ -243,6 +243,9 @@
     <ClCompile Include="sd\ragebot\playerlog.cpp">
       <Filter>sd\ragebot</Filter>
     </ClCompile>
+    <ClCompile Include="sd\ragebot\rbhelper.cpp">
+      <Filter>sd\ragebot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\safetyhook\safetyhook.hpp">
@@ -546,6 +549,9 @@
       <Filter>sdk</Filter>
     </ClInclude>
     <ClInclude Include="sd\ragebot\playerlog.h">
+      <Filter>sd\ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\ragebot\rbhelper.h">
       <Filter>sd\ragebot</Filter>
     </ClInclude>
   </ItemGroup>

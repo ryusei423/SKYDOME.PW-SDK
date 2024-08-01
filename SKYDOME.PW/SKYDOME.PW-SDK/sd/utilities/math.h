@@ -91,6 +91,19 @@ namespace MATH
 
 	void TransformAABB(const Matrix3x4_t& transform, const Vector& minsIn, const Vector& maxsIn, Vector& minsOut, Vector& maxsOut);
 
+	inline void sin_cos(float rad, float* sine, float* cosine) {
+		*sine = std::sinf(rad);
+		*cosine = std::cosf(rad);
+	}
+
+
+	void AngleVectors(const QAngle& angles, Vector* forward, Vector* right, Vector* up);
+	void AngleVectors(const QAngle& angles, Vector* forward);
+	void VectorAngles(Vector forward, QAngle* angles);
+
+
+
+
 	/* @section: random using game's exports */
 	inline int(__cdecl* fnRandomSeed)(int iSeed) = nullptr;
 	inline float(__cdecl* fnRandomFloat)(float flMinValue, float flMaxValue) = nullptr;

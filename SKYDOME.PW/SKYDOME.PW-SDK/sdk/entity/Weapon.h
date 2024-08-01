@@ -92,6 +92,8 @@ public:
 	SCHEMA_ADD_OFFSET(float, m_flRangeModifier, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRangeModifier);
 	SCHEMA_ADD_OFFSET(bool, m_bIsFullAuto, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_bIsFullAuto);
 
+	SCHEMA_ADD_OFFSET(int32_t, m_nNumBullets, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_nNumBullets);
+
 	SCHEMA_ADD_OFFSET(int32_t, m_nDamage, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_nDamage);
 	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyCrouch, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flInaccuracyCrouch);
 	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flInaccuracyStand, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flInaccuracyStand);
@@ -132,14 +134,14 @@ public:
 		/*using original_fn = float(__fastcall*)(void*);
 		return (*(original_fn**)this)[349](this);*/
 
-		return MEM::CallVFunc<float, 349>(this);
+		return MEM::CallVFunc<float, 357>(this);
 	}
 
 	__forceinline float get_inaccuracy() {
 		/*using original_fn = float(__fastcall*)(void*);
 		return (*(original_fn**)this)[399](this);*/
-
-		return MEM::CallVFunc<float,399>(this);
+		float x = 0.0f, y = 0.0f;
+		return MEM::CallVFunc<float,403>(this,&x,&y);
 
 	}
 
@@ -153,7 +155,7 @@ public:
 		/*using original_fn = float(__fastcall*)(void*);
 		return (*(original_fn**)this)[340](this);*/
 
-		return MEM::CallVFunc<float, 340>(this);
+		return MEM::CallVFunc<float, 348>(this);
 	}
 
 };

@@ -5,7 +5,7 @@ class IClient
 {
 public:
 	float get_lerp_time() {
-		return MEM::CallVFunc<float,171>(this);
+		return MEM::CallVFunc<float,174>(this);
 	}
 
 	//c_scene_debug_overlay* get_scene_debug_overlay()

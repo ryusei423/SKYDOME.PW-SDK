@@ -33,3 +33,7 @@ uint32_t CModel::GetHitboxesNum()
 
     return HitboxNum(this);
 }
+
+void CSkeletonInstance::CalculateWorldSpaceBones(uint32_t flags){
+    return MEM::CallFunc<void>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CalculateWorldSpaceBones],this,flags);
+}

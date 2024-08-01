@@ -63,7 +63,7 @@ namespace F::AUTOWALL {
             damage_scale_ct_body = mp_damage_scale_ct_body->value.fl,
             damage_scale_t_body = mp_damage_scale_t_body->value.fl;
 
-        const bool is_ct = player->GetTeam() == 3, is_t = player->GetTeam() == 2;
+        const bool is_ct = player->m_iTeamNum() == TEAM_CT, is_t = player->m_iTeamNum() == TEAM_TT;
 
         float head_damage_scale = is_ct ? damage_scale_ct_head : is_t ? damage_scale_t_head : 1.0f;
         const float body_damage_scale = is_ct ? damage_scale_ct_body : is_t ? damage_scale_t_body : 1.0f;
@@ -245,8 +245,8 @@ namespace F::AUTOWALL {
             damage_scale_ct_body = mp_damage_scale_ct_body->value.fl,
             damage_scale_t_body = mp_damage_scale_t_body->value.fl;
 
-        float flHeadDamageScale = (pCSPlayer->GetTeam() == TEAM_CT ? damage_scale_ct_head : damage_scale_t_head);
-        const float flBodyDamageScale = (pCSPlayer->GetTeam() == TEAM_CT ? damage_scale_ct_body : damage_scale_t_body);
+        float flHeadDamageScale = (pCSPlayer->m_iTeamNum() == TEAM_CT ? damage_scale_ct_head : damage_scale_t_head);
+        const float flBodyDamageScale = (pCSPlayer->m_iTeamNum() == TEAM_CT ? damage_scale_ct_body : damage_scale_t_body);
 
         if (bHeavyArmor)            flHeadDamageScale *= 0.5f;
 

@@ -310,7 +310,7 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 			g_CheatData->LocalController &&
 			g_CheatData->LocalController->IsPawnAlive()&&
 			g_CheatData->LocalPawn){
-			g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->GetAbsVelocity() * 0.03);
+			g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.03);
 		}
 
 		g_PlayerLog->Log();
@@ -321,6 +321,8 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 }
 
 bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, bool nUnk, std::byte nUnk2){
+
+
 	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
 	if(!g_interfaces->EngineClient->IsInGame() && !g_interfaces->EngineClient->IsConnected()){
 		g_interfaces->GlobalVars = nullptr;
@@ -332,7 +334,7 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	}
 
 	CUserCmd* cmd = pInput->GetUserCmd();
-	if (!cmd){
+	if (!cmd || !cmd->csgoUserCmd.pBaseCmd->pViewAngles){
 		return rt;
 	}
 
@@ -346,12 +348,15 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_MovementManager->InitTick(cmd);
 
 
-	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
-	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
+	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
+	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
 	if (*g_ConfigManager->GetBool("ragebot_enable"))
 		g_RageBot->run(cmd);
 
+	if (cmd->csgoUserCmd.pBaseCmd->pInButtonState->nValue & IN_ATTACK){
+		if(*g_ConfigManager->GetBool("ragebot_debug_cmd_info"))g_RageBot->DumpCmdInfo(cmd);
 
+	}
 
 
 	g_MovementManager->EndTick(cmd);

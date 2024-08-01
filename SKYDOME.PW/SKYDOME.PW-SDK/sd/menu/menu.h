@@ -7,7 +7,14 @@ struct DebugData{
 	int it;
 	float ft;
 	bool bl;
+	Vector vt;
 
+	enum 
+	{
+		DB_IT,
+		DB_FT
+
+	};
 	int type;
 
 };
@@ -15,11 +22,16 @@ struct DebugData{
 class MenuManager
 {
 public:
+	Vector test;
+
 	bool init(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);//设置菜单的一些基本信息
 	bool create(HWND hWnd);//创建设备和交换链
 	void CreateRenderTarget(IDXGISwapChain* pSwapChain);//创建渲染目标
 	void frame(IDXGISwapChain* pSwapChain);//不需额外处理，只需调用宾狗和结束
 	void toggle(bool state);
+	float GetScale() {
+		return menu_dpi_scale;
+	}
 
 	DebugData& AddDebug(DebugData d) {
 		return debugs.emplace_back(d);
@@ -30,7 +42,7 @@ public:
 
 	int cur_tab = 0;
 	ImColor color = ImColor(9.f / 255.f,104.f / 255.f,247.f / 255.f);
-
+	ImColor color1 = ImColor(9.f / 255.f, 121.f / 255.f, 247.f / 255.f);
 private:
 	void ShowRage();
 	void ShowEsp();

@@ -17,6 +17,14 @@ void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
 	}
 
+	ImVec2 screen;
+	if (WorldToScreen(test, &screen)) {
+		drawlist->AddLine(ImVec2(0,0),screen, IM_COL32_WHITE);
+	
+	};
+
+	
+
 }
 
 
@@ -36,7 +44,7 @@ void EspDrawManager::MakeFrame(){
 			continue;
 
 
-		if (player.Controller->IsPawnAlive() && player.Pawn->GetHealth()) {
+		if (player.Controller->IsPawnAlive() && player.Pawn->m_iHealth()) {
 			auto& esp = manydogs.emplace_back(player.Controller->GetPawnOrigin());
 			GetEntityBoundingBox(player.Pawn, &esp.box);
 		
@@ -72,15 +80,15 @@ bool EspDrawManager::WorldToScreen(const Vector& vecOrigin, ImVec2* pvecScreen)
 bool EspDrawManager::GetEntityBoundingBox(void* pEntity, ImVec4* pVecOut)
 {
 	auto player = (C_CSPlayerPawn*)pEntity;
-	CCollisionProperty* pCollision = player->GetCollision();
+	CCollisionProperty* pCollision = player->m_pCollision();
 	if (pCollision == nullptr)
 		return false;
 
-	CGameSceneNode* pGameSceneNode = player->GetGameSceneNode();
+	CGameSceneNode* pGameSceneNode = player->m_pGameSceneNode();
 	if (pGameSceneNode == nullptr)
 		return false;
 
-	CTransform nodeToWorldTransform = pGameSceneNode->GetNodeToWorld();
+	CTransform nodeToWorldTransform = pGameSceneNode->m_nodeToWorld();
 	const Matrix3x4_t matTransform = nodeToWorldTransform.quatOrientation.ToMatrix(nodeToWorldTransform.vecPosition);
 
 	const Vector vecMins = pCollision->m_vecMins();

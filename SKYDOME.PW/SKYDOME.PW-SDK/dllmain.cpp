@@ -297,6 +297,7 @@ uintptr_t __stdcall init_main(const HMODULE h_module) {
 
 	g_ConfigManager->init();
 	//g_MenuManager->toggle(true);
+	MATH::Setup();
 	
 	return 0;
 }

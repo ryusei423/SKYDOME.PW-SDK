@@ -196,7 +196,7 @@ public:
 		if (boneDataPtr == nullptr)
 			boneDataPtr = *reinterpret_cast<bone_data**>(reinterpret_cast<uintptr_t>(this) + 0x80);
 
-		SD_ASSERT(boneDataPtr != nullptr);
+		//SD_ASSERT(boneDataPtr != nullptr);
 
 		return boneDataPtr;
 	}
@@ -276,6 +276,7 @@ public:
 	MEM_PAD(0x4); //0x01EC 
 	Matrix4x2_t* m_pBoneCache; //0x01F0
 
+	void CalculateWorldSpaceBones(uint32_t flags);
 	/*void get_bone_data(bone_data& data, int index);
 	void CS_FASTCALL calc_world_space_bones(uint32_t parent, uint32_t mask);
 	void CS_FASTCALL spoofed_calc_world_space_bones(uint32_t mask);*/

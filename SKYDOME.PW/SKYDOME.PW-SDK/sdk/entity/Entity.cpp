@@ -30,8 +30,8 @@ static Vector vecEmpty = Vector(0, 0, 0);
 
 const Vector& C_BaseEntity::GetSceneOrigin()
 {
-	if (this->GetGameSceneNode())
-		return GetGameSceneNode()->GetAbsOrigin();
+	if (this->m_pGameSceneNode())
+		return m_pGameSceneNode()->m_vecAbsOrigin();
 
 	return vecEmpty;
 }
@@ -51,9 +51,9 @@ const Vector& CCSPlayerController::GetPawnOrigin()
 }
 
 bool C_CSPlayerPawn::IsEnemy(C_CSPlayerPawn* pOther){
-	auto mp_teammates_are_enemies = g_interfaces->EngineCVar->Find("mp_teammates_are_enemies");
+	static auto mp_teammates_are_enemies = g_interfaces->EngineCVar->Find("mp_teammates_are_enemies");
 	
-	return mp_teammates_are_enemies->value.i1 ? true : this->GetTeam() != pOther->GetTeam();
+	return mp_teammates_are_enemies->value.i1 ? true : this->m_iTeamNum() != pOther->m_iTeamNum();
 };
 
 #include "Weapon.h"
@@ -192,4 +192,9 @@ CHitBoxSet* C_CSPlayerPawn::GetHitboxSet(int i){
 int C_CSPlayerPawn::HitboxToWorldTransforms(CHitBoxSet* hitBoxSet, CTransform* hitboxToWorld){
 	using fnHitboxToWorldTransforms =  int(__fastcall*)(void*, CHitBoxSet*, CTransform*, int);
 	return reinterpret_cast<fnHitboxToWorldTransforms>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_HITBOX_TO_WORLD_TRANSFORMS])(this,hitBoxSet,hitboxToWorld,1024);
+}
+
+bool CGameSceneNode::CalculateInterpInfos(InterpInfo_t* cl, InterpInfo_t* sv0, InterpInfo_t* sv1, Tickfrac_t* pl)
+{
+	return MEM::CallFunc<bool>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CalculateInterpInfos], this,cl,sv0,sv1,pl);
 }

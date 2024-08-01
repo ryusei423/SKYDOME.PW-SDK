@@ -45,6 +45,8 @@ struct EspItem{
 class EspDrawManager
 {
 public:
+	Vector test;
+
 	void DrawFrame(ImDrawList* drawlist);
 	void MakeFrame();
 	bool WorldToScreen(const Vector& vecOrigin, ImVec2* pvecScreen);

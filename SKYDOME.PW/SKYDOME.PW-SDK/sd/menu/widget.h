@@ -29,9 +29,9 @@
 namespace ImGuiW
 {
 
-
+	bool Checkbox(const char* label, bool* v);
 
 	bool Button(const char* label, const ImVec2& size_arg, ImGuiButtonFlags flags, bool select, int& alpha, int& anim_size,int select_mark_size = 5);
-
+	bool SliderScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags);
 	
 }

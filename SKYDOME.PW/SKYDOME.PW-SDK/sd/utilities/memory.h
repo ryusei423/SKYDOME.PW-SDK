@@ -104,6 +104,14 @@ namespace MEM
 		return (*reinterpret_cast<VirtualFn_t* const*>(reinterpret_cast<std::uintptr_t>(thisptr)))[nIndex](thisptr, argList...);
 	}
 
+	template <typename Ret, typename... Args>
+	static __forceinline Ret CallFunc(void* funcPtr, Args... args)
+	{
+		using FunctionPtr = Ret(*)(Args...);
+		auto function = reinterpret_cast<FunctionPtr>(funcPtr);
+		return function(std::forward<Args>(args)...);
+	}
+
 	//用于调用任意函数
 	/*template <typename T, class CBaseClass, typename... Args_t>
 	static __forceinline T CallFunc(CBaseClass* thisptr,void* funcptr, Args_t... argList)
