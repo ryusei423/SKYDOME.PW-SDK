@@ -11,5 +11,6 @@
 #include"sdk/ienginecvar.h"
 #include"sdk/iglobalvars.h"
 #include"sdk/iclient.h"
+#include"sdk/inetworkclientservice.h"
 
 #include"sdk/entity/Entity.h"

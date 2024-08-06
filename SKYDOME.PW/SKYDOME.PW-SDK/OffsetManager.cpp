@@ -137,6 +137,11 @@ bool OffsetManager::scan()
 	offsets[OFFSET_CalculateWorldSpaceBones] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
 		XorStr("40 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8D 6C 24 ? 48 8B F1")));
 
+	//RVA:E8 ? ? ? ? 45 84 FF 74 32
+	//还没有弄清楚参数是什么，我的伪代码阅读能力有点糟糕，又或许是我没有耐心而已
+	offsets[OFFSET_DRAW_HITBOX] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
+		XorStr("48 89 54 24 10 55 53 56 41 55 41 56 48")));
+
 	offsets[OFFSET_GOBALVARS] = *reinterpret_cast<void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, 
 		XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));
 

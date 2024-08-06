@@ -6,6 +6,7 @@ class lag_record_t {
 public:
 	lag_record_t(C_CSPlayerPawn* pawn) {
 		m_flSimulationTime = pawn->m_flSimulationTime();
+		m_nSimulationTick = pawn->m_nSimulationTick();
 		m_angEyeAngles = pawn->m_angEyeAngles();
 
 		auto scenenode = pawn->m_pGameSceneNode();
@@ -55,6 +56,9 @@ public:
 
 	};
 
+
+	bool IsValid();
+
 	Vector m_vecOrigin, m_vecAbsOrigin, m_vRenderOrigin;
 	QAngle m_angRotation, m_angAbsRotation, m_angEyeAngles;
 
@@ -62,7 +66,7 @@ public:
 	bone_data matrix[128];
 	Matrix4x2_t bone_cache[128];
 	float m_flSimulationTime;
-
+	int m_nSimulationTick;
 };
 
 class PlayerLog_t {
@@ -73,7 +77,7 @@ public:
 class PlayerLog {
 public:
 	void Log();
-
+	void FilterRecords();
 
 
 

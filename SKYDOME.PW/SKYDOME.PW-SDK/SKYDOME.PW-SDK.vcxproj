@@ -256,6 +256,7 @@
     <ClInclude Include="sdk\ienginecvar.h" />
     <ClInclude Include="sdk\iglobalvars.h" />
     <ClInclude Include="sdk\imemalloc.h" />
+    <ClInclude Include="sdk\inetworkclientservice.h" />
     <ClInclude Include="sdk\inputsystem.hpp" />
     <ClInclude Include="sdk\ischemasystem.h" />
     <ClInclude Include="sdk\iswapchaindx11.h" />

@@ -21,7 +21,18 @@ enum EClientFrameStage : int
 	FRAME_RENDER_END,
 	FRAME_NET_FULL_FRAME_UPDATE_ON_REMOVE
 };
+enum flow : int {
+	FLOW_OUTGOING = 0,
+	FLOW_INCOMING = 1,
+};
 
+class INetChannelInfo {
+public:
+	float get_latency(flow flow)
+	{
+		return MEM::CallVFunc<float, 10U>(this, flow);
+	}
+};
 class IEngineClient
 {
 public:
@@ -38,6 +49,10 @@ public:
 	bool IsConnected()
 	{
 		return MEM::CallVFunc<bool, 36U>(this);
+	}
+
+	INetChannelInfo* GetNetChannelInfo(int split_screen_slot) {
+		return MEM::CallVFunc<INetChannelInfo*, 37U>(this, split_screen_slot);
 	}
 
 	// return CBaseHandle index

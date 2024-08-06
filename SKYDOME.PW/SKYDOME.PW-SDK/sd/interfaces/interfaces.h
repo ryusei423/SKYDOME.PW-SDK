@@ -33,6 +33,7 @@ public:
 	IEngineCVar* EngineCVar = nullptr;
 	IGlobalVars* GlobalVars = nullptr;
 	IClient* Client = nullptr;
+	INetworkClientService* NetworkClientService = nullptr;
 
 };
 

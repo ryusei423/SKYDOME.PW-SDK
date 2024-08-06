@@ -114,6 +114,7 @@ bool InterfacesManager::init()
 	EngineClient = Capture<IEngineClient>(pEngineRegisterList, XorStr("Source2EngineToClient00"));
 	EngineCVar = Capture<IEngineCVar>(pTier0RegisterList, XorStr("VEngineCvar00"));
 	Client = Capture<IClient>(pClientRegisterList, XorStr("Source2Client00"));
+	NetworkClientService = Capture<INetworkClientService>(pEngineRegisterList, XorStr("NetworkClientService_001"));
 
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 	INTERFACES_INITLOG("Trace", Trace);
@@ -124,6 +125,8 @@ bool InterfacesManager::init()
 	INTERFACES_INITLOG("EngineClient", EngineClient);
 	INTERFACES_INITLOG("MemAlloc", MemAlloc);
 	INTERFACES_INITLOG("EngineCVar", EngineCVar);
+	INTERFACES_INITLOG("Client", Client);
+	INTERFACES_INITLOG("NetworkClientService", NetworkClientService);
 	if (CheckNull() != 1337) {
 
 		LOG(ERROR) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("interfaces_init_fail")), CheckNull());

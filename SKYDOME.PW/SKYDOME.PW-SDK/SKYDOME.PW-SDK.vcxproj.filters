@@ -554,5 +554,8 @@
     <ClInclude Include="sd\ragebot\rbhelper.h">
       <Filter>sd\ragebot</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\inetworkclientservice.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

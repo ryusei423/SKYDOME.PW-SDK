@@ -403,11 +403,22 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 
 		ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y) - ImVec2(0, 2), ImGui::GetWindowPos() + logo_size_scale - ImVec2(0, 2), color);
 
+		ImVec2 top_l = ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y);
+		ImVec2 top_r = top_l + ImVec2(logo_size_scale.x,0);
+		float a = 125.f;
+		for (int i = 0; i < 10; i++) {
+			auto color = ImGui::GetStyleColorVec4(ImGuiCol_BorderShadow);
+			color.w = a / 255.f;
+			ImGui::GetWindowDrawList()->AddLine(top_l, top_r, ImGui::ColorConvertFloat4ToU32(color));
+			top_l.y += 1;
+			top_r.y += 1;
+			a -= 12.5f;
+		}
+
+		ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
 		ImGui::PushFont(GetDpiFont("main"));
 
 
-		ImGui::Text(U8ST("软件处于测试阶段，所以不要在任何你关心的账户上使用它。"));
-		ImGui::Text(U8ST("我们不对发生的任何禁令负责。"));
 
 		switch (cur_tab)
 		{
@@ -450,6 +461,19 @@ void MenuManager::frame(IDXGISwapChain* pSwapChain)
 		ImGui::EndChild();
 
 		ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y) - ImVec2(0, 2), ImGui::GetWindowPos() + logo_size_scale - ImVec2(0, 2), color);
+		top_l = ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y);
+		top_r = top_l + ImVec2(logo_size_scale.x, 0);
+		a = 125.f;
+		for (int i = 0; i < 10; i++) {
+			auto color = ImGui::GetStyleColorVec4(ImGuiCol_BorderShadow);
+			color.w = a / 255.f;
+			ImGui::GetWindowDrawList()->AddLine(top_l, top_r, ImGui::ColorConvertFloat4ToU32(color));
+			top_l.y += 1;
+			top_r.y += 1;
+			a -= 12.5f;
+		}
+
+		ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
 
 		ImGui::PushFont(GetDpiFont("main_small"));
 		
@@ -541,12 +565,12 @@ void MenuManager::make_header(std::string name, const char* font){
 
 	ImGui::SetCursorPos(ImVec2(0, 0));
 	if (ImGui::BeginChild("header", logo_size_scale, true, ImGuiWindowFlags_NoDecoration)) {
-
+		ImGui::PushFont(GetDpiFont(font));
 		ImVec2 text_size = ImGui::CalcTextSize(name.c_str());
 
 		ImGui::SetCursorPos(ImVec2(12 * menu_dpi_scale, (logo_size_scale.y / 2) - (text_size.y / 2)));
 
-		ImGui::PushFont(GetDpiFont(font));
+		
 
 		ImGui::Text(name.c_str());
 

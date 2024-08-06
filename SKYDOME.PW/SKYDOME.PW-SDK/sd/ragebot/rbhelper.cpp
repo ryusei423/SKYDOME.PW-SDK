@@ -3,6 +3,23 @@
 #include "../../sdk/entity/Weapon.h"
 
 #include"../movement/movement.h"
+
+float saturate(float x) {
+    return std::clamp(x, 0.0f, 1.0f);
+}
+
+float RemapValClamped(float val, float A, float B, float C, float D)
+{
+    float cVal = (val - A) / (B - A);
+    cVal = saturate(cVal);
+
+    return C + (D - C) * cVal;
+}
+
+//https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/shared/cstrike15/weapon_csbase.cpp#L3754
+//https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/shared/cstrike15/weapon_csbase.cpp#L3685
+//https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/shared/cstrike15/weapon_csbase.cpp#L1208
+
 void RageBotHelper::AutomaticStop(C_CSPlayerPawn* pLocal, C_CSWeaponBase* weapon, CUserCmd* cmd){
 
     if (!pLocal || !weapon)
@@ -160,8 +177,24 @@ bool RageBotHelper::Hitchance(C_CSPlayerPawn* pLocal, C_CSPlayerPawn* ent, C_CSW
     MATH::AngleVectors(vAimpoint, &fwd, &right, &up);
 
     // store off inaccuracy / spread ( these functions are quite intensive and we only need them once ).
+    static float save_inaccuracy = weapon->get_inaccuracy();
     inaccuracy = weapon->get_inaccuracy();
+
+    //对于不准确率引擎预测的贫民窟解决方案
+    float delta = std::clamp(inaccuracy - save_inaccuracy,-0.005f,0.01f);
+    inaccuracy = save_inaccuracy + delta;
+    save_inaccuracy = inaccuracy;
     spread = weapon->get_spread();
+
+    /*std::cout << "m_flInaccuracyCrouch -> " << *data->m_flInaccuracyCrouch().flValue << "\n";
+    std::cout << "m_flInaccuracyStand -> " << *data->m_flInaccuracyStand().flValue << "\n";
+    std::cout << "m_flInaccuracyJump -> " << *data->m_flInaccuracyJump().flValue << "\n";
+    std::cout << "m_flInaccuracyMove -> " << *data->m_flInaccuracyMove().flValue << "\n";
+    std::cout << "m_flCycleTime -> " << *data->m_flCycleTime().flValue << "\n";
+    std::cout << inaccuracy << std::endl;*/
+
+    
+
 
     // iterate all possible seeds.
     for (int i{ }; i <= SEED_MAX; ++i) {
@@ -179,7 +212,7 @@ bool RageBotHelper::Hitchance(C_CSPlayerPawn* pLocal, C_CSPlayerPawn* ent, C_CSW
 
 
         // get spread.
-        wep_spread = v_spread/*CalculateSpread(weapon, i, inaccuracy, spread)*/;
+        wep_spread = v_spread * 1.3/*CalculateSpread(weapon, i, inaccuracy, spread)*/;
 
         // get spread direction.
         dir = fwd + (right * wep_spread.x) + (up * wep_spread.y);

@@ -254,6 +254,7 @@ public:
 	SCHEMA_ADD_FIELD(std::int32_t, m_iMaxHealth, "C_BaseEntity->m_iMaxHealth");
 	SCHEMA_ADD_FIELD(float, m_flWaterLevel, "C_BaseEntity->m_flWaterLevel");
 	SCHEMA_ADD_FIELD(std::float_t, m_flSimulationTime, "C_BaseEntity->m_flSimulationTime");
+	SCHEMA_ADD_OFFSET(int, m_nSimulationTick, cs2_dumper::schemas::client_dll::C_BaseEntity::m_nSimulationTick);
 	SCHEMA_ADD_FIELD_OFFSET(EntSubClassVDataBase*, m_pVDataBase, "C_BaseEntity->m_nSubclassID", 0x8);
 };
 

@@ -47,12 +47,12 @@ void RageBot::run(CUserCmd* cmd){
 
 		auto eye = g_CheatData->LocalPawn->GetEyePosition();
 		auto calc_eye = g_CheatData->LocalPawn->CalcEyePosition();
-		QAngle shit = CalcAngle(calc_eye/*(eye + calc_eye) / 2*/, points[0].point);
+		QAngle shit = CalcAngle(g_CheatData->net_update_end_eyepos/*calc_eye*//*(eye + calc_eye) / 2*/, points[0].point);
 		if (g_RageBotHelper->Hitchance(g_CheatData->LocalPawn,
 			points[0].player.Pawn,
 			g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSWeaponBase>(g_CheatData->LocalPawn->GetWeaponServices()->m_hActiveWeapon()),
 			shit,
-			100.f)) {
+			70.f)) {
 		
 		
 			//cmd->SetSubTickAngle(shit);
@@ -115,13 +115,13 @@ void RageBot::DumpCmdInfo(CUserCmd* cmd){
 		if (pInputEntry->sv_interp0) {
 			LOG(DEBUG) << i << " -> pInputEntry->sv_interp0->nSrcTick = " << std::dec << pInputEntry->sv_interp0->nSrcTick;
 			LOG(DEBUG) << i << " -> pInputEntry->sv_interp0->nDstTick = " << std::dec << pInputEntry->sv_interp0->nDstTick;
-			LOG(DEBUG) << i << " -> pInputEntry->sv_interp0->flFraction = " << pInputEntry->cl_interp->flFraction;
+			LOG(DEBUG) << i << " -> pInputEntry->sv_interp0->flFraction = " << pInputEntry->sv_interp0->flFraction;
 		}
 
 		if (pInputEntry->sv_interp1) {
 			LOG(DEBUG) << i << " -> pInputEntry->sv_interp1->nSrcTick = " << std::dec << pInputEntry->sv_interp1->nSrcTick;
 			LOG(DEBUG) << i << " -> pInputEntry->sv_interp1->nDstTick = " << std::dec << pInputEntry->sv_interp1->nDstTick;
-			LOG(DEBUG) << i << " -> pInputEntry->sv_interp1->flFraction = " << pInputEntry->cl_interp->flFraction;
+			LOG(DEBUG) << i << " -> pInputEntry->sv_interp1->flFraction = " << pInputEntry->sv_interp1->flFraction;
 		}
 
 		if (pInputEntry->player_interp) {
@@ -183,7 +183,7 @@ bool RageBot::FindTarget(){
 		float damage = 0;
 		bool canHit = false;
 		F::AUTOWALL::c_auto_wall::data_t data;
-		F::AUTOWALL::g_auto_wall->pen(data, g_CheatData->LocalPawn->CalcEyePosition()/*g_CheatData->net_update_end_eyepos*//*g_CheatData->LocalPawn->GetEyePosition()*/, /*player.Pawn->GetHitBoxPos(0)*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].matrix[6].pos, player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
+		F::AUTOWALL::g_auto_wall->pen(data, /*g_CheatData->LocalPawn->CalcEyePosition()*/g_CheatData->net_update_end_eyepos/*g_CheatData->LocalPawn->GetEyePosition()*/, /*player.Pawn->GetHitBoxPos(0)*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].matrix[6].pos, player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
 		if (data.m_can_hit && data.m_dmg >= 100.f) {
 			auto& pt = points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*//*player.Pawn->GetHitBoxPos(0)*/
 				);

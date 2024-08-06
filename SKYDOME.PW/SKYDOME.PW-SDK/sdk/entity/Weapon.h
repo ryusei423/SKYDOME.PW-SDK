@@ -102,7 +102,10 @@ public:
 	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flCycleTime, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flCycleTime);
 	SCHEMA_ADD_OFFSET(CFiringModeFloat, m_flMaxSpeed, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flMaxSpeed);
 
-
+	SCHEMA_ADD_OFFSET(float, m_flRecoveryTimeCrouch, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRecoveryTimeCrouch);
+	SCHEMA_ADD_OFFSET(float, m_flRecoveryTimeStand, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRecoveryTimeStand);
+	SCHEMA_ADD_OFFSET(float, m_flRecoveryTimeCrouchFinal, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRecoveryTimeCrouchFinal);
+	SCHEMA_ADD_OFFSET(float, m_flRecoveryTimeStandFinal, cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_flRecoveryTimeStandFinal);
 };
 
 enum CSWeaponMode : int /* it works atleast */

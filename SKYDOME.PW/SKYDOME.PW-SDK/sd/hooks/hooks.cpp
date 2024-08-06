@@ -310,7 +310,7 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 			g_CheatData->LocalController &&
 			g_CheatData->LocalController->IsPawnAlive()&&
 			g_CheatData->LocalPawn){
-			g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.03);
+			//g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.03);
 		}
 
 		g_PlayerLog->Log();
@@ -321,7 +321,15 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 }
 
 bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, bool nUnk, std::byte nUnk2){
-
+	//getlocalplayer注释里说 return CBaseHandle index
+	//嗯...先试试能不能用吧
+	//好吧它指的是CBaseHandle中的nIndex，而不是CBaseHandle的索引
+	//还是不太熟悉CS2
+	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
+	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
+	if (g_CheatData->LocalPawn){
+		g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * -0.01);
+	}
 
 	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
 	if(!g_interfaces->EngineClient->IsInGame() && !g_interfaces->EngineClient->IsConnected()){
@@ -338,12 +346,7 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 		return rt;
 	}
 
-	//getlocalplayer注释里说 return CBaseHandle index
-	//嗯...先试试能不能用吧
-	//好吧它指的是CBaseHandle中的nIndex，而不是CBaseHandle的索引
-	//还是不太熟悉CS2
-	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
-	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
+	
 
 	g_MovementManager->InitTick(cmd);
 
