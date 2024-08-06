@@ -28,10 +28,26 @@ enum flow : int {
 
 class INetChannelInfo {
 public:
-	float get_latency(flow flow)
+
+	float get_network_latency()
 	{
-		return MEM::CallVFunc<float, 10U>(this, flow);
+		// xref: StartLagcompensation
+		return MEM::CallVFunc<float, 10U>(this);
+		//return CALL_VIRTUAL(float, 10, this);
 	}
+
+	float get_engine_latency()
+	{
+		// xref: StartLagcompensation
+		return MEM::CallVFunc<float, 11U>(this);
+		//return CALL_VIRTUAL(float, 11, this);
+	}
+
+
+	/*float get_latency(flow flow)
+	{
+		return MEM::CallVFunc<float, 11U>(this, flow);
+	}*/
 };
 class IEngineClient
 {
@@ -80,7 +96,11 @@ public:
 		return MEM::CallVFunc<const char*, 82U>(this);
 	}
 
-	//或许它属于ISource2Client
+	void GetScreenSize(int& iWidth, int& iHeight)
+	{
+		MEM::CallVFunc<void, 53U>(this, std::ref(iWidth), std::ref(iHeight));
+	}
+
 	void ExecuteClientCmdUnrestricted(const char* szCommand)
 	{
 		MEM::CallVFunc<void, 43U>(this, 0, szCommand, 0x7FFEF001);

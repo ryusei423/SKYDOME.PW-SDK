@@ -142,6 +142,11 @@ bool OffsetManager::scan()
 	offsets[OFFSET_DRAW_HITBOX] = reinterpret_cast<void*>(MEM::FindPattern(CLIENT_DLL,
 		XorStr("48 89 54 24 10 55 53 56 41 55 41 56 48")));
 
+	//https://www.unknowncheats.me/forum/counter-strike-2-a/653274-lighting-color-modulation.html
+	offsets[OFFSET_LightingModulation] = reinterpret_cast<void*>(MEM::FindPattern(SCENESYSTEM_DLL,
+		XorStr("48 89 54 24 ? 53 55 41 57")));
+
+
 	offsets[OFFSET_GOBALVARS] = *reinterpret_cast<void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, 
 		XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));
 

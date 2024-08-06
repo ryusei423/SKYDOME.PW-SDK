@@ -47,7 +47,7 @@ void PlayerLog::Log(){
 	}
 
 
-	FilterRecords();
+	//FilterRecords();
 
 
 
@@ -72,6 +72,18 @@ void PlayerLog::FilterRecords(){
 
 }
 
+struct data_info
+{
+	std::uint64_t tick;
+	float time;
+	char pad[0x24];
+};
+
+
+
+
+
+
 #include "../../CheatData.h"
 bool lag_record_t::IsValid()
 {
@@ -95,11 +107,11 @@ bool lag_record_t::IsValid()
 	if (!NetworkChannel || !g_interfaces->NetworkClientService->GetNetworkClient())
 		return false;
 
-	const float flMaxUnlag = 0.2f;
-	const float flLatency = NetworkChannel->get_latency(FLOW_OUTGOING) + NetworkChannel->get_latency(FLOW_INCOMING);
+	const float flMaxUnlag = 0.16f;
+	const float flLatency = NetworkChannel->get_network_latency() + NetworkChannel->get_engine_latency();
 	const float flCorrectedValue = std::clamp(flLatency + g_interfaces->NetworkClientService->GetNetworkClient()->GetClientInterpAmount(), 0.0f, flMaxUnlag);
 	float flMaxDelta = min(flMaxUnlag - flCorrectedValue, 0.2f);
-	const float flDelta = g_interfaces->GlobalVars->flCurtime - flMaxDelta;
+	float flDelta = flMaxDelta - g_interfaces->GlobalVars->flCurtime;
 
-	return m_flSimulationTime > flDelta;
+	return g_interfaces->GlobalVars->flCurtime - m_flSimulationTime < flMaxDelta;
 }

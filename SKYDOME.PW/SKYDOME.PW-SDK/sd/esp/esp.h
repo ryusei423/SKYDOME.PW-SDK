@@ -55,7 +55,7 @@ public:
 private:
 	
 	bool GetEntityBoundingBox(void* pEntity, ImVec4* pVecOut);
-
+	void DrawPlayerLog(ImDrawList* drawlist);
 
 };
 

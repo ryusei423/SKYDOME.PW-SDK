@@ -17,6 +17,10 @@ void EspDrawManager::DrawFrame(ImDrawList* drawlist){
 
 	}
 
+	if (*g_ConfigManager->GetBool("esp_draw_log")) {
+		DrawPlayerLog(drawlist);
+	}
+
 	ImVec2 screen;
 	if (WorldToScreen(test, &screen)) {
 		drawlist->AddLine(ImVec2(0,0),screen, IM_COL32_WHITE);
@@ -115,4 +119,57 @@ bool EspDrawManager::GetEntityBoundingBox(void* pEntity, ImVec4* pVecOut)
 	}
 
 	return true;
+}
+
+static int lerp(int start, int end, float t) {
+	// Ensure t is within the range [0, 1]
+	t = fmaxf(0.0f, fminf(1.0f, t));
+
+	// Perform linear interpolation
+	return static_cast<int>(start + t * (end - start));
+}
+
+
+#include"../ragebot/playerlog.h"
+void EspDrawManager::DrawPlayerLog(ImDrawList* drawlist){
+
+	for (int i = 0; i < 65; i++){
+		auto player = g_PlayerLog->logs[i];
+		if (player.record.empty())
+			continue;
+
+		for (int i = 0; i < player.record.size();i++) {
+			
+			auto& cur_record = player.record[i];
+
+			ImVec2 head, neck, pelvis, l_feet,r_feet,l_head,r_head;
+			WorldToScreen(cur_record.matrix[HEAD].pos, &head);
+			WorldToScreen(cur_record.matrix[NECK].pos, &neck);
+			WorldToScreen(cur_record.matrix[PELVIS].pos, &pelvis);
+			WorldToScreen(cur_record.matrix[L_FEET].pos, &l_feet);
+			WorldToScreen(cur_record.matrix[R_FEET].pos, &r_feet);
+			WorldToScreen(cur_record.matrix[10].pos, &l_head);
+			WorldToScreen(cur_record.matrix[15].pos, &r_head);
+
+
+			//0,102,255
+			//238, 17, 238
+			float tmp = !i ? 0 : (float)i / (float)player.record.size();
+
+			auto color = IM_COL32(lerp(0,238,tmp),
+								lerp(102,17,tmp),
+								lerp(255,238,tmp), 155);
+	
+			drawlist->AddLine(head,neck, color);
+			drawlist->AddLine(neck, l_head, color);
+			drawlist->AddLine(neck, r_head, color);
+			drawlist->AddLine(neck, pelvis, color);
+			drawlist->AddLine(pelvis, l_feet, color);
+			drawlist->AddLine(pelvis, r_feet, color);
+		}
+
+
+
+	}
+
 }

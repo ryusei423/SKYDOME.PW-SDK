@@ -270,7 +270,7 @@ void MenuManager::ShowEsp(){
 
 	ImGui::Checkbox(U8ST("启用透视"), g_ConfigManager->GetBool("esp_enable"));
 	ImGui::Checkbox(U8ST("玩家方框"), g_ConfigManager->GetBool("esp_box"));
-
+	ImGui::Checkbox(U8ST("回溯显示"), g_ConfigManager->GetBool("esp_draw_log"));
 	ImGui::EndChild();
 }
 

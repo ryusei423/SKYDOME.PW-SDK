@@ -4,6 +4,26 @@
 
 class CTransform;
 
+//hitbox index : 0 hitgroup : 1 bone index in list : 6 name : head_0
+//hitbox index : 1 hitgroup : 8 bone index in list : 5 name : neck_0
+//hitbox index : 2 hitgroup : 3 bone index in list : 0 name : pelvis
+//hitbox index : 3 hitgroup : 3 bone index in list : 1 name : spine_0
+//hitbox index : 4 hitgroup : 2 bone index in list : 2 name : spine_1
+//hitbox index : 5 hitgroup : 2 bone index in list : 3 name : spine_2
+//hitbox index : 6 hitgroup : 2 bone index in list : 4 name : spine_3
+//hitbox index : 7 hitgroup : 6 bone index in list : 22 name : leg_upper_l
+//hitbox index : 8 hitgroup : 7 bone index in list : 25 name : leg_upper_r
+//hitbox index : 9 hitgroup : 6 bone index in list : 23 name : leg_lower_l
+//hitbox index : 10 hitgroup : 7 bone index in list : 26 name : leg_lower_r
+//hitbox index : 11 hitgroup : 6 bone index in list : 24 name : ankle_l
+//hitbox index : 12 hitgroup : 7 bone index in list : 27 name : ankle_r
+//hitbox index : 13 hitgroup : 4 bone index in list : 10 name : hand_l
+//hitbox index : 14 hitgroup : 5 bone index in list : 15 name : hand_r
+//hitbox index : 15 hitgroup : 4 bone index in list : 8 name : arm_upper_l
+//hitbox index : 16 hitgroup : 4 bone index in list : 9 name : arm_lower_l
+//hitbox index : 17 hitgroup : 5 bone index in list : 13 name : arm_upper_r
+//hitbox index : 18 hitgroup : 5 bone index in list : 14 name : arm_lower_r
+
 enum HITBOXES : uint32_t {
 	HEAD = 6,
 	NECK = 5,

@@ -10,7 +10,7 @@ public:
 
 	CCSPlayerController* LocalController = nullptr;
 	C_CSPlayerPawn* LocalPawn = nullptr;
-	Vector net_update_end_eyepos;
+	Vector save_eyepos;
 
 	bool RelativeLastValue = false;
 	bool IsRelative = false;

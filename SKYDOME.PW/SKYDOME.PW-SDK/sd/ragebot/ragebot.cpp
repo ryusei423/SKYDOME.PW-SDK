@@ -47,12 +47,12 @@ void RageBot::run(CUserCmd* cmd){
 
 		auto eye = g_CheatData->LocalPawn->GetEyePosition();
 		auto calc_eye = g_CheatData->LocalPawn->CalcEyePosition();
-		QAngle shit = CalcAngle(g_CheatData->net_update_end_eyepos/*calc_eye*//*(eye + calc_eye) / 2*/, points[0].point);
+		QAngle shit = CalcAngle(g_CheatData->save_eyepos/*calc_eye*//*(eye + calc_eye) / 2*/, points[0].point);
 		if (g_RageBotHelper->Hitchance(g_CheatData->LocalPawn,
 			points[0].player.Pawn,
 			g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSWeaponBase>(g_CheatData->LocalPawn->GetWeaponServices()->m_hActiveWeapon()),
 			shit,
-			70.f)) {
+			00.f)) {
 		
 		
 			//cmd->SetSubTickAngle(shit);
@@ -173,29 +173,44 @@ bool RageBot::FindTarget(){
 
 		if (g_PlayerLog->logs[player.handle.GetEntryIndex()].record.empty())
 			continue;
-		
-		lag_record_t backup(player.Pawn);
+		if (g_PlayerLog->logs[player.handle.GetEntryIndex()].record.size() < 10)
+			continue;
+		auto cur_record = g_PlayerLog->logs[player.handle.GetEntryIndex()].record[5];
 
-		g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].recover(player.Pawn);
+		
+		for (int i = g_PlayerLog->logs[player.handle.GetEntryIndex()].record.size() - 1; i > 0 ; i--){
+			if (g_PlayerLog->logs[player.handle.GetEntryIndex()].record[i].IsValid()){
+				cur_record = g_PlayerLog->logs[player.handle.GetEntryIndex()].record[i];
+				LOG(DEBUG) << "选中第 " << std::dec<< i<<" 条记录";
+				break;
+			}
+
+		}
+
+
+		lag_record_t* backup = new lag_record_t(player.Pawn);
+
+		cur_record.recover(player.Pawn);
 		//目前，用计算位置扫描。用虚函数eyepos射击
 		//计算位置基于oldorigin，这确保我们真的能击中目标
 		//但是它不能用于角度计算，这是个十分贫民窟的解决方法，在适当的时候我会想办法调查eyepos相关的东西
 		float damage = 0;
 		bool canHit = false;
 		F::AUTOWALL::c_auto_wall::data_t data;
-		F::AUTOWALL::g_auto_wall->pen(data, /*g_CheatData->LocalPawn->CalcEyePosition()*/g_CheatData->net_update_end_eyepos/*g_CheatData->LocalPawn->GetEyePosition()*/, /*player.Pawn->GetHitBoxPos(0)*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].matrix[6].pos, player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
+		F::AUTOWALL::g_auto_wall->pen(data, /*g_CheatData->LocalPawn->CalcEyePosition()*/g_CheatData->save_eyepos/*g_CheatData->LocalPawn->GetEyePosition()*/, /*player.Pawn->GetHitBoxPos(0)*/cur_record.matrix[6].pos, player.Controller, g_CheatData->LocalController, g_CheatData->LocalPawn, player.Pawn, weapon->datawep(), damage, canHit);
 		if (data.m_can_hit && data.m_dmg >= 100.f) {
 			auto& pt = points.emplace_back(/*player.Pawn->GetEyePosition()*//*player.Pawn->GetGameSceneNode()->GetSkeletonInstance()->GetModel().GetHitboxPos(HEAD)*//*player.Pawn->GetHitBoxPos(0)*/
 				);
 
 			pt.player = player;
-			pt.point = g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].matrix[6].pos;
-			//g_EspDrawManager->test = pt.point;
+			pt.point = cur_record.matrix[6].pos;
+			g_EspDrawManager->test = pt.point;
 			//pt.tick = TIME_TO_TICKS(/*player.Pawn->GetSimulationTime()*/g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].m_flSimulationTime + g_interfaces->Client->get_lerp_time());
-			pt.tick = g_PlayerLog->logs[player.handle.GetEntryIndex()].record[0].m_flSimulationTime / 0.015625;
+			pt.tick = (cur_record.m_flSimulationTime + g_interfaces->NetworkClientService->GetNetworkClient()->GetClientInterpAmount()) / 0.015625;
 		}
 
-		backup.recover(player.Pawn);
+		backup->recover(player.Pawn);
+		delete backup;
 		//noobs.emplace_back(player);
 	}
 
@@ -228,7 +243,8 @@ void RageBot::SetCmdTick(int tick, C_CSPlayerPawn* target, int history){
 		auto History = cur_cmd->GetInputHistoryEntry(history);
 		if (!History)
 			return;
-		LOG(DEBUG) << "将 nRenderTickCount 从 " << std::dec << History->nRenderTickCount << " 调整为 " << std::dec << cl.dstTick << " GlobalVars TickCount: " << std::dec << g_interfaces->GlobalVars->nTickCount;
+		if(cl.dstTick < History->nRenderTickCount)
+		LOG(DEBUG) <<"尝试回溯 " << std::dec << History->nRenderTickCount - cl.dstTick << " 个tick 将 nRenderTickCount 从 " << std::dec << History->nRenderTickCount << " 调整为 " << std::dec << cl.dstTick << " GlobalVars TickCount: " << std::dec << g_interfaces->GlobalVars->nTickCount;
 		History->nRenderTickCount = cl.dstTick;
 
 		if (History->cl_interp) {
