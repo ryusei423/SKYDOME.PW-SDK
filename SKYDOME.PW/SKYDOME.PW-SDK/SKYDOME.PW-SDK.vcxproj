@@ -186,6 +186,7 @@
     <ClCompile Include="sd\ragebot\penetration.cpp" />
     <ClCompile Include="sd\ragebot\playerlog.cpp" />
     <ClCompile Include="sd\ragebot\ragebot.cpp" />
+    <ClCompile Include="sd\ragebot\ragebot_backup.cpp" />
     <ClCompile Include="sd\ragebot\rbhelper.cpp" />
     <ClCompile Include="sd\schema\schema.cpp" />
     <ClCompile Include="sd\utilities\math.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="sd\menu\menu.h" />
     <ClInclude Include="sd\menu\widget.h" />
     <ClInclude Include="sd\movement\movement.h" />
+    <ClInclude Include="sd\ragebot\antiaim.h" />
     <ClInclude Include="sd\ragebot\penetration.h" />
     <ClInclude Include="sd\ragebot\playerlog.h" />
     <ClInclude Include="sd\ragebot\ragebot.h" />

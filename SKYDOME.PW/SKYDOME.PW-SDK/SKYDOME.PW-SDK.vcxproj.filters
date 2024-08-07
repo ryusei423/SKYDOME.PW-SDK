@@ -246,6 +246,9 @@
     <ClCompile Include="sd\ragebot\rbhelper.cpp">
       <Filter>sd\ragebot</Filter>
     </ClCompile>
+    <ClCompile Include="sd\ragebot\ragebot_backup.cpp">
+      <Filter>sd\ragebot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\safetyhook\safetyhook.hpp">
@@ -556,6 +559,9 @@
     </ClInclude>
     <ClInclude Include="sdk\inetworkclientservice.h">
       <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="sd\ragebot\antiaim.h">
+      <Filter>sd\ragebot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

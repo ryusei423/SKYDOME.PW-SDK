@@ -329,6 +329,9 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 	if (g_CheatData->LocalPawn){
 		g_CheatData->save_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * -0.01);
+		
+		//用于早期自动停止
+		g_CheatData->pred_eyepos = g_CheatData->save_eyepos + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.04);
 	}
 
 	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
@@ -336,10 +339,12 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 		g_interfaces->GlobalVars = nullptr;
 		return rt;
 	}
+
 	if (!g_interfaces->GlobalVars){
 		g_interfaces->GlobalVars = *reinterpret_cast<IGlobalVars**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL,
 			XorStr("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));;
 	}
+
 
 	CUserCmd* cmd = pInput->GetUserCmd();
 	if (!cmd || !cmd->csgoUserCmd.pBaseCmd->pViewAngles){
@@ -351,8 +356,8 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_MovementManager->InitTick(cmd);
 
 
-	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
-	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
+	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
 	if (*g_ConfigManager->GetBool("ragebot_enable"))
 		g_RageBot->run(cmd);
 

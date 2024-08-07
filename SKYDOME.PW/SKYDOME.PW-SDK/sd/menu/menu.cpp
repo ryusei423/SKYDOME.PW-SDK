@@ -11,6 +11,8 @@
 #include "widget.h"
 #include "config.h"
 
+#define PAD ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+
 
 static auto GetCorrectDXGIFormat(DXGI_FORMAT currentFormat) {
 	switch (currentFormat) {
@@ -217,6 +219,7 @@ inline ImFont* MenuManager::GetDpiFont(std::string font) {
 };
 
 
+
 void MenuManager::ShowRage(){
 	ImGui::Columns(2, nullptr, false);
 	ImGui::SetColumnOffset(1, 275.9 * menu_dpi_scale);
@@ -224,8 +227,23 @@ void MenuManager::ShowRage(){
 	ImGui::BeginChild("ragebot_config", ImVec2(child_windows_size.x, ImGui::GetContentRegionAvail().y), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
 	make_header(U8ST("武器参数"));
 
-	
-	
+	PAD;
+	ImGui::SliderInt(U8ST("最低命中率"), &g_ConfigManager->configs["ragebot_hc"].it, 0, 100, "%d");
+	PAD;
+	ImGui::SliderInt(U8ST("最低伤害"), &g_ConfigManager->configs["ragebot_damage"].it, 0, 101, "%d");
+	PAD;
+	ImGui::SliderFloat(U8ST("多点缩放"), &g_ConfigManager->configs["ragebot_multpoint"].fl, 0.f, 100.f, "%f");
+
+
+	PAD;
+	const char* Target_selection_str[] = { U8ST("最高伤害"), U8ST("最低血量") };
+	const char* rage_hitbox_item[] = { "Head", "Neck","Chest","Stomach","Arms","Legs" };
+
+	ImGui::Combo(U8ST("目标选择"), &g_ConfigManager->configs["ragebot_target_selection"].it, Target_selection_str, IM_ARRAYSIZE(Target_selection_str));
+	PAD;
+	ImGuiW::MakeCombo(U8ST("目标部位"), rage_hitbox_item, (bool*)&g_ConfigManager->rage_hitbox, IM_ARRAYSIZE(rage_hitbox_item));
+	PAD;
+	ImGuiW::MakeCombo(U8ST("扫描多点部位"), rage_hitbox_item, (bool*)&g_ConfigManager->rage_multpoint_hitbox, IM_ARRAYSIZE(rage_hitbox_item));
 	
 	ImGui::EndChild();
 
@@ -244,11 +262,7 @@ void MenuManager::ShowRage(){
 	const char* aa_yaw_str[] = { U8ST("关闭"), U8ST("向后") };
 	ImGui::Combo(U8ST("偏航"), &g_ConfigManager->configs["ragebot_yaw"].it, aa_yaw_str, IM_ARRAYSIZE(aa_yaw_str));
 
-	static int tmp = 50;
-	static int min = 100;
-	static int max = 0;
-	ImGui::SetCursorPosY(ImGui::GetCursorPos().y + 8);
-	ImGuiW::SliderScalar(U8ST("测试"), ImGuiDataType_S32, &tmp, &min, &max, "%d%%", 0);
+
 	ImGui::EndChild();
 	ImGui::NextColumn();
 
@@ -258,8 +272,25 @@ void MenuManager::ShowRage(){
 	ImGui::BeginChild("ragebot_set", ImVec2(child_windows_size.x, ImGui::GetContentRegionAvail().y), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeY, /*ImGuiWindowFlags_MenuBar*/0);
 
 	make_header(U8ST("瞄准选项"));
+
 	ImGuiW::Checkbox(U8ST("启用"), g_ConfigManager->GetBool("ragebot_enable"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("自动开火"), g_ConfigManager->GetBool("ragebot_auto_shot"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("自动急停"), g_ConfigManager->GetBool("ragebot_auto_stop"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("早期自动急停"), g_ConfigManager->GetBool("ragebot_fast_auto_stop"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("射击中自动急停"), g_ConfigManager->GetBool("ragebot_auto_stop_between_shots"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("扫描回溯"), g_ConfigManager->GetBool("ragebot_backtrack"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("强制完美静默"), g_ConfigManager->GetBool("ragebot_force_psilent"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+	ImGuiW::Checkbox(U8ST("绘制瞄准点"), g_ConfigManager->GetBool("ragebot_draw_aim_point"));
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
 	ImGuiW::Checkbox(U8ST("调试攻击cmd信息"), g_ConfigManager->GetBool("ragebot_debug_cmd_info"));
+
 	ImGui::EndChild();
 
 }
@@ -578,7 +609,21 @@ void MenuManager::make_header(std::string name, const char* font){
 
 	}ImGui::EndChild();
 
-	//ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y), ImGui::GetWindowPos() + logo_size_scale, color);
+	ImVec2 top_l = ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y);
+	ImVec2 top_r = top_l + ImVec2(logo_size_scale.x, 0);
+	float a = 125.f;
+	for (int i = 0; i < 10; i++) {
+		auto color = ImGui::GetStyleColorVec4(ImGuiCol_BorderShadow);
+		color.w = a / 255.f;
+		ImGui::GetWindowDrawList()->AddLine(top_l, top_r, ImGui::ColorConvertFloat4ToU32(color));
+		top_l.y += 1;
+		top_r.y += 1;
+		a -= 12.5f;
+	}
+
+	ImGui::ItemSize(ImVec2(0, 4 * menu_dpi_scale));
+
+	ImGui::GetWindowDrawList()->AddLine(ImGui::GetWindowPos() + ImVec2(0, logo_size_scale.y), ImGui::GetWindowPos() + logo_size_scale, color);
 
 }
 

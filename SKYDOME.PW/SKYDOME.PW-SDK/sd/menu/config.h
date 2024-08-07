@@ -4,7 +4,8 @@
 #include "../../sdk/datatypes/color.h"
 #include "../../sdk/datatypes/vector.h"
 
-
+#define GET_CFG(N,T) g_ConfigManager->configs[N].T
+#define GET_CFG_P(N,T) &g_ConfigManager->configs[N].T
 
 union ConfigItem
 {
@@ -50,6 +51,8 @@ public:
 		configs["esp_box"] = ConfigItem(false);
 	}
 
+	bool rage_hitbox[7];
+	bool rage_multpoint_hitbox[7];
 	std::unordered_map<std::string,ConfigItem> configs;
 
 };

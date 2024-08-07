@@ -2,9 +2,17 @@
 #include<deque>
 #include "../../sdk/hitbox/hitbox.h"
 
+struct CACHE_HITBOX{
+	Vector min, max;
+	bool need_multpoint;
+};
+
+
 class lag_record_t {
 public:
 	lag_record_t(C_CSPlayerPawn* pawn) {
+		has_hitbox = false;
+
 		m_flSimulationTime = pawn->m_flSimulationTime();
 		m_nSimulationTick = pawn->m_nSimulationTick();
 		m_angEyeAngles = pawn->m_angEyeAngles();
@@ -28,6 +36,7 @@ public:
 		if (skeleton->GetModel().GetBoneData() && bone_count && skeleton->m_pBoneCache){
 			memcpy(&matrix, skeleton->GetModel().GetBoneData(), bone_count * sizeof(bone_data));
 			memcpy(&bone_cache, skeleton->m_pBoneCache, bone_count * sizeof(Matrix4x2_t));
+			has_hitbox = MakeHitboxList(pawn);
 		}
 
 		
@@ -58,6 +67,7 @@ public:
 
 
 	bool IsValid();
+	bool MakeHitboxList(C_CSPlayerPawn* pawn);
 
 	Vector m_vecOrigin, m_vecAbsOrigin, m_vRenderOrigin;
 	QAngle m_angRotation, m_angAbsRotation, m_angEyeAngles;
@@ -67,6 +77,9 @@ public:
 	Matrix4x2_t bone_cache[128];
 	float m_flSimulationTime;
 	int m_nSimulationTick;
+
+	bool has_hitbox;
+	std::vector<CACHE_HITBOX>hitboxs;
 };
 
 class PlayerLog_t {

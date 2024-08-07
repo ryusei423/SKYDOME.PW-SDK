@@ -47,7 +47,7 @@ void PlayerLog::Log(){
 	}
 
 
-	//FilterRecords();
+	FilterRecords();
 
 
 
@@ -85,6 +85,7 @@ struct data_info
 
 
 #include "../../CheatData.h"
+#include "../menu/config.h"
 bool lag_record_t::IsValid()
 {
 
@@ -107,11 +108,63 @@ bool lag_record_t::IsValid()
 	if (!NetworkChannel || !g_interfaces->NetworkClientService->GetNetworkClient())
 		return false;
 
-	const float flMaxUnlag = 0.16f;
+	const float flMaxUnlag = 0.2f;
 	const float flLatency = NetworkChannel->get_network_latency() + NetworkChannel->get_engine_latency();
 	const float flCorrectedValue = std::clamp(flLatency + g_interfaces->NetworkClientService->GetNetworkClient()->GetClientInterpAmount(), 0.0f, flMaxUnlag);
 	float flMaxDelta = min(flMaxUnlag - flCorrectedValue, 0.2f);
 	float flDelta = flMaxDelta - g_interfaces->GlobalVars->flCurtime;
 
 	return g_interfaces->GlobalVars->flCurtime - m_flSimulationTime < flMaxDelta;
+}
+
+bool lag_record_t::MakeHitboxList(C_CSPlayerPawn* pawn){
+
+	Vector min,max;
+
+	if (g_ConfigManager->rage_hitbox[0]) {
+		if (pawn->GetHitboxMinMax(HITGROUP_HEAD, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[0]);
+		};
+			
+	}
+	if (g_ConfigManager->rage_hitbox[1]) {
+		if (pawn->GetHitboxMinMax(HITGROUP_NECK, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[1]);
+		};
+			
+	}
+	if (g_ConfigManager->rage_hitbox[2]) {
+		if (pawn->GetHitboxMinMax(HITGROUP_CHEST, min, max)) {
+			hitboxs.emplace_back(min, max,g_ConfigManager->rage_multpoint_hitbox[2]);
+		};
+			
+	}
+	if (g_ConfigManager->rage_hitbox[3]) {
+		if (pawn->GetHitboxMinMax(HITGROUP_STOMACH, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[3]);
+		};
+			
+	}
+	if (g_ConfigManager->rage_hitbox[4]) {
+		if (pawn->GetHitboxMinMax(HITGROUP_LEFTARM, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[4]);
+		};
+			
+		if (pawn->GetHitboxMinMax(HITGROUP_RIGHTARM, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[4]);
+		};
+			
+	}
+	if (g_ConfigManager->rage_hitbox[5]) {
+		if (pawn->GetHitboxMinMax(HITGROUP_LEFTLEG, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[5]);
+		};
+			
+		if (pawn->GetHitboxMinMax(HITGROUP_RIGHTLEG, min, max)) {
+			hitboxs.emplace_back(min, max, g_ConfigManager->rage_multpoint_hitbox[5]);
+		};
+			
+	}
+
+	return hitboxs.size();
 }

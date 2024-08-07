@@ -11,6 +11,7 @@ public:
 	CCSPlayerController* LocalController = nullptr;
 	C_CSPlayerPawn* LocalPawn = nullptr;
 	Vector save_eyepos;
+	Vector pred_eyepos;
 
 	bool RelativeLastValue = false;
 	bool IsRelative = false;

@@ -181,7 +181,7 @@ bool RageBotHelper::Hitchance(C_CSPlayerPawn* pLocal, C_CSPlayerPawn* ent, C_CSW
     inaccuracy = weapon->get_inaccuracy();
 
     //对于不准确率引擎预测的贫民窟解决方案
-    float delta = std::clamp(inaccuracy - save_inaccuracy,-0.005f,0.01f);
+    float delta = std::clamp(inaccuracy - save_inaccuracy,-0.005f, 0.004f);
     inaccuracy = save_inaccuracy + delta;
     save_inaccuracy = inaccuracy;
     spread = weapon->get_spread();
