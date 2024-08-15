@@ -260,7 +260,7 @@
     <ClInclude Include="external\easylogging\easylogging++.h">
       <Filter>external\easylogging</Filter>
     </ClInclude>
-    <ClInclude Include="gobal.h">
+    <ClInclude Include="global.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="external\SD.h">

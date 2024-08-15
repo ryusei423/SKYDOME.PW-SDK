@@ -4,7 +4,7 @@
 // used: std::vector
 #include <vector>
 
-#include "../../gobal.h"
+#include "../../global.h"
 
 #pragma region memory_definitions
 #pragma warning(push)

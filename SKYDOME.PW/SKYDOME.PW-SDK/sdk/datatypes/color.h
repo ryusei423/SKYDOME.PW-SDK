@@ -4,7 +4,7 @@
 // used: bit_cast
 #include <bit>
 
-#include "../../gobal.h"
+#include "../../global.h"
 // used: swap
 #include "../../sd/utilities/crt.h"
 // used: [ext] imu32

@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include "external/easylogging/easylogging++.h"
-#include "gobal.h"
+#include "global.h"
 #include "external/StackWalker/StackWalker.h"
 #include "CheatData.h"
 #include "sd/schema/schema.h"

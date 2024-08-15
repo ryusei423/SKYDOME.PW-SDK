@@ -2,7 +2,7 @@
 #include <map>
 #include <unordered_map>
 #include <string>
-#include "../../gobal.h"
+#include "../../global.h"
 
 #define SET_TEXT(k,t) set(XorStr(k) , XorStr(t));
 

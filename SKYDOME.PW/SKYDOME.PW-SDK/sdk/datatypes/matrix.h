@@ -7,7 +7,7 @@
 //#include "../../common.h"
 
 #include "vector.h"
-#include "../../gobal.h"
+#include "../../global.h"
 
 // forward declarations
 struct QAngle;

@@ -1,7 +1,7 @@
 #pragma once
 
 // used: call virtual function
-#include "../gobal.h"
+#include "../global.h"
 
 // forward declarations
 struct IDXGISwapChain;

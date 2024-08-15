@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../gobal.h"
+#include "../../global.h"
 // used: std::is_integral_v
 #include <type_traits>
 // used: sin, cos, pow, abs, sqrt

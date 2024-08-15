@@ -223,7 +223,7 @@
     <ClInclude Include="external\SD.h" />
     <ClInclude Include="external\StackWalker\StackWalker.h" />
     <ClInclude Include="external\xor.hpp" />
-    <ClInclude Include="gobal.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="OffsetManager.h" />
     <ClInclude Include="sdk\ccsgoinput.h" />
     <ClInclude Include="sdk\cgameentitysystem.h" />

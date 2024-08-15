@@ -1,5 +1,5 @@
 #pragma once
-#include"gobal.h"
+#include"global.h"
 
 #include"sdk/entity/Entity.h"
 class CheatData {

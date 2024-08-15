@@ -22,7 +22,7 @@
 #include "../../sdk/entity/const.h"
 
 
-#include "../../gobal.h"
+#include "../../global.h"
 
 static constexpr std::uint32_t PENMASK = 0x1C300Bu; // mask_shot_hull | contents_hitbox?
 

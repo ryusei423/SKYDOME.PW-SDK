@@ -1,5 +1,5 @@
 #pragma once
-#include"../../gobal.h"
+#include"../../global.h"
 #include <d3d11.h>
 
 namespace g_hooks {
