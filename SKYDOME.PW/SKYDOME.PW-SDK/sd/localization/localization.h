@@ -69,8 +69,8 @@ public:
 
 		SET_TEXT("interfaces_swapchain_not_found", "交换链特征搜索失败！");
 		SET_TEXT("interfaces_init_log", "初始化接口 %s -> %p");
-		SET_TEXT("interfaces_init_success", "对接口的分段检查已经完成，一切顺利，舰长。");
-		SET_TEXT("interfaces_init_fail", "对接口的分段检查失败,第一处空白位于 -> %d");
+		SET_TEXT("interfaces_init_success", "对接口的检查已经完成，一切顺利，舰长。");
+		SET_TEXT("interfaces_init_fail", "对接口的检查失败。");
 
 		SET_TEXT("offset_manager_scan_success", "我们通过特征码扫描了 %d 个地址 ！ 用时%.2f s。");
 		SET_TEXT("offset_manager_scan_fail", "抱歉，发生了一些意料之外的错误... %d 个地址中的 %d 个扫描失败了。");

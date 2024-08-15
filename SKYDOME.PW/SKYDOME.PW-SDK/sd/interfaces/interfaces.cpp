@@ -2,26 +2,6 @@
 #include "../utilities/memory.h"
 #include"../utilities/crt.h"
 
-inline int InterfacesManager::CheckNull()
-{
-	auto size = sizeof(InterfacesManager);
-	auto ptr_size = sizeof(void*);
-	auto cout = ptr_size / size;
-	auto buffer = malloc(size);
-	memcpy(buffer, this, size);
-	for (int i = 0; i < cout; i++) {
-		int offset = i * ptr_size;
-		void* cur = this + offset;
-
-		if (!*(void**)cur)
-		{
-			return i;
-		}
-	}
-	free(buffer);
-
-	return 1337;
-}
 
 using InstantiateInterfaceFn_t = void* (*)();
 
@@ -85,19 +65,8 @@ T* Capture(const CInterfaceRegister* pModuleRegister, const char* szInterfaceNam
 
 bool InterfacesManager::init()
 {
-	/*SwapChainDx11 = reinterpret_cast<ISwapChainDx11*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_SWAPCHAINDX11]);
-	INTERFACES_INITLOG("SwapChainDx11", SwapChainDx11);
-	if (SwapChainDx11) {
-		SwapChainDx11->pDXGISwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&Device);
-		INTERFACES_INITLOG("Device", Device);
-	}
 
-	if (Device) {
-		Device->GetImmediateContext((ID3D11DeviceContext**)&DeviceContext);
-		INTERFACES_INITLOG("DeviceContext", DeviceContext);
-	}*/
 	const auto pTier0Handle = MEM::GetModuleBaseHandle(TIER0_DLL);
-
 	const auto pInputSystemRegisterList = GetRegisterList(INPUTSYSTEM_DLL);
 	const auto pSchemaSystemRegisterList = GetRegisterList(SCHEMASYSTEM_DLL);
 	const auto pEngineRegisterList = GetRegisterList(ENGINE2_DLL);
@@ -116,6 +85,8 @@ bool InterfacesManager::init()
 	Client = Capture<IClient>(pClientRegisterList, XorStr("Source2Client00"));
 	NetworkClientService = Capture<INetworkClientService>(pEngineRegisterList, XorStr("NetworkClientService_001"));
 
+	bool check = true;
+
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 	INTERFACES_INITLOG("Trace", Trace);
 	INTERFACES_INITLOG("InputSystem", InputSystem);
@@ -127,13 +98,8 @@ bool InterfacesManager::init()
 	INTERFACES_INITLOG("EngineCVar", EngineCVar);
 	INTERFACES_INITLOG("Client", Client);
 	INTERFACES_INITLOG("NetworkClientService", NetworkClientService);
-	if (CheckNull() != 1337) {
-
-		LOG(ERROR) << SDlib.StrSystem().printf(g_CheatLocalization->get(XorStr("interfaces_init_fail")), CheckNull());
-		return false;
-	}
 
 
-	LOG(INFO) << g_CheatLocalization->get(XorStr("interfaces_init_success"));
-	return true;
+	LOG(INFO) << g_CheatLocalization->get(XorStr(check ? "interfaces_init_success" : "interfaces_init_fail"));
+	return check;
 }

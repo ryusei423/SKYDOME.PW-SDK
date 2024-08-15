@@ -7,12 +7,22 @@ void PlayerLog::Log(){
 		if (player.Controller)
 			player.UpdatePawn();
 
-		if (!player.Valid())
-			continue;
+		
+			
 
 		
 
 		auto& player_log = logs[player.handle.GetEntryIndex()];
+
+		if (!player.Valid()) {
+			player_log.valid = false;
+			continue;
+		}
+
+
+		player_log.player = player;
+		player_log.valid = true;
+
 		auto& records = player_log.record;
 		
 		if (!player.Controller->IsPawnAlive()) {
@@ -46,8 +56,11 @@ void PlayerLog::Log(){
 
 	}
 
-
-	FilterRecords();
+	if (g_interfaces->GlobalVars)
+	{
+		FilterRecords();
+	}
+	
 
 
 

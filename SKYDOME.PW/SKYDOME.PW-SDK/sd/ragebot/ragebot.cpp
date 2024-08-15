@@ -572,13 +572,14 @@ void RageBot::SetCmdTick(int tick, C_CSPlayerPawn* target, int history){
 	Tickfrac_t tf{ tick, 1.f };
 	InterpInfo_t cl, sv0, sv1;
 	//虽然不知道为什么，但是这个函数有时候工作的很好，有时候会给出一些糟糕的数字
+	//在敌人静止的时候
 	if (target->m_pGameSceneNode()->CalculateInterpInfos(&cl, &sv0, &sv1, &tf)) {
 	
 		auto History = cur_cmd->GetInputHistoryEntry(history);
 		if (!History)
 			return;
 		if(cl.dstTick < History->nRenderTickCount)
-		LOG(DEBUG) <<"尝试回溯 " << std::dec << History->nRenderTickCount - cl.dstTick << " 个tick 将 nRenderTickCount 从 " << std::dec << History->nRenderTickCount << " 调整为 " << std::dec << cl.dstTick << " GlobalVars TickCount: " << std::dec << g_interfaces->GlobalVars->nTickCount;
+		LOG(DEBUG) << std::dec << History->nRenderTickCount - tick <<" 尝试回溯 " << std::dec << History->nRenderTickCount - cl.dstTick << " 个tick 将 nRenderTickCount 从 " << std::dec << History->nRenderTickCount << " 调整为 " << std::dec << cl.dstTick << " GlobalVars TickCount: " << std::dec << g_interfaces->GlobalVars->nTickCount;
 		History->nRenderTickCount = cl.dstTick;
 
 		if (History->cl_interp) {

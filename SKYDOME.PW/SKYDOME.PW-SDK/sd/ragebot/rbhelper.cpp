@@ -74,8 +74,8 @@ void RageBotHelper::AutomaticStop(C_CSPlayerPawn* pLocal, C_CSWeaponBase* weapon
         cmd->csgoUserCmd.pBaseCmd->flSideMove = -stop.y;
     }
     else {
-        /*cmd->csgoUserCmd.pBaseCmd->flForwardMove = 0;
-        cmd->csgoUserCmd.pBaseCmd->flSideMove = 0;*/
+        cmd->csgoUserCmd.pBaseCmd->flForwardMove = 0;
+        cmd->csgoUserCmd.pBaseCmd->flSideMove = 0;
     }
 
 
@@ -85,59 +85,7 @@ void RageBotHelper::AutomaticStop(C_CSPlayerPawn* pLocal, C_CSWeaponBase* weapon
 }
 
 
-__forceinline Vector CalculateSpread(C_CSWeaponBase* weapon, int seed, float inaccuracy, float spread, bool revolver2 = false) {
-    const char* item_def_index;
-    float      recoil_index, r1, r2, r3, r4, s1, c1, s2, c2;
 
-    if (!weapon)
-        return { };
-    // if we have no bullets, we have no spread.
-    auto wep_info = weapon->datawep();
-    if (!wep_info)
-        return { };
-
-    // get some data for later.
-    item_def_index = wep_info->m_szName();
-    recoil_index = weapon->m_flRecoilIndex();
-
-    MATH::fnRandomSeed((seed & 0xff) + 1);
-
-    // generate needed floats.
-    r1 = MATH::fnRandomFloat(0.f, 1.f);
-    r2 = MATH::fnRandomFloat(0.f, 3.14159265358979323846264338327950288f * 2);
-    r3 = MATH::fnRandomFloat(0.f, 1.f);
-    r4 = MATH::fnRandomFloat(0.f, 3.14159265358979323846264338327950288f * 2);
-
-    // revolver secondary spread.
-    if (item_def_index == "weapon_revoler" && revolver2) {
-        r1 = 1.f - (r1 * r1);
-        r3 = 1.f - (r3 * r3);
-    }
-
-    // negev spread.
-    else if (item_def_index == "weapon_negev" && recoil_index < 3.f) {
-        for (int i{ 3 }; i > recoil_index; --i) {
-            r1 *= r1;
-            r3 *= r3;
-        }
-
-        r1 = 1.f - r1;
-        r3 = 1.f - r3;
-    }
-
-    // get needed sine / cosine values.
-    c1 = std::cos(r2);
-    c2 = std::cos(r4);
-    s1 = std::sin(r2);
-    s2 = std::sin(r4);
-
-    // calculate spread vector.
-    return {
-        (c1 * (r1 * inaccuracy)) + (c2 * (r3 * spread)),
-        (s1 * (r1 * inaccuracy)) + (s2 * (r3 * spread)),
-        0.f
-    };
-}
 
 #include "../esp/esp.h"
 bool RageBotHelper::Hitchance(C_CSPlayerPawn* pLocal, C_CSPlayerPawn* ent, C_CSWeaponBase* weapon, QAngle vAimpoint, float hc){
@@ -181,7 +129,7 @@ bool RageBotHelper::Hitchance(C_CSPlayerPawn* pLocal, C_CSPlayerPawn* ent, C_CSW
     inaccuracy = weapon->get_inaccuracy();
 
     //对于不准确率引擎预测的贫民窟解决方案
-    float delta = std::clamp(inaccuracy - save_inaccuracy,-0.005f, 0.004f);
+    float delta = std::clamp(inaccuracy - save_inaccuracy,-0.005f, 0.01f);
     inaccuracy = save_inaccuracy + delta;
     save_inaccuracy = inaccuracy;
     spread = weapon->get_spread();

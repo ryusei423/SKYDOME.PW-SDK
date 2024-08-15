@@ -1,7 +1,7 @@
 #pragma once
 #include<deque>
 #include "../../sdk/hitbox/hitbox.h"
-
+#include "../entitycache/entitycache.h"
 struct CACHE_HITBOX{
 	Vector min, max;
 	bool need_multpoint;
@@ -84,6 +84,8 @@ public:
 
 class PlayerLog_t {
 public:
+	bool valid;
+	CachedEntity player;
 	std::deque<lag_record_t> record;
 };
 

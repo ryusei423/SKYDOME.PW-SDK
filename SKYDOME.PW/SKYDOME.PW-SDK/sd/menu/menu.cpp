@@ -259,7 +259,7 @@ void MenuManager::ShowRage(){
 	const char* aa_pitch_str[] = { U8ST("关闭"), U8ST("低头"),U8ST("抬头"),U8ST("零"),U8ST("抖动") };
 	ImGui::Combo(U8ST("俯仰"), &g_ConfigManager->configs["ragebot_pitch"].it, aa_pitch_str, IM_ARRAYSIZE(aa_pitch_str));
 
-	const char* aa_yaw_str[] = { U8ST("关闭"), U8ST("向后") };
+	const char* aa_yaw_str[] = { U8ST("关闭"), U8ST("向后") , U8ST("旋转") };
 	ImGui::Combo(U8ST("偏航"), &g_ConfigManager->configs["ragebot_yaw"].it, aa_yaw_str, IM_ARRAYSIZE(aa_yaw_str));
 
 
@@ -302,6 +302,8 @@ void MenuManager::ShowEsp(){
 	ImGui::Checkbox(U8ST("启用透视"), g_ConfigManager->GetBool("esp_enable"));
 	ImGui::Checkbox(U8ST("玩家方框"), g_ConfigManager->GetBool("esp_box"));
 	ImGui::Checkbox(U8ST("回溯显示"), g_ConfigManager->GetBool("esp_draw_log"));
+	ImGui::Checkbox(U8ST("血条显示"), g_ConfigManager->GetBool("esp_health"));
+	ImGui::Checkbox(U8ST("名称显示"), g_ConfigManager->GetBool("esp_name"));
 	ImGui::EndChild();
 }
 

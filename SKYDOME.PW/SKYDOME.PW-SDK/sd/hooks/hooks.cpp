@@ -15,6 +15,7 @@
 #include "../entitycache/entitycache.h"
 #include "../ragebot/ragebot.h"
 #include "../ragebot/playerlog.h"
+#include "../ragebot/antiaim.h"
 #include "../menu/config.h"
 #include "../movement/movement.h"
 
@@ -292,7 +293,7 @@ void* __fastcall g_hooks::OnAddEntity::OnAddEntity(void* rcx, CEntityInstance* p
 void* __fastcall g_hooks::OnRemoveEntity::OnRemoveEntity(void* rcx, CEntityInstance* pInstance, CBaseHandle hHandle)
 {
 	g_EntityCache->OnRemove(pInstance, hHandle);
-
+	g_PlayerLog->logs[hHandle.GetEntryIndex()].valid = false;
 	return hook_OnRemoveEntity.call<void*>(rcx,pInstance,hHandle);
 }
 
@@ -311,9 +312,10 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 			g_CheatData->LocalController->IsPawnAlive()&&
 			g_CheatData->LocalPawn){
 			//g_CheatData->net_update_end_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.03);
+			g_PlayerLog->Log();
 		}
 
-		g_PlayerLog->Log();
+		
 		
 
 	}
@@ -326,7 +328,7 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	//好吧它指的是CBaseHandle中的nIndex，而不是CBaseHandle的索引
 	//还是不太熟悉CS2
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
-	g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
+	if(g_CheatData->LocalController)g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
 	if (g_CheatData->LocalPawn){
 		g_CheatData->save_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * -0.01);
 		
@@ -356,8 +358,10 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	g_MovementManager->InitTick(cmd);
 
 
-	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
-	cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
+	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
+	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
+	g_AntiAim->run(cmd);
+
 	if (*g_ConfigManager->GetBool("ragebot_enable"))
 		g_RageBot->run(cmd);
 

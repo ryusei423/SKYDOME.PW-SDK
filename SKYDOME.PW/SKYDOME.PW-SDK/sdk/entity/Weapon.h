@@ -120,9 +120,9 @@ public:
 	void AddStattrakEntity();
 	void AddNametagEntity();
 	SCHEMA_ADD_OFFSET(CCSWeaponBaseVData*, datawep, /*0x368*/0x360);
-	//SCHEMA_ADD_OFFSET(int32_t, m_zoomLevel, 0x1A70);
+	SCHEMA_ADD_OFFSET(int32_t, m_zoomLevel, cs2_dumper::schemas::client_dll::C_CSWeaponBaseGun::m_zoomLevel);
 	//SCHEMA_ADD_OFFSET(bool, m_bInReload, 0x1744);
-	SCHEMA_ADD_FIELD(int32_t, m_zoomLevel, "C_CSWeaponBaseGun->m_bInReload");
+	//SCHEMA_ADD_FIELD(int32_t, m_zoomLevel, "C_CSWeaponBaseGun->m_bInReload");
 	SCHEMA_ADD_FIELD(bool, m_bInReload, "C_CSWeaponBase->m_bInReload");
 
 	SCHEMA_ADD_FIELD(float, m_fAccuracyPenalty, "C_CSWeaponBase->m_fAccuracyPenalty");
