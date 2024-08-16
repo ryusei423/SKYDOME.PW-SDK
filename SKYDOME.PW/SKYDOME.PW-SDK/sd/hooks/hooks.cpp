@@ -357,7 +357,7 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	if (!cmd || 
 		!cmd->csgoUserCmd.pBaseCmd || 
 		(int)cmd->csgoUserCmd.pBaseCmd == 0x1|| 
-		cmd->csgoUserCmd.pBaseCmd->pViewAngles || 
+		!cmd->csgoUserCmd.pBaseCmd->pViewAngles || 
 		cmd->csgoUserCmd.nCachedSize > 1337){
 		return rt;
 	}
@@ -443,7 +443,7 @@ bool g_hooks::init()
 
 	//hook_setmousemode = safetyhook::create_inline(g_OffsetManager->offsets[g_OffsetManager->OFFSET_RELATIVE_MODE_MOUSE], reinterpret_cast<void*>(setmousemode));
 
-	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 13, g_hooks::MouseInputEnabled::MouseInputEnabled);
+	HK("MouseInputEnabled", MouseInputEnabled::hook_MouseInputEnabled, g_interfaces->CSGOInput, 16, g_hooks::MouseInputEnabled::MouseInputEnabled);
 	HK("CreateMove", CreateMove::hook_CreateMove, g_interfaces->CSGOInput, 5, g_hooks::CreateMove::CreateMove);
 	HK("ValidateInput", ValidateInput::hook_ValidateInput, g_interfaces->CSGOInput, 7, g_hooks::ValidateInput::ValidateInput);
 

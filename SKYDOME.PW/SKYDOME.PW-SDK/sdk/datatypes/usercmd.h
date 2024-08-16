@@ -267,6 +267,7 @@ class CUserCmd
 {
 public:
 	MEM_PAD(0x8) // 0x0 VTABLE
+	MEM_PAD(0x10); // TODO: find out what this is, added 14.08.2024
 	CCSGOUserCmdPB csgoUserCmd; // 0x8
 	CInButtonState nButtons; // 0x28
 	MEM_PAD(0x20); // 0x50
@@ -292,4 +293,4 @@ public:
 		}
 	}
 };
-static_assert(sizeof(CUserCmd) == 0x88);
+static_assert(sizeof(CUserCmd) == 0x98);

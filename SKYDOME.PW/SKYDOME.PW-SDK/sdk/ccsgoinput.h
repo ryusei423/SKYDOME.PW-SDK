@@ -45,20 +45,21 @@ public:
 class CCSGOInput
 {
 public:
+	
 	MEM_PAD(0x250);
 	CUserCmd arrCommands[MULTIPLAYER_BACKUP];
-	MEM_PAD(0x89)
+	MEM_PAD(0x99)
 	bool bInThirdPerson;
 	MEM_PAD(0x6);
 	QAngle angThirdPersonAngles;
 	MEM_PAD(0xE);
 	std::int32_t nSequenceNumber;
-	std::int32_t nOldSequenceNumber;
-	MEM_PAD(0xA);
+	double dbSomeTimer;
 	CExtendedMoveData currentMoveData;
 	std::int32_t nWeaponSwitchTick;
-	MEM_PAD(0x8C);
+	MEM_PAD(0x1C4);
 	CExtendedMoveData* pExtendedMoveData;
+
 
 	CUserCmd* GetUserCmd()
 	{
