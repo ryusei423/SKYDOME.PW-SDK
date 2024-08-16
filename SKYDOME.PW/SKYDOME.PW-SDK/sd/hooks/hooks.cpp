@@ -329,7 +329,11 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 	//还是不太熟悉CS2
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	if(g_CheatData->LocalController)g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
-	if (g_CheatData->LocalPawn){
+	if (g_CheatData->LocalPawn&& 
+		g_interfaces->EngineClient->IsConnected() &&
+		g_interfaces->EngineClient->IsInGame()&& 
+		g_CheatData->LocalController->IsPawnAlive()){
+
 		g_CheatData->save_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * -0.01);
 		
 		//用于早期自动停止
@@ -349,7 +353,12 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 
 
 	CUserCmd* cmd = pInput->GetUserCmd();
-	if (!cmd || !cmd->csgoUserCmd.pBaseCmd->pViewAngles){
+	//什么鬼
+	if (!cmd || 
+		!cmd->csgoUserCmd.pBaseCmd || 
+		(int)cmd->csgoUserCmd.pBaseCmd == 0x1|| 
+		cmd->csgoUserCmd.pBaseCmd->pViewAngles || 
+		cmd->csgoUserCmd.nCachedSize > 1337){
 		return rt;
 	}
 
