@@ -26,8 +26,9 @@ bool OffsetManager::scan()
 
 	offsets[OFFSET_SWAPCHAINDX11] = **reinterpret_cast<void***>(MEM::ResolveRelativeAddress(swapchain, 0x4, 0x8));
 
+	// @ida:  #STR: "r_gpu_mem_stats", "-threads", "CTSListBase: Misaligned list\n", "CTSQueue: Misaligned queue\n", "Display GPU memory usage.", "-r_max_device_threads"
+	offsets[OFFSET_SWAPCHAINDX11] = **reinterpret_cast<void***>(MEM::ResolveRelativeAddress(MEM::FindPattern(RENDERSYSTEM_DLL, XorStr("66 0F 7F 0D ? ? ? ? 66 0F 7F 05 ? ? ? ? 0F 1F 40")), 0x4, 0x8));
 
-	
 
 	offsets[OFFSET_CCSGOINPUT] = *reinterpret_cast</*CCSGOInput*/void**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, 
 		XorStr("48 8B 0D ? ? ? ? E8 ? ? ? ? 8B BE 84 12 00 00")), 0x3, 0x7));

@@ -13,9 +13,8 @@ public:
 
 	bool init();
 
-
-	ISwapChainDx11* SwapChainDx11 = nullptr;	//游戏的交换链
-	IDXGISwapChain* SwapChain = nullptr;	//我们自己创建的交换链
+	ISwapChainDx11* GameSwapChain = nullptr;
+	IDXGISwapChain* SwapChain = nullptr;
 	ID3D11Device* Device = nullptr;
 	ID3D11DeviceContext* DeviceContext = nullptr;
 	ID3D11RenderTargetView* RenderTargetView = nullptr;

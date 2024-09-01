@@ -73,10 +73,12 @@ bool InterfacesManager::init()
 	const auto pTier0RegisterList = GetRegisterList(TIER0_DLL);
 	const auto pClientRegisterList = GetRegisterList(CLIENT_DLL);
 
-	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
+	GameSwapChain = reinterpret_cast<ISwapChainDx11*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_SWAPCHAINDX11]);
 	CSGOInput = reinterpret_cast<CCSGOInput*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_CCSGOINPUT]);
 	Trace = reinterpret_cast<i_trace*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_TRACE]);
 	GlobalVars = reinterpret_cast<IGlobalVars*>(g_OffsetManager->offsets[g_OffsetManager->OFFSET_GOBALVARS]);
+
+	MemAlloc = *reinterpret_cast<IMemAlloc**>(MEM::GetExportAddress(pTier0Handle, XorStr("g_pMemAlloc")));
 	InputSystem = Capture<CInputSystem>(pInputSystemRegisterList, XorStr("InputSystemVersion00"));
 	SchemaSystem = Capture<ISchemaSystem>(pSchemaSystemRegisterList, XorStr("SchemaSystem_00"));
 	GameResourceService = Capture<IGameResourceService>(pEngineRegisterList, XorStr("GameResourceServiceClientV00"));
@@ -90,7 +92,7 @@ bool InterfacesManager::init()
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 	INTERFACES_INITLOG("Trace", Trace);
 	INTERFACES_INITLOG("InputSystem", InputSystem);
-	
+	INTERFACES_INITLOG("SwapChain", SwapChain);
 	INTERFACES_INITLOG("SchemaSystem", SchemaSystem);
 	INTERFACES_INITLOG("GameResourceService", GameResourceService);
 	INTERFACES_INITLOG("EngineClient", EngineClient);

@@ -323,28 +323,30 @@ void __fastcall g_hooks::FrameStageNotify::FrameStageNotify(void* rcx, int nFram
 }
 
 bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, bool nUnk, std::byte nUnk2){
+
+	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
+	if (!g_interfaces->EngineClient->IsInGame() && !g_interfaces->EngineClient->IsConnected()) {
+		g_interfaces->GlobalVars = nullptr;
+		return rt;
+	}
+
+
 	//getlocalplayer注释里说 return CBaseHandle index
 	//嗯...先试试能不能用吧
 	//好吧它指的是CBaseHandle中的nIndex，而不是CBaseHandle的索引
 	//还是不太熟悉CS2
 	g_CheatData->LocalController = g_interfaces->GameResourceService->pGameEntitySystem->Get<CCSPlayerController>(g_interfaces->EngineClient->GetLocalPlayer());
 	if(g_CheatData->LocalController)g_CheatData->LocalPawn = g_interfaces->GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(g_CheatData->LocalController->GetPawnHandle());
-	if (g_CheatData->LocalPawn&& 
-		g_interfaces->EngineClient->IsConnected() &&
-		g_interfaces->EngineClient->IsInGame()&& 
-		g_CheatData->LocalController->IsPawnAlive()){
 
-		g_CheatData->save_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * -0.01);
-		
-		//用于早期自动停止
-		g_CheatData->pred_eyepos = g_CheatData->save_eyepos + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.04);
-	}
-
-	auto rt = hook_CreateMove.call<bool>(pInput, nSlot, nUnk, nUnk2);
-	if(!g_interfaces->EngineClient->IsInGame() && !g_interfaces->EngineClient->IsConnected()){
-		g_interfaces->GlobalVars = nullptr;
+	if (!g_CheatData->LocalController || !g_CheatData->LocalController->IsPawnAlive() || !g_CheatData->LocalPawn){
 		return rt;
 	}
+
+	g_CheatData->save_eyepos = g_CheatData->LocalPawn->GetEyePosition() + (g_CheatData->LocalPawn->m_vecAbsVelocity() * -0.01);
+	//用于早期自动停止
+	g_CheatData->pred_eyepos = g_CheatData->save_eyepos + (g_CheatData->LocalPawn->m_vecAbsVelocity() * 0.04);
+
+	
 
 	if (!g_interfaces->GlobalVars){
 		g_interfaces->GlobalVars = *reinterpret_cast<IGlobalVars**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL,
@@ -353,12 +355,10 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 
 
 	CUserCmd* cmd = pInput->GetUserCmd();
-	//什么鬼
+
 	if (!cmd || 
 		!cmd->csgoUserCmd.pBaseCmd || 
-		(int)cmd->csgoUserCmd.pBaseCmd == 0x1|| 
-		!cmd->csgoUserCmd.pBaseCmd->pViewAngles || 
-		cmd->csgoUserCmd.nCachedSize > 1337){
+		!cmd->csgoUserCmd.pBaseCmd->pViewAngles){
 		return rt;
 	}
 
@@ -366,9 +366,6 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 
 	g_MovementManager->InitTick(cmd);
 
-
-	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.pitch = 89.f;
-	//cmd->csgoUserCmd.pBaseCmd->pViewAngles->angValue.yaw += 180.f;
 	g_AntiAim->run(cmd);
 
 	if (*g_ConfigManager->GetBool("ragebot_enable"))
@@ -376,7 +373,6 @@ bool __fastcall g_hooks::CreateMove::CreateMove(CCSGOInput* pInput, int nSlot, b
 
 	if (cmd->csgoUserCmd.pBaseCmd->pInButtonState->nValue & IN_ATTACK){
 		if(*g_ConfigManager->GetBool("ragebot_debug_cmd_info"))g_RageBot->DumpCmdInfo(cmd);
-
 	}
 
 
@@ -416,8 +412,12 @@ bool g_hooks::init()
 	//初始化窗口句柄
 	EnumWindows(::EnumWindowsCallback, reinterpret_cast<LPARAM>(&DX11::hwnd));
 
-	g_MenuManager->create(DX11::hwnd);
+	//g_MenuManager->create(DX11::hwnd);
 	//g_MenuManager->init(hwnd, g_interfaces->Device, g_interfaces->DeviceContext);
+
+	g_interfaces->SwapChain = g_interfaces->GameSwapChain->pDXGISwapChain;
+	g_interfaces->SwapChain->GetDevice(IID_PPV_ARGS(&g_interfaces->Device));
+	g_interfaces->Device->GetImmediateContext(&g_interfaces->DeviceContext);
 
 	IDXGIDevice* pDXGIDevice = NULL;
 	g_interfaces->Device->QueryInterface(IID_PPV_ARGS(&pDXGIDevice));

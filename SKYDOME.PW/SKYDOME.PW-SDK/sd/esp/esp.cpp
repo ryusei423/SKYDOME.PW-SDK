@@ -135,7 +135,7 @@ void EspDrawManager::DrawPlayerLog(ImDrawList* drawlist){
 
 	for (int i = 0; i < 65; i++){
 		auto player = g_PlayerLog->logs[i];
-		if (player.record.empty())
+		if (player.record.empty()|| !player.valid)
 			continue;
 
 		for (int i = 0; i < player.record.size();i++) {

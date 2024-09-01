@@ -85,6 +85,7 @@ public:
 class PlayerLog_t {
 public:
 	bool valid;
+	bool alive;
 	CachedEntity player;
 	std::deque<lag_record_t> record;
 };

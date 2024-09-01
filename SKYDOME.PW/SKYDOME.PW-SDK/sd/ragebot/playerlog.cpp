@@ -23,11 +23,6 @@ void PlayerLog::Log(){
 		if (player.Controller)
 			player.UpdatePawn();
 
-		
-			
-
-		
-
 		auto& player_log = logs[player.handle.GetEntryIndex()];
 
 		if (!player.Valid()) {
@@ -37,11 +32,12 @@ void PlayerLog::Log(){
 
 
 		player_log.player = player;
-		player_log.valid = true;
+		player_log.valid = player_log.alive = true;
 
 		auto& records = player_log.record;
 		
 		if (!player.Controller->IsPawnAlive()) {
+			player_log.valid = false;
 			records.clear();
 		}
 
