@@ -73,6 +73,24 @@ public:
 	SCHEMA_ADD_FIELD(float, m_flForwardMove, "CPlayer_MovementServices->m_flForwardMove");
 	SCHEMA_ADD_FIELD(float, m_flLeftMove, "CPlayer_MovementServices->m_flLeftMove");
 	SCHEMA_ADD_OFFSET(float, m_flSurfaceFriction, 0x1FC);
+
+	//CCSPlayer_MovementServices
+	void RunCommand(CUserCmd* pCmd)
+	{
+		MEM::CallVFunc<void, 23U>(this, pCmd);
+	}
+
+	void SetPredictionCommand(CUserCmd* pCmd)
+	{
+		MEM::CallVFunc<void, 34U>(this, pCmd);
+	}
+
+	void ResetPredictionCommand()
+	{
+		MEM::CallVFunc<void, 35U>(this);
+	}
+
+
 };
 
 
