@@ -92,7 +92,7 @@ bool InterfacesManager::init()
 	INTERFACES_INITLOG("CSGOInput", CSGOInput);
 	INTERFACES_INITLOG("Trace", Trace);
 	INTERFACES_INITLOG("InputSystem", InputSystem);
-	INTERFACES_INITLOG("SwapChain", SwapChain);
+	//INTERFACES_INITLOG("SwapChain", SwapChain);
 	INTERFACES_INITLOG("SchemaSystem", SchemaSystem);
 	INTERFACES_INITLOG("GameResourceService", GameResourceService);
 	INTERFACES_INITLOG("EngineClient", EngineClient);
